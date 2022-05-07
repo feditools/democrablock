@@ -328,14 +328,21 @@ linters:
     - funlen
     - gci
     - gochecknoglobals
+    - goconst
+    - goerr113
+    - gofumpt
+    - goimports
     - golint # deprecated
     - gomnd
+    - gochecknoinits
     - interfacer # deprecated
+    - ireturn
     - lll
     - maligned # deprecated
     - paralleltest
     - scopelint # deprecated
     - testpackage
+    - tparallel
     - varnamelen
     - wrapcheck
     - wsl

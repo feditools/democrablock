@@ -56,7 +56,7 @@ var Defaults = Values{
 
 	// application
 	ApplicationName:    "feditools-login",
-	ApplicationWebsite: "https://github.com/feditools/login",
+	ApplicationWebsite: "https://github.com/feditools/democrablock",
 
 	// database
 	DBType:         "postgres",
