@@ -13,9 +13,19 @@ check:
 check-fix:
 	golangci-lint run --fix
 
+clean:
+	@echo cleaning up workspace
+	@rm -Rvf coverage.txt dist democrablock
+	@find . -name ".DS_Store" -exec rm -v {} \;
+	@rm -Rvf web/static/css/default.min.css web/static/css/error.min.css
+
 fmt:
 	@echo formatting
 	@go fmt $(shell go list ./... | grep -v /vendor/)
+
+stage-static:
+	minify web/static-src/css/default.css > web/static/css/default.min.css
+	minify web/static-src/css/error.css > web/static/css/error.min.css
 
 test:  tidy fmt
 	go test -race -cover ./...
@@ -26,4 +36,4 @@ tidy:
 vendor: tidy
 	go mod vendor
 
-.PHONY: bun-new-migration check check-fix fmt test tidy vendor
+.PHONY: bun-new-migration check check-fix fmt stage-static test tidy vendor

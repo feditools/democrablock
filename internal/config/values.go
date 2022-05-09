@@ -55,7 +55,7 @@ var Defaults = Values{
 	LogLevel:   "info",
 
 	// application
-	ApplicationName:    "feditools-login",
+	ApplicationName:    "feditools-democrablock",
 	ApplicationWebsite: "https://github.com/feditools/democrablock",
 
 	// database
@@ -94,5 +94,5 @@ var Defaults = Values{
 
 	// metrics
 	MetricsStatsDAddress: "localhost:8125",
-	MetricsStatsDPrefix:  "login",
+	MetricsStatsDPrefix:  "democrablock",
 }
