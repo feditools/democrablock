@@ -22,9 +22,10 @@ import (
 	htmltemplate "html/template"
 	"strings"
 	"sync"
+	"time"
 )
 
-// Module contains a webapp module for the web server. Implements web.Module
+// Module contains a webapp module for the web server. Implements web.Module.
 type Module struct {
 	db        db.DB
 	store     sessions.Store
@@ -43,7 +44,10 @@ type Module struct {
 	sigCacheLock sync.RWMutex
 }
 
-// New returns a new webapp module
+const ThirtyDays = 30 * 24 * time.Hour
+
+//revive:disable:argument-limit
+// New returns a new webapp module.
 func New(ctx context.Context, d db.DB, r *redis.Client, lMod *language.Module, t *token.Tokenizer, mc metrics.Collector) (http.Module, error) {
 	l := logger.WithField("func", "New")
 
@@ -51,6 +55,7 @@ func New(ctx context.Context, d db.DB, r *redis.Client, lMod *language.Module, t
 	store, err := redisstore.NewRedisStore(ctx, r.RedisClient())
 	if err != nil {
 		l.Errorf("create redis store: %s", err.Error())
+
 		return nil, err
 	}
 
@@ -58,7 +63,7 @@ func New(ctx context.Context, d db.DB, r *redis.Client, lMod *language.Module, t
 	store.Options(sessions.Options{
 		Path:   "/",
 		Domain: viper.GetString(config.Keys.ServerExternalHostname),
-		MaxAge: 86400 * 60,
+		MaxAge: int(ThirtyDays.Seconds()),
 	})
 
 	// Register models for GOB
@@ -75,6 +80,7 @@ func New(ctx context.Context, d db.DB, r *redis.Client, lMod *language.Module, t
 	tmpl, err := template.New(t)
 	if err != nil {
 		l.Errorf("create temates: %s", err.Error())
+
 		return nil, err
 	}
 
@@ -83,29 +89,29 @@ func New(ctx context.Context, d db.DB, r *redis.Client, lMod *language.Module, t
 		{
 			HRef:        viper.GetString(config.Keys.WebappBootstrapCSSURI),
 			Rel:         "stylesheet",
-			CrossOrigin: "anonymous",
+			CrossOrigin: COAnonymous,
 			Integrity:   viper.GetString(config.Keys.WebappBootstrapCSSIntegrity),
 		},
 		{
 			HRef:        viper.GetString(config.Keys.WebappFontAwesomeCSSURI),
 			Rel:         "stylesheet",
-			CrossOrigin: "anonymous",
+			CrossOrigin: COAnonymous,
 			Integrity:   viper.GetString(config.Keys.WebappFontAwesomeCSSIntegrity),
 		},
 	}
 	paths := []string{
 		path.FileDefaultCSS,
 	}
-	for _, path := range paths {
-		signature, err := getSignature(strings.TrimPrefix(path, "/"))
+	for _, p := range paths {
+		signature, err := getSignature(strings.TrimPrefix(p, "/"))
 		if err != nil {
-			l.Errorf("getting signature for %s: %s", path, err.Error())
+			l.Errorf("getting signature for %s: %s", p, err.Error())
 		}
 
 		hl = append(hl, libtemplate.HeadLink{
-			HRef:        path,
+			HRef:        p,
 			Rel:         "stylesheet",
-			CrossOrigin: "anonymous",
+			CrossOrigin: COAnonymous,
 			Integrity:   signature,
 		})
 	}
@@ -114,7 +120,7 @@ func New(ctx context.Context, d db.DB, r *redis.Client, lMod *language.Module, t
 	fs := []libtemplate.Script{
 		{
 			Src:         viper.GetString(config.Keys.WebappBootstrapJSURI),
-			CrossOrigin: "anonymous",
+			CrossOrigin: COAnonymous,
 			Integrity:   viper.GetString(config.Keys.WebappBootstrapJSIntegrity),
 		},
 	}
@@ -135,9 +141,9 @@ func New(ctx context.Context, d db.DB, r *redis.Client, lMod *language.Module, t
 
 		sigCache: map[string]string{},
 	}, nil
-}
+} //revive:enable:argument-limit
 
-// Name return the module name
-func (m *Module) Name() string {
+// Name return the module name.
+func (*Module) Name() string {
 	return config.ServerRoleWebapp
 }

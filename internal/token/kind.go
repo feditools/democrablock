@@ -1,15 +1,15 @@
 package token
 
-// Kind represents the kind of model to encode a token for
+// Kind represents the kind of model to encode a token for.
 type Kind int64
 
-// This order can not change else all external urls with tokens will become invalid
+// This order can not change else all external urls with tokens will become invalid.
 const (
-	// KindFediInstance is a token that represents a federated social instance
+	// KindFediInstance is a token that represents a federated social instance.
 	KindFediInstance Kind = 1 + iota
-	// KindFediAccount is a token that represents a federated social account
+	// KindFediAccount is a token that represents a federated social account.
 	KindFediAccount
-	// KindBlock is a token that represents a blocked federated social instance
+	// KindBlock is a token that represents a blocked federated social instance.
 	KindBlock
 )
 

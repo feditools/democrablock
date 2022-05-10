@@ -13,7 +13,7 @@ import (
 
 const templateDir = "template"
 
-// InitTemplate are the functions a template implementing Common will have
+// InitTemplate are the functions a template implementing Common will have.
 type InitTemplate interface {
 	AddHeadLink(l libtemplate.HeadLink)
 	AddFooterScript(s libtemplate.Script)
@@ -24,7 +24,7 @@ type InitTemplate interface {
 	SetNavbar(nodes Navbar)
 }
 
-// New creates a new template
+// New creates a new template.
 func New(t *token.Tokenizer) (*template.Template, error) {
 	tpl, err := libtemplate.New(template.FuncMap{
 		"token": t.GetToken,

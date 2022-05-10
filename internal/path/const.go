@@ -1,20 +1,20 @@
 package path
 
 const (
-	// files
+	// files.
 
-	// FileDefaultCSS is the css document applies to all pages
+	// FileDefaultCSS is the css document applies to all pages.
 	FileDefaultCSS = StaticCSS + "/default.min.css"
 
-	// parts
+	// parts.
 
-	// PartStatic is used in a path for static files
+	// PartStatic is used in a path for static files.
 	PartStatic = "static"
 
-	// paths
+	// paths.
 
-	// Static is the path for static files
+	// Static is the path for static files.
 	Static = "/" + PartStatic + "/"
-	// StaticCSS is the path
+	// StaticCSS is the path.
 	StaticCSS = Static + "css"
 )
