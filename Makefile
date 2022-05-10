@@ -41,6 +41,9 @@ test-docker-start:
 test-docker-stop:
 	docker-compose --project-name ${PROJECT_NAME} -f deployments/docker-compose-test.yaml down
 
+test-ext: tidy fmt
+	go test --tags=postgres,redis -cover ./...
+
 tidy:
 	go mod tidy -compat=1.17
 
