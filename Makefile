@@ -2,6 +2,9 @@ PROJECT_NAME=democrablock
 
 .DEFAULT_GOAL := test
 
+build-snapshot: clean
+	goreleaser build --snapshot
+
 bun-new-migration: export BUN_TIMESTAMP=$(shell date +%Y%m%d%H%M%S | head -c 14)
 bun-new-migration:
 	touch internal/db/bun/migrations/${BUN_TIMESTAMP}_new.go
@@ -50,4 +53,4 @@ tidy:
 vendor: tidy
 	go mod vendor
 
-.PHONY: bun-new-migration check check-fix fmt stage-static test test-docker-restart test-docker-start test-docker-stop tidy vendor
+.PHONY: build-snapshot bun-new-migration check check-fix fmt stage-static test test-docker-restart test-docker-start test-docker-stop test-ext tidy vendor
