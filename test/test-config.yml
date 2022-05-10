@@ -34,10 +34,10 @@ db-address: "localhost"
 # Int. Port for database connection.
 # Examples: [5432, 1234, 6969]
 # Default: 5432
-db-port: 5432
+db-port: 15432
 
 # String. Username for the database connection.
-# Examples: ["mydbuser","postgres","relay"]
+# Examples: ["mydbuser","postgres","democrablock"]
 # Default: ""
 db-user: "test"
 
@@ -76,7 +76,7 @@ db-crypto-key: "test1234test5678test9123test4567"
 
 # String. Address and port of the redis instance
 # Default: "localhost:6379"
-redis-address: "localhost:6379"
+redis-address: "localhost:16379"
 
 # Int. Redis database to use
 # Examples: [0, 1, 15]
@@ -87,3 +87,15 @@ redis-db: 0
 # Examples: ["","test","password"]
 # Default: ""
 redis-password: "test"
+
+#############
+## METRICS ##
+#############
+
+# String. Address and port of the statsd instance
+# Default: "localhost:8125"
+statsd-addr: "localhost:18125"
+
+# String. Prefix to add to statsd metrics
+# Default: "democrablock"
+#statsd-prefix: ""
