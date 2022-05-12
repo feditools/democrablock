@@ -23,6 +23,10 @@ type KeyNames struct {
 	DBLoadTestData  string
 	DBEncryptionKey string
 
+	// grpc
+	GRPCLoginAddress string
+	GRPCLoginToken   string
+
 	// redis
 	RedisAddress  string
 	RedisDB       string
@@ -71,6 +75,10 @@ var Keys = KeyNames{
 	DBTLSCACert:     "db-tls-ca-cert",
 	DBLoadTestData:  "test-data", // CLI only
 	DBEncryptionKey: "db-crypto-key",
+
+	// grpc
+	GRPCLoginAddress: "grpc-login-address",
+	GRPCLoginToken:   "grpc-login-token",
 
 	// redis
 	RedisAddress:  "redis-address",

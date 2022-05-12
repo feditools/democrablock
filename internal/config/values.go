@@ -23,6 +23,10 @@ type Values struct {
 	DBLoadTestData  bool
 	DBEncryptionKey string
 
+	// grpc
+	GRPCLoginAddress string
+	GRPCLoginToken   string
+
 	// redis
 	RedisAddress  string
 	RedisDB       int
@@ -68,6 +72,9 @@ var Defaults = Values{
 	DBTLSMode:      "disable",
 	DBTLSCACert:    "",
 	DBLoadTestData: false,
+
+	// grpc
+	GRPCLoginAddress: "localhost:50051",
 
 	// redis
 	RedisAddress:  "localhost:6379",

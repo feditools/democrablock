@@ -4,9 +4,41 @@ import (
 	"crypto/sha512"
 	"encoding/base64"
 	"fmt"
+	"github.com/feditools/democrablock/internal/http"
+	"github.com/feditools/democrablock/internal/models"
+	"github.com/feditools/democrablock/internal/path"
 	"github.com/feditools/democrablock/web"
+	"github.com/gorilla/sessions"
 	"io/ioutil"
+	nethttp "net/http"
 )
+
+// auth helpers
+
+func (m *Module) authRequireLoggedIn(w nethttp.ResponseWriter, r *nethttp.Request) (*models.FediAccount, bool) {
+	us := r.Context().Value(http.ContextKeySession).(*sessions.Session)
+
+	if r.Context().Value(http.ContextKeyAccount) == nil {
+		// Save current page
+		if r.URL.Query().Encode() == "" {
+			us.Values[SessionKeyLoginRedirect] = r.URL.Path
+		} else {
+			us.Values[SessionKeyLoginRedirect] = r.URL.Path + "?" + r.URL.Query().Encode()
+		}
+		err := us.Save(r, w)
+		if err != nil {
+			m.returnErrorPage(w, r, nethttp.StatusInternalServerError, err.Error())
+			return nil, true
+		}
+
+		// redirect to login
+		nethttp.Redirect(w, r, path.Login, nethttp.StatusFound)
+		return nil, true
+	}
+
+	account := r.Context().Value(http.ContextKeyAccount).(*models.FediAccount)
+	return account, false
+}
 
 // signature caching
 

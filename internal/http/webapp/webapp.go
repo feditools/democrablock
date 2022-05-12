@@ -5,6 +5,7 @@ import (
 	"encoding/gob"
 	"github.com/feditools/democrablock/internal/config"
 	"github.com/feditools/democrablock/internal/db"
+	"github.com/feditools/democrablock/internal/grpc"
 	"github.com/feditools/democrablock/internal/http"
 	"github.com/feditools/democrablock/internal/http/template"
 	"github.com/feditools/democrablock/internal/kv"
@@ -28,10 +29,11 @@ import (
 // Module contains a webapp module for the web server. Implements web.Module.
 type Module struct {
 	db        db.DB
-	store     sessions.Store
+	grpc      *grpc.Client
 	language  *language.Module
 	metrics   metrics.Collector
 	minify    *minify.M
+	store     sessions.Store
 	templates *htmltemplate.Template
 	tokenizer *token.Tokenizer
 
@@ -48,7 +50,7 @@ const ThirtyDays = 30 * 24 * time.Hour
 
 //revive:disable:argument-limit
 // New returns a new webapp module.
-func New(ctx context.Context, d db.DB, r *redis.Client, lMod *language.Module, t *token.Tokenizer, mc metrics.Collector) (http.Module, error) {
+func New(ctx context.Context, d db.DB, g *grpc.Client, r *redis.Client, lMod *language.Module, t *token.Tokenizer, mc metrics.Collector) (http.Module, error) {
 	l := logger.WithField("func", "New")
 
 	// Fetch new store.
@@ -127,10 +129,11 @@ func New(ctx context.Context, d db.DB, r *redis.Client, lMod *language.Module, t
 
 	return &Module{
 		db:        d,
-		store:     store,
+		grpc:      g,
 		language:  lMod,
 		metrics:   mc,
 		minify:    m,
+		store:     store,
 		templates: tmpl,
 		tokenizer: t,
 
