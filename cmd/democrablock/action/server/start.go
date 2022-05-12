@@ -83,12 +83,14 @@ var Start action.Action = func(ctx context.Context) error {
 	tokz, err := token.New()
 	if err != nil {
 		l.Errorf("create tokenizer: %s", err.Error())
+
 		return err
 	}
 
 	languageMod, err := language.New()
 	if err != nil {
 		l.Errorf("language: %s", err.Error())
+
 		return err
 	}
 
@@ -97,6 +99,7 @@ var Start action.Action = func(ctx context.Context) error {
 	httpServer, err := http.NewServer(ctx, metricsCollector)
 	if err != nil {
 		l.Errorf("http httpServer: %s", err.Error())
+
 		return err
 	}
 
@@ -107,6 +110,7 @@ var Start action.Action = func(ctx context.Context) error {
 		webMod, err := webapp.New(ctx, cachedDBClient, grcpClient, redisClient, languageMod, tokz, metricsCollector)
 		if err != nil {
 			logrus.Errorf("webapp module: %s", err.Error())
+
 			return err
 		}
 		webModules = append(webModules, webMod)
@@ -117,6 +121,7 @@ var Start action.Action = func(ctx context.Context) error {
 		err := mod.Route(httpServer)
 		if err != nil {
 			l.Errorf("loading %s module: %s", mod.Name(), err.Error())
+
 			return err
 		}
 	}
@@ -125,7 +130,7 @@ var Start action.Action = func(ctx context.Context) error {
 	errChan := make(chan error)
 
 	// Wait for SIGINT and SIGTERM (HIT CTRL-C)
-	stopSigChan := make(chan os.Signal)
+	stopSigChan := make(chan os.Signal, 1)
 	signal.Notify(stopSigChan, syscall.SIGINT, syscall.SIGTERM)
 
 	// start webserver
@@ -146,5 +151,6 @@ var Start action.Action = func(ctx context.Context) error {
 	}
 
 	l.Infof("done")
+
 	return nil
 }

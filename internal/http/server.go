@@ -2,14 +2,12 @@ package http
 
 import (
 	"context"
-	"fmt"
 	"github.com/feditools/democrablock/internal/config"
 	"github.com/feditools/democrablock/internal/metrics"
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 	"github.com/spf13/viper"
 	"github.com/tyrm/go-util/middleware"
-	"github.com/tyrm/go-util/mimetype"
 	"net/http"
 	"time"
 )
@@ -45,15 +43,22 @@ func NewServer(_ context.Context, m metrics.Collector) (*Server, error) {
 	r.Use(handlers.CompressHandler)
 	r.Use(middleware.BlockFlocMux)
 
-	r.NotFoundHandler = server.notFoundHandler()
-	r.MethodNotAllowedHandler = server.methodNotAllowedHandler()
-
 	return server, nil
 }
 
 // HandleFunc attaches a function to a path.
 func (s *Server) HandleFunc(path string, f func(http.ResponseWriter, *http.Request)) *mux.Route {
 	return s.router.HandleFunc(path, f)
+}
+
+// MethodNotAllowedHandler adds a global method not allowed error handler.
+func (s *Server) MethodNotAllowedHandler(handler http.Handler) {
+	s.router.MethodNotAllowedHandler = handler
+}
+
+// NotFoundHandler adds a global not found error handler.
+func (s *Server) NotFoundHandler(handler http.Handler) {
+	s.router.NotFoundHandler = handler
 }
 
 // PathPrefix attaches a new route url path prefix.
@@ -72,26 +77,4 @@ func (s *Server) Start() error {
 // Stop shuts down the web server.
 func (s *Server) Stop(ctx context.Context) error {
 	return s.srv.Shutdown(ctx)
-}
-
-func (s *Server) methodNotAllowedHandler() http.Handler {
-	// wrap in middleware since middleware isn't run on error pages
-	return s.middlewareMetrics(middleware.BlockFlocMux(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Content-Type", mimetype.TextPlain)
-		_, err := w.Write([]byte(fmt.Sprintf("%d %s", http.StatusMethodNotAllowed, http.StatusText(http.StatusMethodNotAllowed))))
-		if err != nil {
-			logger.WithField("func", "methodNotAllowedHandler").Errorf("writing response: %s", err.Error())
-		}
-	})))
-}
-
-func (s *Server) notFoundHandler() http.Handler {
-	// wrap in middleware since middleware isn't run on error pages
-	return s.middlewareMetrics(middleware.BlockFlocMux(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Content-Type", mimetype.TextPlain)
-		_, err := w.Write([]byte(fmt.Sprintf("%d %s", http.StatusNotFound, http.StatusText(http.StatusNotFound))))
-		if err != nil {
-			logger.WithField("func", "methodNotAllowedHandler").Errorf("writing response: %s", err.Error())
-		}
-	})))
 }

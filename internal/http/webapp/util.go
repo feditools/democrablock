@@ -16,7 +16,7 @@ import (
 // auth helpers
 
 func (m *Module) authRequireLoggedIn(w nethttp.ResponseWriter, r *nethttp.Request) (*models.FediAccount, bool) {
-	us := r.Context().Value(http.ContextKeySession).(*sessions.Session)
+	us := r.Context().Value(http.ContextKeySession).(*sessions.Session) //nolint
 
 	if r.Context().Value(http.ContextKeyAccount) == nil {
 		// Save current page
@@ -28,24 +28,29 @@ func (m *Module) authRequireLoggedIn(w nethttp.ResponseWriter, r *nethttp.Reques
 		err := us.Save(r, w)
 		if err != nil {
 			m.returnErrorPage(w, r, nethttp.StatusInternalServerError, err.Error())
+
 			return nil, true
 		}
 
 		// redirect to login
 		nethttp.Redirect(w, r, path.Login, nethttp.StatusFound)
+
 		return nil, true
 	}
 
-	account := r.Context().Value(http.ContextKeyAccount).(*models.FediAccount)
-	return account, false
+	if account, ok := r.Context().Value(http.ContextKeyAccount).(*models.FediAccount); ok {
+		return account, false
+	}
+
+	return nil, false
 }
 
 // signature caching
 
-func getSignature(path string) (string, error) {
+func getSignature(filePath string) (string, error) {
 	l := logger.WithField("func", "getSignature")
 
-	file, err := web.Files.Open(path)
+	file, err := web.Files.Open(filePath)
 	if err != nil {
 		l.Errorf("opening file: %s", err.Error())
 
@@ -69,29 +74,29 @@ func getSignature(path string) (string, error) {
 	return fmt.Sprintf("sha384-%s", signature), nil
 }
 
-func (m *Module) getSignatureCached(path string) (string, error) {
-	if sig, ok := m.readCachedSignature(path); ok {
+func (m *Module) getSignatureCached(filePath string) (string, error) {
+	if sig, ok := m.readCachedSignature(filePath); ok {
 		return sig, nil
 	}
-	sig, err := getSignature(path)
+	sig, err := getSignature(filePath)
 	if err != nil {
 		return "", err
 	}
-	m.writeCachedSignature(path, sig)
+	m.writeCachedSignature(filePath, sig)
 
 	return sig, nil
 }
 
-func (m *Module) readCachedSignature(path string) (string, bool) {
+func (m *Module) readCachedSignature(filePath string) (string, bool) {
 	m.sigCacheLock.RLock()
-	val, ok := m.sigCache[path]
+	val, ok := m.sigCache[filePath]
 	m.sigCacheLock.RUnlock()
 
 	return val, ok
 }
 
-func (m *Module) writeCachedSignature(path string, sig string) {
+func (m *Module) writeCachedSignature(filePath string, sig string) {
 	m.sigCacheLock.Lock()
-	m.sigCache[path] = sig
+	m.sigCache[filePath] = sig
 	m.sigCacheLock.Unlock()
 }

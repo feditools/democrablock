@@ -16,8 +16,9 @@ func (m *Module) MiddlewareRequireAdmin(next nethttp.Handler) nethttp.Handler {
 		}
 
 		if !account.Admin {
-			localizer := r.Context().Value(http.ContextKeyLocalizer).(*language.Localizer)
+			localizer := r.Context().Value(http.ContextKeyLocalizer).(*language.Localizer) //nolint
 			m.returnErrorPage(w, r, nethttp.StatusUnauthorized, localizer.TextUnauthorized().String())
+
 			return
 		}
 

@@ -17,11 +17,12 @@ func (m *Module) returnErrorPage(w http.ResponseWriter, r *http.Request, code in
 	err := m.initTemplate(w, r, tmplVars)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
+
 		return
 	}
 
 	// add error css file
-	signature, err := getSignature(strings.TrimPrefix(path.FileErrorCSS, "/"))
+	signature, err := m.getSignatureCached(strings.TrimPrefix(path.FileErrorCSS, "/"))
 	if err != nil {
 		l.Errorf("getting signature for %s: %s", path.FileErrorCSS, err.Error())
 	}

@@ -9,20 +9,18 @@ import (
 	"github.com/feditools/democrablock/internal/http/template"
 	"github.com/feditools/democrablock/internal/models"
 	"github.com/feditools/go-lib/language"
-	"github.com/gorilla/sessions"
 	nethttp "net/http"
 )
 
-func (m *Module) initTemplate(w nethttp.ResponseWriter, r *nethttp.Request, tmpl template.InitTemplate) error {
-	l := logger.WithField("func", "initTemplate")
-
+func (m *Module) initTemplate(_ nethttp.ResponseWriter, r *nethttp.Request, tmpl template.InitTemplate) error {
 	// set text handler
-	localizer := r.Context().Value(http.ContextKeyLocalizer).(*language.Localizer)
+	localizer := r.Context().Value(http.ContextKeyLocalizer).(*language.Localizer) //nolint
 	tmpl.SetLocalizer(localizer)
 
 	// set language
-	lang := r.Context().Value(http.ContextKeyLanguage).(string)
-	tmpl.SetLanguage(lang)
+	if lang, ok := r.Context().Value(http.ContextKeyLanguage).(string); ok {
+		tmpl.SetLanguage(lang)
+	}
 
 	// set logo image src
 	tmpl.SetLogoSrc(m.logoSrcDark, m.logoSrcLight)
@@ -37,25 +35,8 @@ func (m *Module) initTemplate(w nethttp.ResponseWriter, r *nethttp.Request, tmpl
 		tmpl.AddFooterScript(script)
 	}
 
-	if r.Context().Value(http.ContextKeyAccount) != nil {
-		account := r.Context().Value(http.ContextKeyAccount).(*models.FediAccount)
+	if account, ok := r.Context().Value(http.ContextKeyAccount).(*models.FediAccount); ok {
 		tmpl.SetAccount(account)
-	}
-
-	// try to read session data
-	if r.Context().Value(http.ContextKeySession) == nil {
-		return nil
-	}
-
-	us := r.Context().Value(http.ContextKeySession).(*sessions.Session)
-	saveSession := false
-
-	if saveSession {
-		err := us.Save(r, w)
-		if err != nil {
-			l.Warningf("initTemplate could not save session: %s", err.Error())
-			return err
-		}
 	}
 
 	return nil
@@ -69,12 +50,18 @@ func (m *Module) executeTemplate(w nethttp.ResponseWriter, name string, tmplVars
 	}
 
 	h := sha256.New()
-	h.Write(b.Bytes())
+
+	_, err = h.Write(b.Bytes())
+	if err != nil {
+		return err
+	}
 	w.Header().Set("Digest", fmt.Sprintf("sha-256=%s", base64.StdEncoding.EncodeToString(h.Sum(nil))))
 
 	if m.minify == nil {
 		_, err := w.Write(b.Bytes())
+
 		return err
 	}
+
 	return m.minify.Minify("text/html", w, b)
 }

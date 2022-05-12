@@ -8,7 +8,7 @@ import (
 	nethttp "net/http"
 )
 
-// Middleware runs on every http request
+// Middleware runs on every http request.
 func (m *Module) Middleware(next nethttp.Handler) nethttp.Handler {
 	return etag.Handler(nethttp.HandlerFunc(func(w nethttp.ResponseWriter, r *nethttp.Request) {
 		l := logger.WithField("func", "Middleware")
@@ -18,6 +18,7 @@ func (m *Module) Middleware(next nethttp.Handler) nethttp.Handler {
 		if err != nil {
 			l.Errorf("get session: %s", err.Error())
 			m.returnErrorPage(w, r, nethttp.StatusInternalServerError, err.Error())
+
 			return
 		}
 		ctx := context.WithValue(r.Context(), http.ContextKeySession, us)
@@ -30,6 +31,7 @@ func (m *Module) Middleware(next nethttp.Handler) nethttp.Handler {
 			if err != nil {
 				l.Errorf("db read: %s", err.Error())
 				m.returnErrorPage(w, r, nethttp.StatusInternalServerError, err.Error())
+
 				return
 			}
 
@@ -39,6 +41,7 @@ func (m *Module) Middleware(next nethttp.Handler) nethttp.Handler {
 				if err != nil {
 					l.Errorf("db read: %s", err.Error())
 					m.returnErrorPage(w, r, nethttp.StatusInternalServerError, err.Error())
+
 					return
 				}
 				account.Instance = instance
@@ -54,6 +57,7 @@ func (m *Module) Middleware(next nethttp.Handler) nethttp.Handler {
 		if err != nil {
 			l.Errorf("could get localizer: %s", err.Error())
 			m.returnErrorPage(w, r, nethttp.StatusInternalServerError, err.Error())
+
 			return
 		}
 		ctx = context.WithValue(ctx, http.ContextKeyLocalizer, localizer)

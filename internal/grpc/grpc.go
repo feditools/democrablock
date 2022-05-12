@@ -49,26 +49,26 @@ func New(ctx context.Context) (*Client, error) {
 	gob.Register(models.FediInstance{})
 
 	fediAccount, err := bigcache.NewBigCache(bigcache.Config{
-		Shards:             32,
+		Shards:             32, // nolint
 		LifeWindow:         fediAccountLifeWindow,
 		CleanWindow:        fediAccountCleanWindow,
 		MaxEntriesInWindow: fediAccountMaxEntriesInWindow,
-		MaxEntrySize:       500,
+		MaxEntrySize:       500, // nolint
 		Verbose:            true,
-		HardMaxCacheSize:   8192,
+		HardMaxCacheSize:   8192, // nolint
 	})
 	if err != nil {
 		return nil, err
 	}
 
 	fediInstances, err := bigcache.NewBigCache(bigcache.Config{
-		Shards:             32,
-		LifeWindow:         fediAccountLifeWindow,
-		CleanWindow:        fediAccountCleanWindow,
-		MaxEntriesInWindow: fediAccountMaxEntriesInWindow,
-		MaxEntrySize:       500,
+		Shards:             32, // nolint
+		LifeWindow:         fediInstanceLifeWindow,
+		CleanWindow:        fediInstanceCleanWindow,
+		MaxEntriesInWindow: fediInstanceMaxEntriesInWindow,
+		MaxEntrySize:       500, // nolint
 		Verbose:            true,
-		HardMaxCacheSize:   8192,
+		HardMaxCacheSize:   8192, // nolint
 	})
 	if err != nil {
 		return nil, err

@@ -17,5 +17,4 @@ func (c *Client) GetFediInstance(ctx context.Context, id int64) (*models.FediIns
 		ServerHostname: gFediInstance.ServerHostname,
 		Software:       gFediInstance.Software,
 	}, nil
-
 }

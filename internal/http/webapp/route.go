@@ -9,11 +9,15 @@ import (
 )
 
 // Route attaches routes to the web server.
-func (*Module) Route(s *http.Server) error {
+func (m *Module) Route(s *http.Server) error {
 	staticFS, err := iofs.Sub(web.Files, DirStatic)
 	if err != nil {
 		return err
 	}
+
+	// Error Pages
+	s.NotFoundHandler(m.notFoundHandler())
+	s.MethodNotAllowedHandler(m.methodNotAllowedHandler())
 
 	// Static Files
 	s.PathPrefix(path.Static).Handler(nethttp.StripPrefix(path.Static, nethttp.FileServer(nethttp.FS(staticFS))))

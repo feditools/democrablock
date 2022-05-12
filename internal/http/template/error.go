@@ -1,6 +1,6 @@
 package template
 
-// ErrorName is the name of the error template
+// ErrorName is the name of the error template.
 const ErrorName = "error"
 
 // Error contains the variables for the error template.
