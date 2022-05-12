@@ -118,7 +118,8 @@ var Start action.Action = func(ctx context.Context) error {
 
 	// add modules to server
 	for _, mod := range webModules {
-		err := mod.Route(httpServer)
+		mod.SetServer(httpServer)
+		err := mod.Route()
 		if err != nil {
 			l.Errorf("loading %s module: %s", mod.Name(), err.Error())
 

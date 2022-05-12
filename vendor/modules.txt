@@ -14,7 +14,7 @@ github.com/dgryski/go-rendezvous
 # github.com/fatih/color v1.13.0
 ## explicit; go 1.13
 github.com/fatih/color
-# github.com/feditools/go-lib v0.11.1
+# github.com/feditools/go-lib v0.11.2-0.20220512082256-35278b8f822e
 ## explicit; go 1.17
 github.com/feditools/go-lib/grpc
 github.com/feditools/go-lib/http
@@ -249,7 +249,6 @@ github.com/tmthrgd/go-hex
 ## explicit; go 1.17
 github.com/tyrm/go-util
 github.com/tyrm/go-util/middleware
-github.com/tyrm/go-util/mimetype
 # github.com/ugorji/go/codec v1.2.7
 ## explicit; go 1.11
 github.com/ugorji/go/codec

@@ -39,7 +39,7 @@ func NewServer(_ context.Context, m metrics.Collector) (*Server, error) {
 	}
 
 	// add global middlewares
-	r.Use(server.middlewareMetrics)
+	r.Use(server.MiddlewareMetrics)
 	r.Use(handlers.CompressHandler)
 	r.Use(middleware.BlockFlocMux)
 
@@ -49,16 +49,6 @@ func NewServer(_ context.Context, m metrics.Collector) (*Server, error) {
 // HandleFunc attaches a function to a path.
 func (s *Server) HandleFunc(path string, f func(http.ResponseWriter, *http.Request)) *mux.Route {
 	return s.router.HandleFunc(path, f)
-}
-
-// MethodNotAllowedHandler adds a global method not allowed error handler.
-func (s *Server) MethodNotAllowedHandler(handler http.Handler) {
-	s.router.MethodNotAllowedHandler = handler
-}
-
-// NotFoundHandler adds a global not found error handler.
-func (s *Server) NotFoundHandler(handler http.Handler) {
-	s.router.NotFoundHandler = handler
 }
 
 // PathPrefix attaches a new route url path prefix.

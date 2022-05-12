@@ -5,6 +5,8 @@ import (
 	"github.com/feditools/democrablock/internal/http/template"
 	"github.com/feditools/democrablock/internal/path"
 	libtemplate "github.com/feditools/go-lib/template"
+	"github.com/gorilla/handlers"
+	"github.com/tyrm/go-util/middleware"
 	"net/http"
 	"strings"
 )
@@ -55,20 +57,32 @@ func (m *Module) returnErrorPage(w http.ResponseWriter, r *http.Request, code in
 	w.WriteHeader(code)
 	err = m.executeTemplate(w, "error", tmplVars)
 	if err != nil {
-		logger.Errorf("could not render error template: %s", err.Error())
+		l.Errorf("could not render error template: %s", err.Error())
 	}
 }
 
 func (m *Module) methodNotAllowedHandler() http.Handler {
 	// wrap in middleware since middlware isn't run on error pages
-	return m.Middleware(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	return m.wrapInMiddlewares(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		m.returnErrorPage(w, r, http.StatusMethodNotAllowed, r.Method)
 	}))
 }
 
 func (m *Module) notFoundHandler() http.Handler {
 	// wrap in middleware since middlware isn't run on error pages
-	return m.Middleware(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	return m.wrapInMiddlewares(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		m.returnErrorPage(w, r, http.StatusNotFound, fmt.Sprintf("page not found: %s", r.URL.Path))
 	}))
+}
+
+func (m *Module) wrapInMiddlewares(h http.Handler) http.Handler {
+	return m.srv.MiddlewareMetrics(
+		handlers.CompressHandler(
+			middleware.BlockFlocMux(
+				m.Middleware(
+					h,
+				),
+			),
+		),
+	)
 }

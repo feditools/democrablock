@@ -13,7 +13,7 @@ bun-new-migration:
 check:
 	golangci-lint run
 
-check-fix:
+check-fix: fmt
 	golangci-lint run --fix
 
 clean:

@@ -5,7 +5,7 @@ go 1.17
 require (
 	github.com/allegro/bigcache/v3 v3.0.2
 	github.com/cactus/go-statsd-client/v5 v5.0.0
-	github.com/feditools/go-lib v0.11.1
+	github.com/feditools/go-lib v0.11.2-0.20220512082256-35278b8f822e
 	github.com/feditools/login v0.0.0-20220512060144-0d6ae7d83144
 	github.com/go-http-utils/etag v0.0.0-20161124023236-513ea8f21eb1
 	github.com/go-redis/redis/v8 v8.11.5

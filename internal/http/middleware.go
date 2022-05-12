@@ -5,10 +5,11 @@ import (
 	"time"
 )
 
-func (s *Server) middlewareMetrics(next nethttp.Handler) nethttp.Handler {
+// MiddlewareMetrics sends http request metrics.
+func (s *Server) MiddlewareMetrics(next nethttp.Handler) nethttp.Handler {
 	return nethttp.HandlerFunc(func(w nethttp.ResponseWriter, r *nethttp.Request) {
 		start := time.Now()
-		l := logger.WithField("func", "middlewareMetrics")
+		l := logger.WithField("func", "MiddlewareMetrics")
 
 		wx := NewResponseWriter(w)
 

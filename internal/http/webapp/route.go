@@ -1,7 +1,6 @@
 package webapp
 
 import (
-	"github.com/feditools/democrablock/internal/http"
 	"github.com/feditools/democrablock/internal/path"
 	"github.com/feditools/democrablock/web"
 	iofs "io/fs"
@@ -9,19 +8,21 @@ import (
 )
 
 // Route attaches routes to the web server.
-func (m *Module) Route(s *http.Server) error {
+func (m *Module) Route() error {
 	staticFS, err := iofs.Sub(web.Files, DirStatic)
 	if err != nil {
 		return err
 	}
 
-	// Error Pages
-	s.NotFoundHandler(m.notFoundHandler())
-	s.MethodNotAllowedHandler(m.methodNotAllowedHandler())
-
 	// Static Files
-	s.PathPrefix(path.Static).Handler(nethttp.StripPrefix(path.Static, nethttp.FileServer(nethttp.FS(staticFS))))
+	m.srv.PathPrefix(path.Static).Handler(nethttp.StripPrefix(path.Static, nethttp.FileServer(nethttp.FS(staticFS))))
 
-	// webapp := s.PathPrefix("/").Subrouter()
+	webapp := m.srv.PathPrefix("/").Subrouter()
+	webapp.Use(m.Middleware)
+	webapp.NotFoundHandler = m.notFoundHandler()
+	webapp.MethodNotAllowedHandler = m.methodNotAllowedHandler()
+
+	webapp.HandleFunc(path.Home, m.HomeGetHandler).Methods("GET")
+
 	return nil
 }

@@ -18,7 +18,7 @@ import (
 	"github.com/gorilla/sessions"
 	"github.com/rbcervilla/redisstore/v8"
 	"github.com/spf13/viper"
-	minify "github.com/tdewolff/minify/v2"
+	"github.com/tdewolff/minify/v2"
 	"github.com/tdewolff/minify/v2/html"
 	htmltemplate "html/template"
 	"strings"
@@ -33,6 +33,7 @@ type Module struct {
 	language  *language.Module
 	metrics   metrics.Collector
 	minify    *minify.M
+	srv       *http.Server
 	store     sessions.Store
 	templates *htmltemplate.Template
 	tokenizer *token.Tokenizer
@@ -149,4 +150,9 @@ func New(ctx context.Context, d db.DB, g *grpc.Client, r *redis.Client, lMod *la
 // Name return the module name.
 func (*Module) Name() string {
 	return config.ServerRoleWebapp
+}
+
+// SetServer adds a reference to the server to the module.
+func (m *Module) SetServer(s *http.Server) {
+	m.srv = s
 }
