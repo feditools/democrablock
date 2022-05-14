@@ -14,7 +14,7 @@ func (m *Module) Middleware(next nethttp.Handler) nethttp.Handler {
 		l := logger.WithField("func", "Middleware")
 
 		// Init Session
-		us, err := m.store.Get(r, "login")
+		us, err := m.store.Get(r, "democrablock")
 		if err != nil {
 			l.Errorf("get session: %s", err.Error())
 			m.returnErrorPage(w, r, nethttp.StatusInternalServerError, err.Error())

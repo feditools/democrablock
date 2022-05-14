@@ -11,10 +11,15 @@ func Server(cmd *cobra.Command, values config.Values) {
 	Redis(cmd, values)
 
 	// server
-	cmd.PersistentFlags().String(config.Keys.ServerExternalHostname, values.ServerExternalHostname, usage.ServerExternalHostname)
+	cmd.PersistentFlags().String(config.Keys.ServerExternalURL, values.ServerExternalURL, usage.ServerExternalURL)
 	cmd.PersistentFlags().String(config.Keys.ServerHTTPBind, values.ServerHTTPBind, usage.ServerHTTPBind)
 	cmd.PersistentFlags().Bool(config.Keys.ServerMinifyHTML, values.ServerMinifyHTML, usage.ServerMinifyHTML)
 	cmd.PersistentFlags().StringArray(config.Keys.ServerRoles, values.ServerRoles, usage.ServerRoles)
+
+	// auth
+	cmd.PersistentFlags().String(config.Keys.OAuthClientID, values.OAuthClientID, usage.OAuthClientID)
+	cmd.PersistentFlags().String(config.Keys.OAuthClientSecret, values.OAuthClientSecret, usage.OAuthClientSecret)
+	cmd.PersistentFlags().String(config.Keys.OAuthServerURL, values.OAuthServerURL, usage.OAuthServerURL)
 
 	// webapp
 	cmd.PersistentFlags().String(config.Keys.WebappBootstrapCSSURI, values.WebappBootstrapCSSURI, usage.WebappBootstrapCSSURI)

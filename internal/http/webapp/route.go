@@ -23,6 +23,8 @@ func (m *Module) Route() error {
 	webapp.MethodNotAllowedHandler = m.methodNotAllowedHandler()
 
 	webapp.HandleFunc(path.Home, m.HomeGetHandler).Methods("GET")
+	webapp.HandleFunc(path.Login, m.LoginGetHandler).Methods("GET")
+	webapp.HandleFunc(path.CallbackOauth, m.CallbackOauthGetHandler).Methods("GET")
 
 	return nil
 }

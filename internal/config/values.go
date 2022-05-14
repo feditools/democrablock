@@ -33,10 +33,15 @@ type Values struct {
 	RedisPassword string
 
 	// server
-	ServerExternalHostname string
-	ServerHTTPBind         string
-	ServerMinifyHTML       bool
-	ServerRoles            []string
+	ServerExternalURL string
+	ServerHTTPBind    string
+	ServerMinifyHTML  bool
+	ServerRoles       []string
+
+	// oauth
+	OAuthClientID     string
+	OAuthClientSecret string
+	OAuthServerURL    string
 
 	// webapp
 	WebappBootstrapCSSURI         string
@@ -82,12 +87,15 @@ var Defaults = Values{
 	RedisPassword: "",
 
 	// server
-	ServerExternalHostname: "localhost",
-	ServerHTTPBind:         ":5000",
-	ServerMinifyHTML:       true,
+	ServerExternalURL: "localhost",
+	ServerHTTPBind:    ":5000",
+	ServerMinifyHTML:  true,
 	ServerRoles: []string{
 		ServerRoleWebapp,
 	},
+
+	// oauth
+	OAuthServerURL: "https://login.fedi.tools",
 
 	// webapp
 	WebappBootstrapCSSURI:         "https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css",

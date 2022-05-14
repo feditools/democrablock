@@ -33,10 +33,15 @@ type KeyNames struct {
 	RedisPassword string
 
 	// server
-	ServerExternalHostname string
-	ServerHTTPBind         string
-	ServerMinifyHTML       string
-	ServerRoles            string
+	ServerExternalURL string
+	ServerHTTPBind    string
+	ServerMinifyHTML  string
+	ServerRoles       string
+
+	// oauth
+	OAuthClientID     string
+	OAuthClientSecret string
+	OAuthServerURL    string
 
 	// webapp
 	WebappBootstrapCSSURI         string
@@ -86,10 +91,15 @@ var Keys = KeyNames{
 	RedisPassword: "redis-password",
 
 	// server
-	ServerExternalHostname: "external-hostname",
-	ServerHTTPBind:         "http-bind",
-	ServerMinifyHTML:       "minify-html",
-	ServerRoles:            "server-role",
+	ServerExternalURL: "external-url",
+	ServerHTTPBind:    "http-bind",
+	ServerMinifyHTML:  "minify-html",
+	ServerRoles:       "server-role",
+
+	// oauth
+	OAuthClientID:     "oauth-client-id",
+	OAuthClientSecret: "oauth-client-secret",
+	OAuthServerURL:    "oauth-server-url",
 
 	// webapp
 	WebappBootstrapCSSURI:         "webapp-bootstrap-css-uri",

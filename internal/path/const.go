@@ -10,15 +10,21 @@ const (
 
 	// parts.
 
-	// PartStatic is used in a path for static files.
-	PartStatic = "static"
+	// PartCallback is used in a path for callback.
+	PartCallback = "callback"
 	// PartList is used in a path for a list.
 	PartList = "list"
 	// PartLogin is used in a path for login.
 	PartLogin = "login"
+	// PartOauth is used in a path for oauth.
+	PartOauth = "oauth"
+	// PartStatic is used in a path for static files.
+	PartStatic = "static"
 
 	// paths.
 
+	// CallbackOauth is the path for an oauth callback.
+	CallbackOauth = "/" + PartCallback + "/" + PartOauth
 	// Home is the path for the home page.
 	Home = "/"
 	// List is the path for the block list.

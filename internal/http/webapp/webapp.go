@@ -20,7 +20,9 @@ import (
 	"github.com/spf13/viper"
 	"github.com/tdewolff/minify/v2"
 	"github.com/tdewolff/minify/v2/html"
+	"golang.org/x/oauth2"
 	htmltemplate "html/template"
+	"net/url"
 	"strings"
 	"sync"
 	"time"
@@ -33,6 +35,7 @@ type Module struct {
 	language  *language.Module
 	metrics   metrics.Collector
 	minify    *minify.M
+	oauth     oauth2.Config
 	srv       *http.Server
 	store     sessions.Store
 	templates *htmltemplate.Template
@@ -54,6 +57,19 @@ const ThirtyDays = 30 * 24 * time.Hour
 func New(ctx context.Context, d db.DB, g *grpc.Client, r *redis.Client, lMod *language.Module, t *token.Tokenizer, mc metrics.Collector) (http.Module, error) {
 	l := logger.WithField("func", "New")
 
+	// Auth Config
+	authServerURL := viper.GetString(config.Keys.OAuthServerURL)
+	oauth := oauth2.Config{
+		ClientID:     viper.GetString(config.Keys.OAuthClientID),
+		ClientSecret: viper.GetString(config.Keys.OAuthClientSecret),
+		Scopes:       []string{"all"},
+		RedirectURL:  viper.GetString(config.Keys.ServerExternalURL) + path.CallbackOauth,
+		Endpoint: oauth2.Endpoint{
+			AuthURL:  authServerURL + "/oauth/authorize",
+			TokenURL: authServerURL + "/oauth/token",
+		},
+	}
+
 	// Fetch new store.
 	store, err := redisstore.NewRedisStore(ctx, r.RedisClient())
 	if err != nil {
@@ -62,15 +78,22 @@ func New(ctx context.Context, d db.DB, g *grpc.Client, r *redis.Client, lMod *la
 		return nil, err
 	}
 
+	serverExternalURL, err := url.Parse(viper.GetString(config.Keys.ServerExternalURL))
+	if err != nil {
+		l.Errorf("parsing external url: %s", err.Error())
+
+		return nil, err
+	}
 	store.KeyPrefix(kv.KeySession())
 	store.Options(sessions.Options{
 		Path:   "/",
-		Domain: viper.GetString(config.Keys.ServerExternalHostname),
+		Domain: serverExternalURL.Host,
 		MaxAge: int(ThirtyDays.Seconds()),
 	})
 
 	// Register models for GOB
 	gob.Register(SessionKey(0))
+	gob.Register(oauth2.Token{})
 
 	// minify
 	var m *minify.M
@@ -134,6 +157,7 @@ func New(ctx context.Context, d db.DB, g *grpc.Client, r *redis.Client, lMod *la
 		language:  lMod,
 		metrics:   mc,
 		minify:    m,
+		oauth:     oauth,
 		store:     store,
 		templates: tmpl,
 		tokenizer: t,
