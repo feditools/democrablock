@@ -5,8 +5,8 @@ go 1.17
 require (
 	github.com/allegro/bigcache/v3 v3.0.2
 	github.com/cactus/go-statsd-client/v5 v5.0.0
-	github.com/feditools/go-lib v0.11.2-0.20220512082256-35278b8f822e
-	github.com/feditools/login v0.0.0-20220512060144-0d6ae7d83144
+	github.com/feditools/go-lib v0.11.2-0.20220518182639-365163222fec
+	github.com/feditools/login v0.0.0-20220518221728-cdf03f24ebdd
 	github.com/go-http-utils/etag v0.0.0-20161124023236-513ea8f21eb1
 	github.com/go-redis/redis/v8 v8.11.5
 	github.com/go-redsync/redsync/v4 v4.5.0
@@ -24,10 +24,10 @@ require (
 	github.com/spf13/viper v1.11.0
 	github.com/tdewolff/minify/v2 v2.11.2
 	github.com/tyrm/go-util v0.4.2
-	github.com/uptrace/bun v1.1.4
-	github.com/uptrace/bun/dialect/pgdialect v1.1.4
-	github.com/uptrace/bun/dialect/sqlitedialect v1.1.4
-	github.com/uptrace/bun/extra/bundebug v1.1.4
+	github.com/uptrace/bun v1.1.5
+	github.com/uptrace/bun/dialect/pgdialect v1.1.5
+	github.com/uptrace/bun/dialect/sqlitedialect v1.1.5
+	github.com/uptrace/bun/extra/bundebug v1.1.5
 	golang.org/x/oauth2 v0.0.0-20220411215720-9780585627b5
 	modernc.org/sqlite v1.17.1
 )
@@ -89,7 +89,7 @@ require (
 	golang.org/x/xerrors v0.0.0-20220411194840-2f41105eb62f // indirect
 	google.golang.org/appengine v1.6.7 // indirect
 	google.golang.org/genproto v0.0.0-20220407144326-9054f6ed7bac // indirect
-	google.golang.org/grpc v1.46.0 // indirect
+	google.golang.org/grpc v1.46.2 // indirect
 	google.golang.org/protobuf v1.28.0 // indirect
 	gopkg.in/ini.v1 v1.66.4 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect

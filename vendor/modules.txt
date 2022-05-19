@@ -14,16 +14,17 @@ github.com/dgryski/go-rendezvous
 # github.com/fatih/color v1.13.0
 ## explicit; go 1.13
 github.com/fatih/color
-# github.com/feditools/go-lib v0.11.2-0.20220512082256-35278b8f822e
+# github.com/feditools/go-lib v0.11.2-0.20220518182639-365163222fec
 ## explicit; go 1.17
 github.com/feditools/go-lib/grpc
 github.com/feditools/go-lib/http
 github.com/feditools/go-lib/language
 github.com/feditools/go-lib/log
 github.com/feditools/go-lib/template
-# github.com/feditools/login v0.0.0-20220512060144-0d6ae7d83144
-## explicit; go 1.18
+# github.com/feditools/login v0.0.0-20220518221728-cdf03f24ebdd
+## explicit; go 1.17
 github.com/feditools/login/pkg/grpc
+github.com/feditools/login/pkg/proto
 # github.com/felixge/httpsnoop v1.0.2
 ## explicit; go 1.13
 github.com/felixge/httpsnoop
@@ -252,7 +253,7 @@ github.com/tyrm/go-util/middleware
 # github.com/ugorji/go/codec v1.2.7
 ## explicit; go 1.11
 github.com/ugorji/go/codec
-# github.com/uptrace/bun v1.1.4
+# github.com/uptrace/bun v1.1.5
 ## explicit; go 1.17
 github.com/uptrace/bun
 github.com/uptrace/bun/dialect
@@ -264,13 +265,13 @@ github.com/uptrace/bun/internal/parser
 github.com/uptrace/bun/internal/tagparser
 github.com/uptrace/bun/migrate
 github.com/uptrace/bun/schema
-# github.com/uptrace/bun/dialect/pgdialect v1.1.4
+# github.com/uptrace/bun/dialect/pgdialect v1.1.5
 ## explicit; go 1.17
 github.com/uptrace/bun/dialect/pgdialect
-# github.com/uptrace/bun/dialect/sqlitedialect v1.1.4
+# github.com/uptrace/bun/dialect/sqlitedialect v1.1.5
 ## explicit; go 1.17
 github.com/uptrace/bun/dialect/sqlitedialect
-# github.com/uptrace/bun/extra/bundebug v1.1.4
+# github.com/uptrace/bun/extra/bundebug v1.1.5
 ## explicit; go 1.17
 github.com/uptrace/bun/extra/bundebug
 # github.com/vmihailenco/msgpack/v5 v5.3.5
@@ -355,7 +356,7 @@ google.golang.org/appengine/urlfetch
 # google.golang.org/genproto v0.0.0-20220407144326-9054f6ed7bac
 ## explicit; go 1.15
 google.golang.org/genproto/googleapis/rpc/status
-# google.golang.org/grpc v1.46.0
+# google.golang.org/grpc v1.46.2
 ## explicit; go 1.14
 google.golang.org/grpc
 google.golang.org/grpc/attributes

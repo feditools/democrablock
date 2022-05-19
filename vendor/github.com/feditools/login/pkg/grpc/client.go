@@ -1,25 +1,24 @@
 package grpc
 
 import (
+	"time"
+
+	"github.com/feditools/login/pkg/proto"
+
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
 	"google.golang.org/grpc/credentials/insecure"
-	"log"
-	"time"
 )
 
 const defaultTimeout = 10 * time.Second
 
-// Client is a feditools login grpc client
+// Client is a feditools login grpc client.
 type Client struct {
-	conn *grpc.ClientConn
-
-	fediAccount  FediAccountClient
-	fediInstance FediInstanceClient
-	ping         PingClient
+	conn  *grpc.ClientConn
+	login proto.LoginClient
 }
 
-// NewClient creates a new feditools login grpc client
+// NewClient creates a new feditools login grpc client.
 func NewClient(address string, cred credentials.PerRPCCredentials) (*Client, error) {
 	opts := []grpc.DialOption{
 		grpc.WithPerRPCCredentials(cred),
@@ -28,24 +27,19 @@ func NewClient(address string, cred credentials.PerRPCCredentials) (*Client, err
 
 	conn, err := grpc.Dial(address, opts...)
 	if err != nil {
-		log.Fatalf("did not connect: %v", err)
+		return nil, err
 	}
 
 	// services
-	fediAccountC := NewFediAccountClient(conn)
-	fediInstanceC := NewFediInstanceClient(conn)
-	pingC := NewPingClient(conn)
+	loginC := proto.NewLoginClient(conn)
 
 	return &Client{
-		conn: conn,
-
-		fediAccount:  fediAccountC,
-		fediInstance: fediInstanceC,
-		ping:         pingC,
+		conn:  conn,
+		login: loginC,
 	}, nil
 }
 
-// Close closes the feditools login grpc client
+// Close closes the feditools login grpc client.
 func (c *Client) Close() error {
 	return c.conn.Close()
 }

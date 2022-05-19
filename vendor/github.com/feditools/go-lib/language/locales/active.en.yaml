@@ -5,9 +5,12 @@ Account:
 AddOauth20Client:
   one: Add OAuth 2.0 Client
   other: Add OAuth 2.0 Clients
+Allow: Allow
 ApplicationToken:
   one: Application Token
   other: Application Tokens
+Authorize: Authorize
+AuthorizeApplicationDescription: Authorize {{.Description}}
 Client:
   one: Client
   other: Clients

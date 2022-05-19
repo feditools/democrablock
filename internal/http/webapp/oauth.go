@@ -56,6 +56,9 @@ func (m *Module) CallbackOauthGetHandler(w nethttp.ResponseWriter, r *nethttp.Re
 
 		return
 	}
+
+	l.Debugf("code: %s", code)
+
 	token, err := m.oauth.Exchange(r.Context(), code, oauth2.SetAuthURLParam("code_verifier", expectedCode))
 	if err != nil {
 		m.returnErrorPage(w, r, nethttp.StatusInternalServerError, err.Error())
@@ -63,7 +66,7 @@ func (m *Module) CallbackOauthGetHandler(w nethttp.ResponseWriter, r *nethttp.Re
 		return
 	}
 
-	l.Debugf("login success: %+v", token)
+	l.Debugf("login success: (%s), %+v", token.Type(), token)
 
 	us.Values[SessionKeyOAuthToken] = token
 	err = us.Save(r, w)
