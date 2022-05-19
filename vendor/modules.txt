@@ -8,6 +8,9 @@ github.com/cactus/go-statsd-client/v5/statsd
 # github.com/cespare/xxhash/v2 v2.1.2
 ## explicit; go 1.11
 github.com/cespare/xxhash/v2
+# github.com/coreos/go-oidc/v3 v3.2.0
+## explicit; go 1.14
+github.com/coreos/go-oidc/v3/oidc
 # github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f
 ## explicit
 github.com/dgryski/go-rendezvous
@@ -285,6 +288,7 @@ github.com/vmihailenco/tagparser/v2/internal
 github.com/vmihailenco/tagparser/v2/internal/parser
 # golang.org/x/crypto v0.0.0-20220427172511-eb4f295cb31f
 ## explicit; go 1.17
+golang.org/x/crypto/ed25519
 golang.org/x/crypto/pbkdf2
 golang.org/x/crypto/sha3
 # golang.org/x/mod v0.6.0-dev.0.20220106191415-9b9b3d81d5e3
@@ -443,6 +447,11 @@ google.golang.org/protobuf/types/known/timestamppb
 # gopkg.in/ini.v1 v1.66.4
 ## explicit
 gopkg.in/ini.v1
+# gopkg.in/square/go-jose.v2 v2.6.0
+## explicit
+gopkg.in/square/go-jose.v2
+gopkg.in/square/go-jose.v2/cipher
+gopkg.in/square/go-jose.v2/json
 # gopkg.in/yaml.v2 v2.4.0
 ## explicit; go 1.15
 gopkg.in/yaml.v2

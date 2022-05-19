@@ -5,6 +5,7 @@ go 1.17
 require (
 	github.com/allegro/bigcache/v3 v3.0.2
 	github.com/cactus/go-statsd-client/v5 v5.0.0
+	github.com/coreos/go-oidc/v3 v3.2.0
 	github.com/feditools/go-lib v0.11.2-0.20220518182639-365163222fec
 	github.com/feditools/login v0.0.0-20220518221728-cdf03f24ebdd
 	github.com/go-http-utils/etag v0.0.0-20161124023236-513ea8f21eb1
@@ -92,6 +93,7 @@ require (
 	google.golang.org/grpc v1.46.2 // indirect
 	google.golang.org/protobuf v1.28.0 // indirect
 	gopkg.in/ini.v1 v1.66.4 // indirect
+	gopkg.in/square/go-jose.v2 v2.6.0 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b // indirect
 	lukechampine.com/uint128 v1.2.0 // indirect
