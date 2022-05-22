@@ -5,6 +5,7 @@ import (
 	"github.com/feditools/democrablock/internal/http"
 	libhttp "github.com/feditools/go-lib/http"
 	"github.com/go-http-utils/etag"
+	"github.com/google/uuid"
 	nethttp "net/http"
 )
 
@@ -21,11 +22,21 @@ func (m *Module) Middleware(next nethttp.Handler) nethttp.Handler {
 
 			return
 		}
+		if us.IsNew {
+			l.Debugf("new session detected. adding id.")
+			us.Values[SessionKeyID] = uuid.New().String()
+			if err := us.Save(r, w); err != nil {
+				l.Errorf("saving session id: %s", err.Error())
+				m.returnErrorPage(w, r, nethttp.StatusInternalServerError, err.Error())
+
+				return
+			}
+		}
+
 		ctx := context.WithValue(r.Context(), http.ContextKeySession, us)
 
 		// Retrieve our account and type-assert it
-		val := us.Values[SessionKeyAccountID]
-		if accountID, ok := val.(int64); ok {
+		if accountID, ok := us.Values[SessionKeyAccountID].(int64); ok {
 			// read federated accounts
 			account, err := m.grpc.GetFediAccount(ctx, accountID)
 			if err != nil {
