@@ -3,7 +3,6 @@ package webapp
 import (
 	"context"
 	"encoding/gob"
-	"github.com/coreos/go-oidc/v3/oidc"
 	"github.com/feditools/democrablock/internal/config"
 	"github.com/feditools/democrablock/internal/db"
 	"github.com/feditools/democrablock/internal/grpc"
@@ -16,6 +15,7 @@ import (
 	"github.com/feditools/democrablock/internal/token"
 	"github.com/feditools/go-lib/language"
 	libtemplate "github.com/feditools/go-lib/template"
+	"github.com/feditools/login/pkg/oauth"
 	"github.com/gorilla/sessions"
 	"github.com/rbcervilla/redisstore/v8"
 	"github.com/spf13/viper"
@@ -31,17 +31,16 @@ import (
 
 // Module contains a webapp module for the web server. Implements web.Module.
 type Module struct {
-	db            db.DB
-	grpc          *grpc.Client
-	language      *language.Module
-	metrics       metrics.Collector
-	minify        *minify.M
-	oauth         oauth2.Config
-	oauthVerifier *oidc.IDTokenVerifier
-	srv           *http.Server
-	store         sessions.Store
-	templates     *htmltemplate.Template
-	tokenizer     *token.Tokenizer
+	db        db.DB
+	grpc      *grpc.Client
+	language  *language.Module
+	metrics   metrics.Collector
+	minify    *minify.M
+	oauth     *oauth.Client
+	srv       *http.Server
+	store     sessions.Store
+	templates *htmltemplate.Template
+	tokenizer *token.Tokenizer
 
 	logoSrcDark   string
 	logoSrcLight  string
@@ -59,30 +58,18 @@ const ThirtyDays = 30 * 24 * time.Hour
 func New(ctx context.Context, d db.DB, g *grpc.Client, r *redis.Client, lMod *language.Module, t *token.Tokenizer, mc metrics.Collector) (http.Module, error) {
 	l := logger.WithField("func", "New")
 
-	// Auth Config
-	provider, err := oidc.NewProvider(ctx, viper.GetString(config.Keys.OAuthServerURL))
+	oauthConfig := &oauth.Config{
+		CallbackURL:  viper.GetString(config.Keys.ServerExternalURL) + path.CallbackOauth,
+		ServerURL:    viper.GetString(config.Keys.OAuthServerURL),
+		ClientID:     viper.GetString(config.Keys.OAuthClientID),
+		ClientSecret: viper.GetString(config.Keys.OAuthClientSecret),
+	}
+	oauthClient, err := oauth.New(ctx, oauthConfig)
 	if err != nil {
-		l.Errorf("oidc: %s", err.Error())
+		l.Errorf("create oauth client: %s", err.Error())
 
 		return nil, err
 	}
-
-	oauth := oauth2.Config{
-		ClientID:     viper.GetString(config.Keys.OAuthClientID),
-		ClientSecret: viper.GetString(config.Keys.OAuthClientSecret),
-		Scopes:       []string{oidc.ScopeOpenID},
-		RedirectURL:  viper.GetString(config.Keys.ServerExternalURL) + path.CallbackOauth,
-		Endpoint: oauth2.Endpoint{
-			AuthURL:   provider.Endpoint().AuthURL,
-			TokenURL:  provider.Endpoint().TokenURL,
-			AuthStyle: provider.Endpoint().AuthStyle,
-		},
-	}
-
-	oidcConfig := &oidc.Config{
-		ClientID: viper.GetString(config.Keys.OAuthClientID),
-	}
-	verifier := provider.Verifier(oidcConfig)
 
 	// Fetch new store.
 	store, err := redisstore.NewRedisStore(ctx, r.RedisClient())
@@ -166,16 +153,15 @@ func New(ctx context.Context, d db.DB, g *grpc.Client, r *redis.Client, lMod *la
 	}
 
 	return &Module{
-		db:            d,
-		grpc:          g,
-		language:      lMod,
-		metrics:       mc,
-		minify:        m,
-		oauth:         oauth,
-		oauthVerifier: verifier,
-		store:         store,
-		templates:     tmpl,
-		tokenizer:     t,
+		db:        d,
+		grpc:      g,
+		language:  lMod,
+		metrics:   mc,
+		minify:    m,
+		oauth:     oauthClient,
+		store:     store,
+		templates: tmpl,
+		tokenizer: t,
 
 		logoSrcDark:   viper.GetString(config.Keys.WebappLogoSrcDark),
 		logoSrcLight:  viper.GetString(config.Keys.WebappLogoSrcLight),

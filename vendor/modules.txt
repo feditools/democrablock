@@ -24,9 +24,10 @@ github.com/feditools/go-lib/http
 github.com/feditools/go-lib/language
 github.com/feditools/go-lib/log
 github.com/feditools/go-lib/template
-# github.com/feditools/login v0.0.0-20220518221728-cdf03f24ebdd
+# github.com/feditools/login v0.0.0-20220523005024-4a05c27af661
 ## explicit; go 1.17
 github.com/feditools/login/pkg/grpc
+github.com/feditools/login/pkg/oauth
 github.com/feditools/login/pkg/proto
 # github.com/felixge/httpsnoop v1.0.2
 ## explicit; go 1.13
