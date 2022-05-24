@@ -24,7 +24,7 @@ github.com/feditools/go-lib/http
 github.com/feditools/go-lib/language
 github.com/feditools/go-lib/log
 github.com/feditools/go-lib/template
-# github.com/feditools/login v0.0.0-20220523005024-4a05c27af661
+# github.com/feditools/login v0.0.0-20220524060751-a527878c7ba4
 ## explicit; go 1.17
 github.com/feditools/login/pkg/grpc
 github.com/feditools/login/pkg/oauth

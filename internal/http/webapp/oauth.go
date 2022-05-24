@@ -16,15 +16,8 @@ func (m *Module) CallbackOauthGetHandler(w nethttp.ResponseWriter, r *nethttp.Re
 
 	// get session
 	us := r.Context().Value(http.ContextKeySession).(*sessions.Session) //nolint
-	sessionID, ok := us.Values[SessionKeyID].(string)
-	if !ok {
-		l.Warn("missing session id")
-		m.returnErrorPage(w, r, nethttp.StatusInternalServerError, "missing session id")
 
-		return
-	}
-
-	token, err := m.oauth.HandleCallback(w, r, us, sessionID)
+	token, idToken, err := m.oauth.HandleCallback(w, r, us)
 	if err != nil {
 		if oerr, ok := err.(*oauth.Error); ok {
 			m.returnErrorPage(w, r, oerr.Code, oerr.Message)
@@ -40,6 +33,7 @@ func (m *Module) CallbackOauthGetHandler(w nethttp.ResponseWriter, r *nethttp.Re
 	l.Debugf("login success: %+v", token)
 
 	us.Values[SessionKeyOAuthToken] = token
+	us.Values[SessionKeyOAuthJWT] = idToken
 	err = us.Save(r, w)
 	if err != nil {
 		l.Errorf("session oauth token: %s", err.Error())

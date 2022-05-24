@@ -41,7 +41,7 @@ func New(ctx context.Context) (*Client, error) {
 		return nil, err
 	}
 	if loginResp.Response != "pong" {
-		return nil, fmt.Errorf("login returns invalid response to ping: %s", loginResp.Response)
+		return nil, fmt.Errorf("ping: %s", loginResp.Response)
 	}
 
 	// make caches

@@ -3,6 +3,7 @@ package webapp
 import (
 	"context"
 	"encoding/gob"
+	"github.com/coreos/go-oidc/v3/oidc"
 	"github.com/feditools/democrablock/internal/config"
 	"github.com/feditools/democrablock/internal/db"
 	"github.com/feditools/democrablock/internal/grpc"
@@ -95,6 +96,7 @@ func New(ctx context.Context, d db.DB, g *grpc.Client, r *redis.Client, lMod *la
 	// Register models for GOB
 	gob.Register(SessionKey(0))
 	gob.Register(oauth2.Token{})
+	gob.Register(oidc.IDToken{})
 
 	// minify
 	var m *minify.M

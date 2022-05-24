@@ -2,11 +2,14 @@ package webapp
 
 import (
 	"context"
+	"fmt"
+	"github.com/coreos/go-oidc/v3/oidc"
 	"github.com/feditools/democrablock/internal/http"
 	libhttp "github.com/feditools/go-lib/http"
 	"github.com/go-http-utils/etag"
-	"github.com/google/uuid"
+	"golang.org/x/oauth2"
 	nethttp "net/http"
+	"strconv"
 )
 
 // Middleware runs on every http request.
@@ -22,23 +25,47 @@ func (m *Module) Middleware(next nethttp.Handler) nethttp.Handler {
 
 			return
 		}
-		if us.IsNew {
-			l.Debugf("new session detected. adding id.")
-			us.Values[SessionKeyID] = uuid.New().String()
-			if err := us.Save(r, w); err != nil {
-				l.Errorf("saving session id: %s", err.Error())
+
+		ctx := context.WithValue(r.Context(), http.ContextKeySession, us)
+
+		// retrieve our token
+		if token, ok := us.Values[SessionKeyOAuthToken].(oauth2.Token); ok {
+			l.Debugf("token: %+v", token)
+			newToken, newIDToken, refreshed, err := m.oauth.TokenSource(r.Context(), us, &token)
+			if err != nil {
+				l.Errorf("token source: %s", err.Error())
 				m.returnErrorPage(w, r, nethttp.StatusInternalServerError, err.Error())
 
 				return
 			}
+			if refreshed {
+				us.Values[SessionKeyOAuthToken] = newToken
+				us.Values[SessionKeyOAuthJWT] = newIDToken
+
+				if err := us.Save(r, w); err != nil {
+					l.Errorf("save session: %s", err.Error())
+					m.returnErrorPage(w, r, nethttp.StatusInternalServerError, fmt.Sprintf("save session: %s", err.Error()))
+
+					return
+				}
+			}
 		}
 
-		ctx := context.WithValue(r.Context(), http.ContextKeySession, us)
-
 		// Retrieve our account and type-assert it
-		if accountID, ok := us.Values[SessionKeyAccountID].(int64); ok {
+		if accountID, ok := us.Values[SessionKeyOAuthJWT].(oidc.IDToken); ok {
+			l.Debugf("accountID: %+v", accountID)
+
+			// parse subject integer
+			accountIDInt, err := strconv.ParseInt(accountID.Subject, 10, 64)
+			if err != nil {
+				l.Errorf("parsing int: %s", err.Error())
+				m.returnErrorPage(w, r, nethttp.StatusInternalServerError, err.Error())
+
+				return
+			}
+
 			// read federated accounts
-			account, err := m.grpc.GetFediAccount(ctx, accountID)
+			account, err := m.grpc.GetFediAccount(ctx, accountIDInt)
 			if err != nil {
 				l.Errorf("db read: %s", err.Error())
 				m.returnErrorPage(w, r, nethttp.StatusInternalServerError, err.Error())
