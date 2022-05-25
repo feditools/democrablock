@@ -17,16 +17,31 @@ func (m *Module) Middleware(next nethttp.Handler) nethttp.Handler {
 	return etag.Handler(nethttp.HandlerFunc(func(w nethttp.ResponseWriter, r *nethttp.Request) {
 		l := logger.WithField("func", "Middleware")
 
-		// Init Session
-		us, err := m.store.Get(r, "democrablock")
+		// create localizer
+		lang := r.FormValue("lang")
+		accept := r.Header.Get("Accept-Language")
+		localizer, err := m.language.NewLocalizer(lang, accept)
 		if err != nil {
-			l.Errorf("get session: %s", err.Error())
+			l.Errorf("could get localizer: %s", err.Error())
 			m.returnErrorPage(w, r, nethttp.StatusInternalServerError, err.Error())
 
 			return
 		}
+		ctx := context.WithValue(r.Context(), http.ContextKeyLocalizer, localizer)
 
-		ctx := context.WithValue(r.Context(), http.ContextKeySession, us)
+		// Init Session
+		us, err := m.store.Get(r, "democrablock")
+		if err != nil {
+			l.Errorf("get session: %s", err.Error())
+			m.returnErrorPage(w, r.WithContext(ctx), nethttp.StatusInternalServerError, err.Error())
+
+			return
+		}
+
+		ctx = context.WithValue(ctx, http.ContextKeySession, us)
+
+		// set request language
+		ctx = context.WithValue(ctx, http.ContextKeyLanguage, libhttp.GetPageLang(lang, accept, m.language.Language().String()))
 
 		// retrieve our token
 		if token, ok := us.Values[SessionKeyOAuthToken].(oauth2.Token); ok {
@@ -34,7 +49,7 @@ func (m *Module) Middleware(next nethttp.Handler) nethttp.Handler {
 			newToken, newIDToken, refreshed, err := m.oauth.TokenSource(r.Context(), us, &token)
 			if err != nil {
 				l.Errorf("token source: %s", err.Error())
-				m.returnErrorPage(w, r, nethttp.StatusInternalServerError, err.Error())
+				m.returnErrorPage(w, r.WithContext(ctx), nethttp.StatusInternalServerError, err.Error())
 
 				return
 			}
@@ -44,7 +59,7 @@ func (m *Module) Middleware(next nethttp.Handler) nethttp.Handler {
 
 				if err := us.Save(r, w); err != nil {
 					l.Errorf("save session: %s", err.Error())
-					m.returnErrorPage(w, r, nethttp.StatusInternalServerError, fmt.Sprintf("save session: %s", err.Error()))
+					m.returnErrorPage(w, r.WithContext(ctx), nethttp.StatusInternalServerError, fmt.Sprintf("save session: %s", err.Error()))
 
 					return
 				}
@@ -59,7 +74,7 @@ func (m *Module) Middleware(next nethttp.Handler) nethttp.Handler {
 			accountIDInt, err := strconv.ParseInt(accountID.Subject, 10, 64)
 			if err != nil {
 				l.Errorf("parsing int: %s", err.Error())
-				m.returnErrorPage(w, r, nethttp.StatusInternalServerError, err.Error())
+				m.returnErrorPage(w, r.WithContext(ctx), nethttp.StatusInternalServerError, err.Error())
 
 				return
 			}
@@ -68,7 +83,7 @@ func (m *Module) Middleware(next nethttp.Handler) nethttp.Handler {
 			account, err := m.grpc.GetFediAccount(ctx, accountIDInt)
 			if err != nil {
 				l.Errorf("db read: %s", err.Error())
-				m.returnErrorPage(w, r, nethttp.StatusInternalServerError, err.Error())
+				m.returnErrorPage(w, r.WithContext(ctx), nethttp.StatusInternalServerError, err.Error())
 
 				return
 			}
@@ -78,7 +93,7 @@ func (m *Module) Middleware(next nethttp.Handler) nethttp.Handler {
 				instance, err := m.grpc.GetFediInstance(ctx, account.InstanceID)
 				if err != nil {
 					l.Errorf("db read: %s", err.Error())
-					m.returnErrorPage(w, r, nethttp.StatusInternalServerError, err.Error())
+					m.returnErrorPage(w, r.WithContext(ctx), nethttp.StatusInternalServerError, err.Error())
 
 					return
 				}
@@ -87,21 +102,6 @@ func (m *Module) Middleware(next nethttp.Handler) nethttp.Handler {
 				ctx = context.WithValue(ctx, http.ContextKeyAccount, account)
 			}
 		}
-
-		// create localizer
-		lang := r.FormValue("lang")
-		accept := r.Header.Get("Accept-Language")
-		localizer, err := m.language.NewLocalizer(lang, accept)
-		if err != nil {
-			l.Errorf("could get localizer: %s", err.Error())
-			m.returnErrorPage(w, r, nethttp.StatusInternalServerError, err.Error())
-
-			return
-		}
-		ctx = context.WithValue(ctx, http.ContextKeyLocalizer, localizer)
-
-		// set request language
-		ctx = context.WithValue(ctx, http.ContextKeyLanguage, libhttp.GetPageLang(lang, accept, m.language.Language().String()))
 
 		// Do Request
 		next.ServeHTTP(w, r.WithContext(ctx))
