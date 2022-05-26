@@ -46,7 +46,7 @@ func (m *Module) displayLoginPage(w nethttp.ResponseWriter, r *nethttp.Request, 
 	l := logger.WithField("func", "displayLoginPage")
 
 	// get localizer
-	localizer := r.Context().Value(http.ContextKeyLocalizer).(*language.Localizer)
+	localizer := r.Context().Value(http.ContextKeyLocalizer).(*language.Localizer) // nolint
 
 	// Init template variables
 	tmplVars := &template.Login{}

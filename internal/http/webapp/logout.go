@@ -10,7 +10,7 @@ import (
 // LogoutGetHandler logs a user out.
 func (m *Module) LogoutGetHandler(w nethttp.ResponseWriter, r *nethttp.Request) {
 	// Init Session
-	us := r.Context().Value(http.ContextKeySession).(*sessions.Session)
+	us := r.Context().Value(http.ContextKeySession).(*sessions.Session) // nolint
 
 	// Set account to nil
 	us.Values[http.SessionKeyAccountID] = nil

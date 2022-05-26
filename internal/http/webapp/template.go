@@ -16,11 +16,11 @@ func (m *Module) initTemplate(_ nethttp.ResponseWriter, r *nethttp.Request, tmpl
 	// l := logger.WithField("func", "initTemplate")
 
 	// set text handler
-	localizer := r.Context().Value(http.ContextKeyLocalizer).(*language.Localizer)
+	localizer := r.Context().Value(http.ContextKeyLocalizer).(*language.Localizer) // nolint
 	tmpl.SetLocalizer(localizer)
 
 	// set language
-	lang := r.Context().Value(http.ContextKeyLanguage).(string)
+	lang := r.Context().Value(http.ContextKeyLanguage).(string) // nolint
 	tmpl.SetLanguage(lang)
 
 	// set logo image src
@@ -37,7 +37,7 @@ func (m *Module) initTemplate(_ nethttp.ResponseWriter, r *nethttp.Request, tmpl
 	}
 
 	if r.Context().Value(http.ContextKeyAccount) != nil {
-		account := r.Context().Value(http.ContextKeyAccount).(*models.FediAccount)
+		account := r.Context().Value(http.ContextKeyAccount).(*models.FediAccount) // nolint
 		tmpl.SetAccount(account)
 	}
 

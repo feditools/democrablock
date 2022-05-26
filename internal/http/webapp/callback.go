@@ -76,6 +76,13 @@ func (m *Module) CallbackOauthGetHandler(w nethttp.ResponseWriter, r *nethttp.Re
 			return
 		}
 		account, ok := accountI.(*models.FediAccount)
+		if !ok {
+			msg := "can't cast account to FediAccount"
+			l.Error(msg)
+			m.returnErrorPage(w, r, nethttp.StatusInternalServerError, msg)
+
+			return
+		}
 
 		// increment login
 		err = m.db.IncFediAccountLoginCount(r.Context(), account)
@@ -87,7 +94,7 @@ func (m *Module) CallbackOauthGetHandler(w nethttp.ResponseWriter, r *nethttp.Re
 		}
 
 		// init session
-		us := r.Context().Value(http.ContextKeySession).(*sessions.Session)
+		us := r.Context().Value(http.ContextKeySession).(*sessions.Session) // nolint
 		us.Values[http.SessionKeyAccountID] = account.ID
 		err = us.Save(r, w)
 		if err != nil {

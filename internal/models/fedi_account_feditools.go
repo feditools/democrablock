@@ -51,6 +51,7 @@ func (f *FediAccount) SetInstance(instanceI fedihelper.Instance) {
 	instance, ok := instanceI.(*FediInstance)
 	if !ok {
 		l.Warnf("instance not type *FediInstance")
+
 		return
 	}
 
