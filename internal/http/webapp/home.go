@@ -17,13 +17,7 @@ func (m *Module) HomeGetHandler(w nethttp.ResponseWriter, r *nethttp.Request) {
 
 	// Init template variables
 	tmplVars := &template.Home{}
-	err := m.initTemplate(w, r, tmplVars)
-	if err != nil {
-		nethttp.Error(w, err.Error(), nethttp.StatusInternalServerError)
-
-		return
-	}
-	err = m.initTemplatePublic(w, r, tmplVars)
+	err := m.initTemplatePublic(w, r, tmplVars)
 	if err != nil {
 		nethttp.Error(w, err.Error(), nethttp.StatusInternalServerError)
 

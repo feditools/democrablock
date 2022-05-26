@@ -2,7 +2,6 @@ package bun
 
 import (
 	"context"
-	"database/sql"
 	"errors"
 
 	"github.com/feditools/democrablock/internal/db"
@@ -49,13 +48,17 @@ func (c *Client) ReadFediInstance(ctx context.Context, id int64) (*models.FediIn
 	fediInstance := &models.FediInstance{}
 
 	err := c.newFediInstanceQ(fediInstance).Where("id = ?", id).Scan(ctx)
-	if errors.Is(err, sql.ErrNoRows) {
-		return nil, nil
-	}
 	if err != nil {
-		go metric.Done(true)
+		dbErr := c.bun.ProcessError(err)
 
-		return nil, c.bun.ProcessError(err)
+		if errors.Is(dbErr, db.ErrNoEntries) {
+			// report no entries as a non error
+			go metric.Done(false)
+		} else {
+			go metric.Done(true)
+		}
+
+		return nil, dbErr
 	}
 
 	go metric.Done(false)
@@ -70,13 +73,17 @@ func (c *Client) ReadFediInstanceByDomain(ctx context.Context, domain string) (*
 	fediInstance := &models.FediInstance{}
 
 	err := c.newFediInstanceQ(fediInstance).Where("lower(domain) = lower(?)", domain).Scan(ctx)
-	if errors.Is(err, sql.ErrNoRows) {
-		return nil, nil
-	}
 	if err != nil {
-		go metric.Done(true)
+		dbErr := c.bun.ProcessError(err)
 
-		return nil, c.bun.ProcessError(err)
+		if errors.Is(dbErr, db.ErrNoEntries) {
+			// report no entries as a non error
+			go metric.Done(false)
+		} else {
+			go metric.Done(true)
+		}
+
+		return nil, dbErr
 	}
 
 	go metric.Done(false)

@@ -2,6 +2,9 @@ package fedi
 
 import (
 	"context"
+	"errors"
+
+	"github.com/feditools/democrablock/internal/db"
 
 	"github.com/feditools/democrablock/internal/models"
 	"github.com/feditools/go-lib/fedihelper"
@@ -25,17 +28,35 @@ func (m *Module) CreateInstanceHandler(ctx context.Context, instanceI fedihelper
 	return m.db.CreateFediInstance(ctx, instance)
 }
 
-func (m *Module) GetAccountHandler(ctx context.Context, instanceI fedihelper.Instance, username string) (account fedihelper.Account, err error) {
+func (m *Module) GetAccountHandler(ctx context.Context, instanceI fedihelper.Instance, username string) (fedihelper.Account, bool, error) {
 	instance, ok := instanceI.(*models.FediInstance)
 	if !ok {
-		return nil, ErrCantCast
+		return nil, false, ErrCantCast
 	}
 
-	return m.db.ReadFediAccountByUsername(ctx, instance.ID, username)
+	account, err := m.db.ReadFediAccountByUsername(ctx, instance.ID, username)
+	if err != nil {
+		if errors.Is(err, db.ErrNoEntries) {
+			return nil, false, nil
+		}
+
+		return nil, false, err
+	}
+
+	return account, true, nil
 }
 
-func (m *Module) GetInstanceHandler(ctx context.Context, domain string) (instance fedihelper.Instance, err error) {
-	return m.db.ReadFediInstanceByDomain(ctx, domain)
+func (m *Module) GetInstanceHandler(ctx context.Context, domain string) (fedihelper.Instance, bool, error) {
+	instance, err := m.db.ReadFediInstanceByDomain(ctx, domain)
+	if err != nil {
+		if errors.Is(err, db.ErrNoEntries) {
+			return nil, false, nil
+		}
+
+		return nil, false, err
+	}
+
+	return instance, true, nil
 }
 
 func (m *Module) GetTokenHandler(_ context.Context, o interface{}) (token string) {

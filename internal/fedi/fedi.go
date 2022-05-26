@@ -31,7 +31,7 @@ func New(d db.DB, h fedihelper.HTTP, k fedihelper.KV, t *token.Tokenizer) (*Modu
 		tokz: t,
 	}
 
-	fedi, err := fedihelper.New(h, appName, fediHelpers)
+	fedi, err := fedihelper.New(h, k, appName, fediHelpers)
 	if err != nil {
 		return nil, err
 	}

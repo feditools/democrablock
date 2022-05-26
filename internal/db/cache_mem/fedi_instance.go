@@ -61,13 +61,17 @@ func (c *CacheMem) ReadFediInstance(ctx context.Context, id int64) (*models.Fedi
 	}
 	instance, err := c.db.ReadFediInstance(ctx, id)
 	if err != nil {
-		go metric.Done(false, true)
+		if errors.Is(err, db.ErrNoEntries) {
+			// report no entries as a non error
+			go metric.Done(false, false)
+		} else {
+			go metric.Done(false, true)
+		}
 
 		return nil, err
 	}
-	if instance != nil {
-		c.setFediInstance(ctx, instance)
-	}
+
+	c.setFediInstance(ctx, instance)
 	go metric.Done(false, false)
 
 	return instance, nil
@@ -85,13 +89,17 @@ func (c *CacheMem) ReadFediInstanceByDomain(ctx context.Context, domain string) 
 	}
 	instance, err := c.db.ReadFediInstanceByDomain(ctx, domain)
 	if err != nil {
-		go metric.Done(false, true)
+		if errors.Is(err, db.ErrNoEntries) {
+			// report no entries as a non error
+			go metric.Done(false, false)
+		} else {
+			go metric.Done(false, true)
+		}
 
 		return nil, err
 	}
-	if instance != nil {
-		c.setFediInstance(ctx, instance)
-	}
+
+	c.setFediInstance(ctx, instance)
 	go metric.Done(false, false)
 
 	return instance, nil

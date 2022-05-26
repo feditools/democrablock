@@ -96,13 +96,17 @@ func (c *Client) ReadFediAccount(ctx context.Context, id int64) (*models.FediAcc
 
 	fediAccount := new(models.FediAccount)
 	err := c.newFediAccountQ(fediAccount).Where("id = ?", id).Scan(ctx)
-	if errors.Is(err, sql.ErrNoRows) {
-		return nil, nil
-	}
 	if err != nil {
-		go metric.Done(true)
+		dbErr := c.bun.ProcessError(err)
 
-		return nil, c.bun.ProcessError(err)
+		if errors.Is(dbErr, db.ErrNoEntries) {
+			// report no entries as a non error
+			go metric.Done(false)
+		} else {
+			go metric.Done(true)
+		}
+
+		return nil, dbErr
 	}
 
 	go metric.Done(false)
@@ -122,13 +126,17 @@ func (c *Client) ReadFediAccountByUsername(ctx context.Context, instanceID int64
 		Where("fedi_instances.id = ?", instanceID).
 		Where("lower(fedi_account.username) = lower(?)", username).
 		Scan(ctx)
-	if errors.Is(err, sql.ErrNoRows) {
-		return nil, nil
-	}
 	if err != nil {
-		go metric.Done(true)
+		dbErr := c.bun.ProcessError(err)
 
-		return nil, c.bun.ProcessError(err)
+		if errors.Is(dbErr, db.ErrNoEntries) {
+			// report no entries as a non error
+			go metric.Done(false)
+		} else {
+			go metric.Done(true)
+		}
+
+		return nil, dbErr
 	}
 
 	go metric.Done(false)

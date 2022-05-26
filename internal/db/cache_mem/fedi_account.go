@@ -96,13 +96,17 @@ func (c *CacheMem) ReadFediAccount(ctx context.Context, id int64) (*models.FediA
 	}
 	account, err := c.db.ReadFediAccount(ctx, id)
 	if err != nil {
-		go metric.Done(false, true)
+		if errors.Is(err, db.ErrNoEntries) {
+			// report no entries as a non error
+			go metric.Done(false, false)
+		} else {
+			go metric.Done(false, true)
+		}
 
 		return nil, err
 	}
-	if account != nil {
-		c.setFediAccount(ctx, account)
-	}
+
+	c.setFediAccount(ctx, account)
 	go metric.Done(false, false)
 
 	return account, nil
@@ -120,13 +124,17 @@ func (c *CacheMem) ReadFediAccountByUsername(ctx context.Context, instanceID int
 	}
 	account, err := c.db.ReadFediAccountByUsername(ctx, instanceID, username)
 	if err != nil {
-		go metric.Done(false, true)
+		if errors.Is(err, db.ErrNoEntries) {
+			// report no entries as a non error
+			go metric.Done(false, false)
+		} else {
+			go metric.Done(false, true)
+		}
 
 		return nil, err
 	}
-	if account != nil {
-		c.setFediAccount(ctx, account)
-	}
+
+	c.setFediAccount(ctx, account)
 	go metric.Done(false, false)
 
 	return account, nil

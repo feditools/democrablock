@@ -9,9 +9,10 @@ import (
 const nodeInfoCacheExp = 60 * time.Minute
 
 // New creates a new fedi module.
-func New(h HTTP, clientName string, helpers []Helper) (*FediHelper, error) {
+func New(h HTTP, k KV, clientName string, helpers []Helper) (*FediHelper, error) {
 	newFedi := &FediHelper{
 		http: h,
+		kv:   k,
 
 		helpers: map[Software]Helper{},
 
