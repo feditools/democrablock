@@ -1,11 +1,12 @@
 package webapp
 
 import (
+	"io/fs"
+	nethttp "net/http"
+
 	"github.com/feditools/democrablock/internal/http"
 	"github.com/feditools/democrablock/internal/path"
 	"github.com/feditools/democrablock/web"
-	"io/fs"
-	nethttp "net/http"
 )
 
 // Route attaches routes to the web server.

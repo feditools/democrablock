@@ -2,8 +2,9 @@ package cachemem
 
 import (
 	"context"
-	"github.com/feditools/go-lib/metrics"
 	"time"
+
+	"github.com/feditools/go-lib/metrics"
 
 	bigcache "github.com/allegro/bigcache/v3"
 	"github.com/feditools/democrablock/internal/db"

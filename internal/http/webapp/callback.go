@@ -2,6 +2,8 @@ package webapp
 
 import (
 	"fmt"
+	nethttp "net/http"
+
 	"github.com/feditools/democrablock/internal/http"
 	models "github.com/feditools/democrablock/internal/models"
 	"github.com/feditools/democrablock/internal/path"
@@ -9,7 +11,6 @@ import (
 	"github.com/feditools/go-lib/fedihelper"
 	"github.com/gorilla/mux"
 	"github.com/gorilla/sessions"
-	nethttp "net/http"
 )
 
 // CallbackOauthGetHandler handles an oauth callback.

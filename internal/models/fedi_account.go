@@ -2,8 +2,9 @@ package models
 
 import (
 	"context"
-	"github.com/uptrace/bun"
 	"time"
+
+	"github.com/uptrace/bun"
 )
 
 // FediAccount represents a federated social account.

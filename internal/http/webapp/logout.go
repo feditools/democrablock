@@ -1,10 +1,11 @@
 package webapp
 
 import (
+	nethttp "net/http"
+
 	"github.com/feditools/democrablock/internal/http"
 	"github.com/feditools/democrablock/internal/path"
 	"github.com/gorilla/sessions"
-	nethttp "net/http"
 )
 
 // LogoutGetHandler logs a user out.

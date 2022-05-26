@@ -1,13 +1,14 @@
 package webapp
 
 import (
+	nethttp "net/http"
+	"strings"
+
 	"github.com/feditools/democrablock/internal/http"
 	"github.com/feditools/democrablock/internal/http/template"
 	"github.com/feditools/democrablock/internal/path"
 	"github.com/feditools/go-lib/language"
 	libtemplate "github.com/feditools/go-lib/template"
-	nethttp "net/http"
-	"strings"
 )
 
 // LoginGetHandler serves the login page.

@@ -5,11 +5,12 @@ import (
 	"crypto/sha256"
 	"encoding/base64"
 	"fmt"
+	nethttp "net/http"
+
 	"github.com/feditools/democrablock/internal/http"
 	"github.com/feditools/democrablock/internal/http/template"
 	"github.com/feditools/democrablock/internal/models"
 	"github.com/feditools/go-lib/language"
-	nethttp "net/http"
 )
 
 func (m *Module) initTemplate(_ nethttp.ResponseWriter, r *nethttp.Request, tmpl template.InitTemplate) error {

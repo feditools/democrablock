@@ -3,13 +3,14 @@ package http
 import (
 	"context"
 	"fmt"
+	"net/http"
+	"time"
+
 	"github.com/feditools/democrablock/internal/config"
 	"github.com/feditools/go-lib/metrics"
 	"github.com/gorilla/mux"
 	"github.com/spf13/viper"
 	"github.com/tyrm/go-util/mimetype"
-	"net/http"
-	"time"
 )
 
 const httpServerTimeout = 60 * time.Second

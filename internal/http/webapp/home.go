@@ -1,10 +1,11 @@
 package webapp
 
 import (
+	nethttp "net/http"
+
 	"github.com/feditools/democrablock/internal/http"
 	"github.com/feditools/democrablock/internal/http/template"
 	"github.com/feditools/go-lib/language"
-	nethttp "net/http"
 )
 
 // HomeGetHandler serves the home page.

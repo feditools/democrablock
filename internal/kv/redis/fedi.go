@@ -2,8 +2,9 @@ package redis
 
 import (
 	"context"
-	"github.com/feditools/democrablock/internal/kv"
 	"time"
+
+	"github.com/feditools/democrablock/internal/kv"
 )
 
 // fedi node info

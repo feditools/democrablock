@@ -2,11 +2,12 @@ package webapp
 
 import (
 	"fmt"
+	"net/http"
+	"strings"
+
 	"github.com/feditools/democrablock/internal/http/template"
 	"github.com/feditools/democrablock/internal/path"
 	libtemplate "github.com/feditools/go-lib/template"
-	"net/http"
-	"strings"
 )
 
 func (m *Module) returnErrorPage(w http.ResponseWriter, r *http.Request, code int, errStr string) {

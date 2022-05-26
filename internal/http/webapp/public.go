@@ -1,11 +1,12 @@
 package webapp
 
 import (
+	nethttp "net/http"
+
 	"github.com/feditools/democrablock/internal/http"
 	"github.com/feditools/democrablock/internal/http/template"
 	"github.com/feditools/democrablock/internal/path"
 	"github.com/feditools/go-lib/language"
-	nethttp "net/http"
 )
 
 func makePublicNavbar(r *nethttp.Request) template.Navbar {

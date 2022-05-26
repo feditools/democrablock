@@ -1,9 +1,10 @@
 package models
 
 import (
+	"time"
+
 	"github.com/feditools/go-lib/fedihelper"
 	"github.com/sirupsen/logrus"
-	"time"
 )
 
 // GetActorURI returns the account's actor uri.

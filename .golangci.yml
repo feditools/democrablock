@@ -331,7 +331,6 @@ linters:
     - goconst
     - goerr113
     - gofumpt
-    - goimports
     - golint # deprecated
     - gomnd
     - gochecknoinits

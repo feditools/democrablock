@@ -2,6 +2,7 @@ package database
 
 import (
 	"context"
+
 	"github.com/feditools/go-lib/metrics/statsd"
 
 	"github.com/feditools/democrablock/cmd/democrablock/action"

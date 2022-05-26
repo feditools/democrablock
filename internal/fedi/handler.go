@@ -2,6 +2,7 @@ package fedi
 
 import (
 	"context"
+
 	"github.com/feditools/democrablock/internal/models"
 	"github.com/feditools/go-lib/fedihelper"
 )

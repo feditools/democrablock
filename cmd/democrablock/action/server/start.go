@@ -3,6 +3,10 @@ package server
 import (
 	"context"
 	"fmt"
+	"os"
+	"os/signal"
+	"syscall"
+
 	"github.com/feditools/democrablock/internal/config"
 	"github.com/feditools/democrablock/internal/fedi"
 	"github.com/feditools/democrablock/internal/http"
@@ -10,9 +14,6 @@ import (
 	"github.com/feditools/democrablock/internal/token"
 	"github.com/feditools/go-lib/language"
 	"github.com/spf13/viper"
-	"os"
-	"os/signal"
-	"syscall"
 
 	"github.com/feditools/democrablock/cmd/democrablock/action"
 	"github.com/feditools/democrablock/internal/db/bun"

@@ -2,13 +2,14 @@ package fedi
 
 import (
 	"context"
+	"net/url"
+
 	"github.com/feditools/democrablock/internal/config"
 	"github.com/feditools/democrablock/internal/db"
 	"github.com/feditools/democrablock/internal/token"
 	"github.com/feditools/go-lib/fedihelper"
 	"github.com/feditools/go-lib/fedihelper/mastodon"
 	"github.com/spf13/viper"
-	"net/url"
 )
 
 func New(d db.DB, h fedihelper.HTTP, k fedihelper.KV, t *token.Tokenizer) (*Module, error) {

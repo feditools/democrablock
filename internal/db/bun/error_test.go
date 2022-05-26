@@ -3,8 +3,9 @@ package bun
 import (
 	"errors"
 	"fmt"
-	"github.com/jackc/pgconn"
 	"testing"
+
+	"github.com/jackc/pgconn"
 )
 
 func TestProcessPostgresError(t *testing.T) {

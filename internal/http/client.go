@@ -3,10 +3,11 @@ package http
 import (
 	"context"
 	"fmt"
-	"github.com/feditools/democrablock/internal/config"
-	"github.com/spf13/viper"
 	"io"
 	"net/http"
+
+	"github.com/feditools/democrablock/internal/config"
+	"github.com/spf13/viper"
 )
 
 func NewClient(_ context.Context) (*Client, error) {

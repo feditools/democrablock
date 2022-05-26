@@ -2,10 +2,11 @@ package webapp
 
 import (
 	"context"
+	nethttp "net/http"
+
 	"github.com/feditools/democrablock/internal/http"
 	libhttp "github.com/feditools/go-lib/http"
 	"github.com/go-http-utils/etag"
-	nethttp "net/http"
 )
 
 // Middleware runs on every http request.

@@ -1,8 +1,9 @@
 package template
 
 import (
-	libtemplate "github.com/feditools/go-lib/template"
 	"regexp"
+
+	libtemplate "github.com/feditools/go-lib/template"
 )
 
 // Navbar is a navbar that can be added to a page.

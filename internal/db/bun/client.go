@@ -8,10 +8,11 @@ import (
 	"encoding/pem"
 	"errors"
 	"fmt"
-	"github.com/feditools/go-lib/metrics"
 	"os"
 	"runtime"
 	"strings"
+
+	"github.com/feditools/go-lib/metrics"
 
 	"github.com/feditools/democrablock/internal/config"
 	"github.com/feditools/democrablock/internal/db"

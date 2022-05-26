@@ -1,10 +1,11 @@
 package http
 
 import (
+	"net/http"
+
 	"github.com/go-http-utils/etag"
 	"github.com/gorilla/handlers"
 	"github.com/tyrm/go-util/middleware"
-	"net/http"
 )
 
 // MiddlewareMetrics sends http request metrics.

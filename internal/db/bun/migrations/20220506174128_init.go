@@ -2,6 +2,7 @@ package migrations
 
 import (
 	"context"
+
 	models "github.com/feditools/democrablock/internal/db/bun/migrations/20220506174128_init"
 
 	"github.com/uptrace/bun"

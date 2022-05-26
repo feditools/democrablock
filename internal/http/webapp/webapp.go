@@ -3,6 +3,12 @@ package webapp
 import (
 	"context"
 	"encoding/gob"
+	htmltemplate "html/template"
+	"net/url"
+	"strings"
+	"sync"
+	"time"
+
 	"github.com/feditools/democrablock/internal/config"
 	"github.com/feditools/democrablock/internal/db"
 	"github.com/feditools/democrablock/internal/fedi"
@@ -20,11 +26,6 @@ import (
 	"github.com/spf13/viper"
 	"github.com/tdewolff/minify/v2"
 	"github.com/tdewolff/minify/v2/html"
-	htmltemplate "html/template"
-	"net/url"
-	"strings"
-	"sync"
-	"time"
 )
 
 const SessionMaxAge = 30 * 24 * time.Hour // 30 days
