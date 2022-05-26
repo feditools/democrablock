@@ -29,10 +29,10 @@ type Values struct {
 	RedisPassword string
 
 	// server
-	ServerExternalHostname string
-	ServerHTTPBind         string
-	ServerMinifyHTML       bool
-	ServerRoles            []string
+	ServerExternalURL string
+	ServerHTTPBind    string
+	ServerMinifyHTML  bool
+	ServerRoles       []string
 
 	// webapp
 	WebappBootstrapCSSURI         string
@@ -75,9 +75,9 @@ var Defaults = Values{
 	RedisPassword: "",
 
 	// server
-	ServerExternalHostname: "localhost",
-	ServerHTTPBind:         ":5000",
-	ServerMinifyHTML:       true,
+	ServerExternalURL: "http://localhost:5000",
+	ServerHTTPBind:    ":5000",
+	ServerMinifyHTML:  true,
 	ServerRoles: []string{
 		ServerRoleWebapp,
 	},

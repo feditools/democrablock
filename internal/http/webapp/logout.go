@@ -22,5 +22,5 @@ func (m *Module) LogoutGetHandler(w nethttp.ResponseWriter, r *nethttp.Request) 
 		return
 	}
 
-	nethttp.Redirect(w, r, path.Login, nethttp.StatusFound)
+	nethttp.Redirect(w, r, path.Home, nethttp.StatusFound)
 }

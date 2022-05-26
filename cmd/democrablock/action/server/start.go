@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/feditools/democrablock/internal/config"
+	"github.com/feditools/democrablock/internal/fedi"
 	"github.com/feditools/democrablock/internal/http"
 	"github.com/feditools/democrablock/internal/http/webapp"
 	"github.com/feditools/democrablock/internal/token"
@@ -87,6 +88,14 @@ var Start action.Action = func(ctx context.Context) error {
 		return err
 	}
 
+	// create fedi module
+	fediMod, err := fedi.New(cachedDBClient, nil, redisClient, tokz)
+	if err != nil {
+		l.Errorf("fedi: %s", err.Error())
+
+		return err
+	}
+
 	// create http server
 	l.Debug("creating http server")
 	httpServer, err := http.NewServer(ctx, metricsCollector)
@@ -100,7 +109,7 @@ var Start action.Action = func(ctx context.Context) error {
 	var webModules []http.Module
 	if lib.ContainsString(viper.GetStringSlice(config.Keys.ServerRoles), config.ServerRoleWebapp) {
 		l.Infof("adding webapp module")
-		webMod, err := webapp.New(ctx, cachedDBClient, redisClient, languageMod, tokz, metricsCollector)
+		webMod, err := webapp.New(ctx, cachedDBClient, redisClient, fediMod, languageMod, tokz, metricsCollector)
 		if err != nil {
 			l.Errorf("webapp module: %s", err.Error())
 
