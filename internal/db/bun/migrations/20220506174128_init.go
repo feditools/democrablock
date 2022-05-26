@@ -2,6 +2,7 @@ package migrations
 
 import (
 	"context"
+	models "github.com/feditools/democrablock/internal/db/bun/migrations/20220506174128_init"
 
 	"github.com/uptrace/bun"
 )
@@ -11,7 +12,10 @@ func init() {
 
 	up := func(ctx context.Context, db *bun.DB) error {
 		return db.RunInTx(ctx, nil, func(ctx context.Context, tx bun.Tx) error {
-			modelList := []interface{}{}
+			modelList := []interface{}{
+				&models.FediInstance{},
+				&models.FediAccount{},
+			}
 			for _, i := range modelList {
 				l.Infof("creating table %T", i)
 				if _, err := tx.NewCreateTable().Model(i).IfNotExists().Exec(ctx); err != nil {

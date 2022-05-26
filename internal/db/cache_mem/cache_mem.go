@@ -9,12 +9,28 @@ import (
 	"github.com/feditools/democrablock/internal/metrics"
 )
 
+const (
+	fediAccountLifeWindow         = 10 * time.Minute
+	fediAccountCleanWindow        = 5 * time.Minute
+	fediAccountMaxEntriesInWindow = 10000
+
+	fediInstanceLifeWindow         = 10 * time.Minute
+	fediInstanceCleanWindow        = 5 * time.Minute
+	fediInstanceMaxEntriesInWindow = 10000
+)
+
 // CacheMem is an in memory caching middleware for our db interface.
 type CacheMem struct {
 	db      db.DB
 	metrics metrics.Collector
 
 	count *bigcache.BigCache
+
+	fediAccount             *bigcache.BigCache
+	fediAccountUsernameToID *bigcache.BigCache
+
+	fediInstance           *bigcache.BigCache
+	fediInstanceDomainToID *bigcache.BigCache
 
 	allCaches []*bigcache.BigCache
 }
@@ -38,6 +54,58 @@ func New(_ context.Context, d db.DB, m metrics.Collector) (db.DB, error) {
 
 		return nil, err
 	}
+
+	fediAccount, err := bigcache.NewBigCache(bigcache.Config{
+		Shards:             32,
+		LifeWindow:         fediAccountLifeWindow,
+		CleanWindow:        fediAccountCleanWindow,
+		MaxEntriesInWindow: fediAccountMaxEntriesInWindow,
+		MaxEntrySize:       500,
+		Verbose:            true,
+		HardMaxCacheSize:   8192,
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	fediAccountUsernameToID, err := bigcache.NewBigCache(bigcache.Config{
+		Shards:             32,
+		LifeWindow:         fediAccountLifeWindow,
+		CleanWindow:        fediAccountCleanWindow,
+		MaxEntriesInWindow: fediAccountMaxEntriesInWindow,
+		MaxEntrySize:       8,
+		Verbose:            true,
+		HardMaxCacheSize:   8192,
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	fediInstance, err := bigcache.NewBigCache(bigcache.Config{
+		Shards:             32,
+		LifeWindow:         fediInstanceLifeWindow,
+		CleanWindow:        fediInstanceCleanWindow,
+		MaxEntriesInWindow: fediInstanceMaxEntriesInWindow,
+		MaxEntrySize:       500,
+		Verbose:            true,
+		HardMaxCacheSize:   8192,
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	fediInstanceDomainToID, err := bigcache.NewBigCache(bigcache.Config{
+		Shards:             32,
+		LifeWindow:         fediInstanceLifeWindow,
+		CleanWindow:        fediInstanceCleanWindow,
+		MaxEntriesInWindow: fediInstanceMaxEntriesInWindow,
+		MaxEntrySize:       8,
+		Verbose:            true,
+		HardMaxCacheSize:   8192,
+	})
+	if err != nil {
+		return nil, err
+	}
 	//revive:enable:add-constant
 
 	return &CacheMem{
@@ -48,6 +116,10 @@ func New(_ context.Context, d db.DB, m metrics.Collector) (db.DB, error) {
 
 		allCaches: []*bigcache.BigCache{
 			count,
+			fediAccount,
+			fediAccountUsernameToID,
+			fediInstance,
+			fediInstanceDomainToID,
 		},
 	}, nil
 }

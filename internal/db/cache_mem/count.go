@@ -4,16 +4,26 @@ import (
 	"context"
 	"encoding/binary"
 	"errors"
+	"fmt"
 
 	"github.com/allegro/bigcache/v3"
 )
 
 const (
-	tableNameBlocks = "blocks"
+	tableNameFediAccounts  = "fedi_accounts"
+	tableNameFediInstances = "fedi_instances"
 )
 
-func keyCountBlocks() string {
-	return tableNameBlocks
+func keyCountFediAccounts() string {
+	return tableNameFediAccounts
+}
+
+func keyCountFediAccountsForInstance(instanceID int64) string {
+	return fmt.Sprintf("%s-i-%d", tableNameFediAccounts, instanceID)
+}
+
+func keyCountFediInstances() string {
+	return tableNameFediInstances
 }
 
 func (c *CacheMem) getCount(_ context.Context, k string) (int64, bool) {

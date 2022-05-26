@@ -12,12 +12,13 @@ import (
 	"github.com/feditools/democrablock/internal/metrics"
 	"github.com/feditools/democrablock/internal/path"
 	"github.com/feditools/democrablock/internal/token"
+	"github.com/feditools/go-lib/fedihelper"
 	"github.com/feditools/go-lib/language"
 	libtemplate "github.com/feditools/go-lib/template"
 	"github.com/gorilla/sessions"
 	"github.com/rbcervilla/redisstore/v8"
 	"github.com/spf13/viper"
-	minify "github.com/tdewolff/minify/v2"
+	"github.com/tdewolff/minify/v2"
 	"github.com/tdewolff/minify/v2/html"
 	htmltemplate "html/template"
 	"strings"
@@ -25,13 +26,17 @@ import (
 	"time"
 )
 
+const SessionMaxAge = 30 * 24 * time.Hour // 30 days
+
 // Module contains a webapp module for the web server. Implements web.Module.
 type Module struct {
 	db        db.DB
-	store     sessions.Store
+	fedi      *fedihelper.FediHelper
 	language  *language.Module
 	metrics   metrics.Collector
 	minify    *minify.M
+	srv       *http.Server
+	store     sessions.Store
 	templates *htmltemplate.Template
 	tokenizer *token.Tokenizer
 
@@ -44,11 +49,9 @@ type Module struct {
 	sigCacheLock sync.RWMutex
 }
 
-const ThirtyDays = 30 * 24 * time.Hour
-
 //revive:disable:argument-limit
 // New returns a new webapp module.
-func New(ctx context.Context, d db.DB, r *redis.Client, lMod *language.Module, t *token.Tokenizer, mc metrics.Collector) (http.Module, error) {
+func New(ctx context.Context, d db.DB, r *redis.Client, lMod *language.Module, t *token.Tokenizer, mc metrics.Collector) (*Module, error) {
 	l := logger.WithField("func", "New")
 
 	// Fetch new store.
@@ -63,11 +66,11 @@ func New(ctx context.Context, d db.DB, r *redis.Client, lMod *language.Module, t
 	store.Options(sessions.Options{
 		Path:   "/",
 		Domain: viper.GetString(config.Keys.ServerExternalHostname),
-		MaxAge: int(ThirtyDays.Seconds()),
+		MaxAge: int(SessionMaxAge.Seconds()),
 	})
 
 	// Register models for GOB
-	gob.Register(SessionKey(0))
+	gob.Register(http.SessionKey(0))
 
 	// minify
 	var m *minify.M
@@ -146,4 +149,9 @@ func New(ctx context.Context, d db.DB, r *redis.Client, lMod *language.Module, t
 // Name return the module name.
 func (*Module) Name() string {
 	return config.ServerRoleWebapp
+}
+
+// SetServer adds a reference to the server to the module.
+func (m *Module) SetServer(s *http.Server) {
+	m.srv = s
 }
