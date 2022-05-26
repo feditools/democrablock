@@ -6,8 +6,8 @@ import (
 	"context"
 	"github.com/feditools/democrablock/internal/config"
 	"github.com/feditools/democrablock/internal/db"
-	"github.com/feditools/democrablock/internal/mock"
 	"github.com/feditools/democrablock/internal/models/testdata"
+	"github.com/feditools/go-lib/mock"
 	"github.com/spf13/viper"
 	"testing"
 )

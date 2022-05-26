@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/feditools/democrablock/internal/config"
-	"github.com/feditools/democrablock/internal/metrics"
+	"github.com/feditools/go-lib/metrics"
 	"github.com/gorilla/mux"
 	"github.com/spf13/viper"
 	"github.com/tyrm/go-util/mimetype"

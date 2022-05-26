@@ -5,12 +5,13 @@ import (
 	"time"
 
 	"github.com/cactus/go-statsd-client/v5/statsd"
-	"github.com/feditools/democrablock/internal/config"
-	"github.com/feditools/democrablock/internal/metrics"
-	"github.com/spf13/viper"
+	"github.com/feditools/go-lib/metrics"
 )
 
-const DefaultRate = 1.0
+const (
+	defaultRate                 = 1.0
+	defaultSystemCollectionRate = 10 * time.Second
+)
 
 // Module represents a statsd metrics collector.
 type Module struct {
@@ -24,10 +25,10 @@ type Module struct {
 }
 
 // New creates a new Statsd metrics module.
-func New() (metrics.Collector, error) {
+func New(address, prefix string) (metrics.Collector, error) {
 	statsConfig := &statsd.ClientConfig{
-		Address: viper.GetString(config.Keys.MetricsStatsDAddress),
-		Prefix:  viper.GetString(config.Keys.MetricsStatsDPrefix),
+		Address: address,
+		Prefix:  prefix,
 	}
 	client, err := statsd.NewClientWithConfig(statsConfig)
 	if err != nil {
@@ -37,8 +38,8 @@ func New() (metrics.Collector, error) {
 	m := &Module{
 		s: client,
 
-		rate:                 DefaultRate,
-		systemCollectionRate: 10 * time.Second,
+		rate:                 defaultRate,
+		systemCollectionRate: defaultSystemCollectionRate,
 
 		done: make(chan bool),
 	}

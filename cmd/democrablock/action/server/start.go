@@ -18,16 +18,20 @@ import (
 	"github.com/feditools/democrablock/internal/db/bun"
 	cachemem "github.com/feditools/democrablock/internal/db/cache_mem"
 	"github.com/feditools/democrablock/internal/kv/redis"
-	"github.com/feditools/democrablock/internal/metrics/statsd"
 	"github.com/feditools/go-lib"
+	"github.com/feditools/go-lib/metrics/statsd"
 )
 
 // Start starts the server.
 var Start action.Action = func(ctx context.Context) error {
 	l := logger.WithField("func", "Start")
-
 	l.Infof("starting")
-	metricsCollector, err := statsd.New()
+
+	// create metrics collector
+	metricsCollector, err := statsd.New(
+		viper.GetString(config.Keys.MetricsStatsDAddress),
+		viper.GetString(config.Keys.MetricsStatsDPrefix),
+	)
 	if err != nil {
 		l.Errorf("metrics: %s", err.Error())
 
@@ -40,6 +44,7 @@ var Start action.Action = func(ctx context.Context) error {
 		}
 	}()
 
+	// create db client
 	dbClient, err := bun.New(ctx, metricsCollector)
 	if err != nil {
 		l.Errorf("db: %s", err.Error())
@@ -59,6 +64,7 @@ var Start action.Action = func(ctx context.Context) error {
 		}
 	}()
 
+	// create kv client
 	redisClient, err := redis.New(ctx)
 	if err != nil {
 		l.Errorf("redis: %s", err.Error())
@@ -71,6 +77,14 @@ var Start action.Action = func(ctx context.Context) error {
 			l.Errorf("closing redis: %s", err.Error())
 		}
 	}()
+
+	// create http client
+	httpClient, err := http.NewClient(ctx)
+	if err != nil {
+		l.Errorf("http client: %s", err.Error())
+
+		return err
+	}
 
 	// create tokenizer
 	tokz, err := token.New()
@@ -89,7 +103,7 @@ var Start action.Action = func(ctx context.Context) error {
 	}
 
 	// create fedi module
-	fediMod, err := fedi.New(cachedDBClient, nil, redisClient, tokz)
+	fediMod, err := fedi.New(cachedDBClient, httpClient, redisClient, tokz)
 	if err != nil {
 		l.Errorf("fedi: %s", err.Error())
 

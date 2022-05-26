@@ -2,11 +2,11 @@ package cachemem
 
 import (
 	"context"
+	"github.com/feditools/go-lib/metrics"
 	"time"
 
 	bigcache "github.com/allegro/bigcache/v3"
 	"github.com/feditools/democrablock/internal/db"
-	"github.com/feditools/democrablock/internal/metrics"
 )
 
 const (
@@ -113,6 +113,12 @@ func New(_ context.Context, d db.DB, m metrics.Collector) (db.DB, error) {
 		metrics: m,
 
 		count: count,
+
+		fediAccount:             fediAccount,
+		fediAccountUsernameToID: fediAccountUsernameToID,
+
+		fediInstance:           fediInstance,
+		fediInstanceDomainToID: fediInstanceDomainToID,
 
 		allCaches: []*bigcache.BigCache{
 			count,

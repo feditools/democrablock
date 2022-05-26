@@ -4,7 +4,7 @@ import (
 	"runtime"
 	"time"
 
-	"github.com/feditools/democrablock/internal/metrics"
+	"github.com/feditools/go-lib/metrics"
 )
 
 func (m *Module) systemCollector() {

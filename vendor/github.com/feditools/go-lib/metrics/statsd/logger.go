@@ -1,7 +1,7 @@
 package statsd
 
 import (
-	"github.com/feditools/democrablock/internal/log"
+	"github.com/feditools/go-lib/log"
 )
 
 type empty struct{}

@@ -9,7 +9,7 @@ import (
 
 	"github.com/feditools/democrablock/internal/config"
 	"github.com/feditools/democrablock/internal/db"
-	"github.com/feditools/democrablock/internal/mock"
+	"github.com/feditools/go-lib/mock"
 	"github.com/jackc/pgconn"
 	"github.com/spf13/viper"
 )

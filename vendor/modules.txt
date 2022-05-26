@@ -24,6 +24,9 @@ github.com/feditools/go-lib/fedihelper/models
 github.com/feditools/go-lib/http
 github.com/feditools/go-lib/language
 github.com/feditools/go-lib/log
+github.com/feditools/go-lib/metrics
+github.com/feditools/go-lib/metrics/statsd
+github.com/feditools/go-lib/mock
 github.com/feditools/go-lib/template
 # github.com/felixge/httpsnoop v1.0.2
 ## explicit; go 1.13
