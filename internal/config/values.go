@@ -28,11 +28,15 @@ type Values struct {
 	RedisDB       int
 	RedisPassword string
 
+	// account
+	Account         string
+	AccountAddGroup []string
+
 	// server
-	ServerExternalHostname string
-	ServerHTTPBind         string
-	ServerMinifyHTML       bool
-	ServerRoles            []string
+	ServerExternalURL string
+	ServerHTTPBind    string
+	ServerMinifyHTML  bool
+	ServerRoles       []string
 
 	// webapp
 	WebappBootstrapCSSURI         string
@@ -75,16 +79,16 @@ var Defaults = Values{
 	RedisPassword: "",
 
 	// server
-	ServerExternalHostname: "localhost",
-	ServerHTTPBind:         ":5000",
-	ServerMinifyHTML:       true,
+	ServerExternalURL: "http://localhost:5000",
+	ServerHTTPBind:    ":5000",
+	ServerMinifyHTML:  true,
 	ServerRoles: []string{
 		ServerRoleWebapp,
 	},
 
 	// webapp
 	WebappBootstrapCSSURI:         "https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css",
-	WebappBootstrapCSSIntegrity:   "sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDBrCEXSU1oBoqyl2QvZ6jIW3",
+	WebappBootstrapCSSIntegrity:   "sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3",
 	WebappBootstrapJSURI:          "https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js",
 	WebappBootstrapJSIntegrity:    "sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p",
 	WebappFontAwesomeCSSURI:       "https://cdn.fedi.tools/vendor/fontawesome-free-6.1.1/css/all.min.css",

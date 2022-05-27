@@ -1,14 +1,15 @@
 package template
 
 import (
+	"html/template"
+	"io/ioutil"
+	"strings"
+
 	"github.com/feditools/democrablock/internal/models"
 	"github.com/feditools/democrablock/internal/token"
 	"github.com/feditools/democrablock/web"
 	"github.com/feditools/go-lib/language"
 	libtemplate "github.com/feditools/go-lib/template"
-	"html/template"
-	"io/ioutil"
-	"strings"
 )
 
 const templateDir = "template"

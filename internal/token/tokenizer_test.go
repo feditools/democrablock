@@ -4,10 +4,11 @@ package token
 
 import (
 	"fmt"
+	"testing"
+
 	"github.com/feditools/democrablock/internal/config"
 	"github.com/feditools/democrablock/internal/models"
 	"github.com/spf13/viper"
-	"testing"
 )
 
 var testTables = []struct {

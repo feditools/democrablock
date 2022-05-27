@@ -3,15 +3,14 @@ package http
 import (
 	"context"
 	"fmt"
-	"github.com/feditools/democrablock/internal/config"
-	"github.com/feditools/democrablock/internal/metrics"
-	"github.com/gorilla/handlers"
-	"github.com/gorilla/mux"
-	"github.com/spf13/viper"
-	"github.com/tyrm/go-util/middleware"
-	"github.com/tyrm/go-util/mimetype"
 	"net/http"
 	"time"
+
+	"github.com/feditools/democrablock/internal/config"
+	"github.com/feditools/go-lib/metrics"
+	"github.com/gorilla/mux"
+	"github.com/spf13/viper"
+	"github.com/tyrm/go-util/mimetype"
 )
 
 const httpServerTimeout = 60 * time.Second
@@ -41,9 +40,7 @@ func NewServer(_ context.Context, m metrics.Collector) (*Server, error) {
 	}
 
 	// add global middlewares
-	r.Use(server.middlewareMetrics)
-	r.Use(handlers.CompressHandler)
-	r.Use(middleware.BlockFlocMux)
+	r.Use(server.WrapInMiddlewares)
 
 	r.NotFoundHandler = server.notFoundHandler()
 	r.MethodNotAllowedHandler = server.methodNotAllowedHandler()
@@ -76,22 +73,22 @@ func (s *Server) Stop(ctx context.Context) error {
 
 func (s *Server) methodNotAllowedHandler() http.Handler {
 	// wrap in middleware since middleware isn't run on error pages
-	return s.middlewareMetrics(middleware.BlockFlocMux(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	return s.WrapInMiddlewares(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", mimetype.TextPlain)
 		_, err := w.Write([]byte(fmt.Sprintf("%d %s", http.StatusMethodNotAllowed, http.StatusText(http.StatusMethodNotAllowed))))
 		if err != nil {
 			logger.WithField("func", "methodNotAllowedHandler").Errorf("writing response: %s", err.Error())
 		}
-	})))
+	}))
 }
 
 func (s *Server) notFoundHandler() http.Handler {
 	// wrap in middleware since middleware isn't run on error pages
-	return s.middlewareMetrics(middleware.BlockFlocMux(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	return s.WrapInMiddlewares(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", mimetype.TextPlain)
 		_, err := w.Write([]byte(fmt.Sprintf("%d %s", http.StatusNotFound, http.StatusText(http.StatusNotFound))))
 		if err != nil {
 			logger.WithField("func", "methodNotAllowedHandler").Errorf("writing response: %s", err.Error())
 		}
-	})))
+	}))
 }

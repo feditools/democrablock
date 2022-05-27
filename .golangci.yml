@@ -12,7 +12,7 @@ linters-settings:
         disabled: false
         arguments:
           - maxLitCount: "3"
-            allowStrs: '"","func"'
+            allowStrs: '"","func","type"'
             allowInts: "0,1,2,3,4,5,6,7,8,9,10,64"
             allowFloats: ""
       # https://github.com/mgechev/revive/blob/master/RULES_DESCRIPTIONS.md#atomic
@@ -331,7 +331,6 @@ linters:
     - goconst
     - goerr113
     - gofumpt
-    - goimports
     - golint # deprecated
     - gomnd
     - gochecknoinits

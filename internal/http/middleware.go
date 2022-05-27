@@ -2,12 +2,16 @@ package http
 
 import (
 	"net/http"
-	"time"
+
+	"github.com/go-http-utils/etag"
+	"github.com/gorilla/handlers"
+	"github.com/tyrm/go-util/middleware"
 )
 
-func (s *Server) middlewareMetrics(next http.Handler) http.Handler {
+// MiddlewareMetrics sends http request metrics.
+func (s *Server) MiddlewareMetrics(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		start := time.Now()
+		metric := s.metrics.NewHTTPRequest(r.Method, r.URL.Path)
 		l := logger.WithField("func", "middlewareMetrics")
 
 		wx := NewResponseWriter(w)
@@ -15,8 +19,24 @@ func (s *Server) middlewareMetrics(next http.Handler) http.Handler {
 		// Do Request
 		next.ServeHTTP(wx, r)
 
-		ended := time.Since(start)
-		l.Debugf("rendering %s took %d ms", r.URL.Path, ended.Milliseconds())
-		go s.metrics.HTTPRequestTiming(ended, wx.Status(), r.Method, r.URL.Path)
+		go func() {
+			ended := metric.Done(wx.Status())
+			l.Debugf("rendering %s took %d ms", r.URL.Path, ended.Milliseconds())
+		}()
 	})
+}
+
+// WrapInMiddlewares wraps an http.Handler in the server's middleware.
+func (s *Server) WrapInMiddlewares(h http.Handler) http.Handler {
+	return s.MiddlewareMetrics(
+		middleware.BlockMissingUserAgentMux(
+			etag.Handler(
+				handlers.CompressHandler(
+					middleware.BlockFlocMux(
+						h,
+					),
+				), false,
+			),
+		),
+	)
 }

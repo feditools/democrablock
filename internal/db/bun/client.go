@@ -12,9 +12,10 @@ import (
 	"runtime"
 	"strings"
 
+	"github.com/feditools/go-lib/metrics"
+
 	"github.com/feditools/democrablock/internal/config"
 	"github.com/feditools/democrablock/internal/db"
-	"github.com/feditools/democrablock/internal/metrics"
 	"github.com/jackc/pgx/v4"
 	"github.com/jackc/pgx/v4/stdlib"
 	"github.com/spf13/viper"

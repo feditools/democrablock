@@ -4,8 +4,9 @@ import (
 	"crypto/sha512"
 	"encoding/base64"
 	"fmt"
-	"github.com/feditools/democrablock/web"
 	"io/ioutil"
+
+	"github.com/feditools/democrablock/web"
 )
 
 // signature caching

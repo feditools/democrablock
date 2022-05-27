@@ -1,6 +1,15 @@
 package template
 
-import "github.com/feditools/go-lib/language"
+import liblanguage "github.com/feditools/go-lib/language"
+
+const (
+	// FormInputTypeHidden is a hidden html input field.
+	FormInputTypeHidden = "hidden"
+	// FormInputTypePassword is a password html input field.
+	FormInputTypePassword = "password"
+	// FormInputTypeText is a text html input field.
+	FormInputTypeText = "text"
+)
 
 // FormInput is a templated form input.
 type FormInput struct {
@@ -8,7 +17,7 @@ type FormInput struct {
 	Type         string
 	Name         string
 	Placeholder  string
-	Label        *language.LocalizedString
+	Label        *liblanguage.LocalizedString
 	LabelClass   string
 	Value        string
 	WrappedClass string

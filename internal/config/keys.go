@@ -28,11 +28,15 @@ type KeyNames struct {
 	RedisDB       string
 	RedisPassword string
 
+	// account
+	Account         string
+	AccountAddGroup string
+
 	// server
-	ServerExternalHostname string
-	ServerHTTPBind         string
-	ServerMinifyHTML       string
-	ServerRoles            string
+	ServerExternalURL string
+	ServerHTTPBind    string
+	ServerMinifyHTML  string
+	ServerRoles       string
 
 	// webapp
 	WebappBootstrapCSSURI         string
@@ -77,11 +81,15 @@ var Keys = KeyNames{
 	RedisDB:       "redis-db",
 	RedisPassword: "redis-password",
 
+	// account
+	Account:         "account",
+	AccountAddGroup: "add-group",
+
 	// server
-	ServerExternalHostname: "external-hostname",
-	ServerHTTPBind:         "http-bind",
-	ServerMinifyHTML:       "minify-html",
-	ServerRoles:            "server-role",
+	ServerExternalURL: "external-url",
+	ServerHTTPBind:    "http-bind",
+	ServerMinifyHTML:  "minify-html",
+	ServerRoles:       "server-role",
 
 	// webapp
 	WebappBootstrapCSSURI:         "webapp-bootstrap-css-uri",
