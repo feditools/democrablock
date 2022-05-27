@@ -28,6 +28,10 @@ type KeyNames struct {
 	RedisDB       string
 	RedisPassword string
 
+	// account
+	Account         string
+	AccountAddGroup string
+
 	// server
 	ServerExternalURL string
 	ServerHTTPBind    string
@@ -76,6 +80,10 @@ var Keys = KeyNames{
 	RedisAddress:  "redis-address",
 	RedisDB:       "redis-db",
 	RedisPassword: "redis-password",
+
+	// account
+	Account:         "account",
+	AccountAddGroup: "add-group",
 
 	// server
 	ServerExternalURL: "external-url",

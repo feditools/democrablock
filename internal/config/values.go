@@ -28,6 +28,10 @@ type Values struct {
 	RedisDB       int
 	RedisPassword string
 
+	// account
+	Account         string
+	AccountAddGroup []string
+
 	// server
 	ServerExternalURL string
 	ServerHTTPBind    string
