@@ -12,9 +12,9 @@ log-level: "debug"
 ##############
 
 # String. Database type.
-# Options: ["postgres","sqlite"]
-# Default: "postgres"
-db-type: "postgres"
+# Options: ["postgres","sqlite","postgres"]
+# Default: "immudb"
+db-type: "immudb"
 
 # String. Database address or parameters.
 #
@@ -28,28 +28,28 @@ db-type: "postgres"
 # WARNING: :memory: should NOT BE USED except for testing purposes.
 #
 # Examples: ["localhost","my.db.host","127.0.0.1","192.111.39.110",":memory:", "sqlite.db"]
-# Default: ""
+# Default: "localhost"
 db-address: "localhost"
 
 # Int. Port for database connection.
-# Examples: [5432, 1234, 6969]
-# Default: 5432
-db-port: 15432
+# Examples: [5432, 3322, 1234, 6969]
+# Default: 3322
+db-port: 3322
 
 # String. Username for the database connection.
 # Examples: ["mydbuser","postgres","democrablock"]
-# Default: ""
-db-user: "test"
+# Default: "immudb"
+db-user: "immudb"
 
 # String. Password to use for the database connection
 # Examples: ["password123","omgiloveyou","postgres"]
-# Default: ""
-db-password: "test"
+# Default: "immudb"
+db-password: "immudb"
 
 # String. Name of the database to use within the provided database type.
 # Examples: ["mydb","postgres","relay"]
-# Default: "relay"
-db-database: "test"
+# Default: "defaultdb"
+db-database: "defaultdb"
 
 # String. Disable, enable, or require SSL/TLS connection to the database.
 # If "disable" then no TLS connection will be attempted.
@@ -76,12 +76,12 @@ db-crypto-key: "test1234test5678test9123test4567"
 
 # String. Address and port of the redis instance
 # Default: "localhost:6379"
-redis-address: "localhost:16379"
+#redis-address: "localhost:6379"
 
 # Int. Redis database to use
 # Examples: [0, 1, 15]
 # Default: 0
-redis-db: 0
+#redis-db: 0
 
 # String. Password to use for the redis connection
 # Examples: ["","test","password"]
@@ -94,7 +94,7 @@ redis-password: "test"
 
 # String. Address and port of the statsd instance
 # Default: "localhost:8125"
-statsd-addr: "localhost:18125"
+#statsd-addr: "localhost:8125"
 
 # String. Prefix to add to statsd metrics
 # Default: "democrablock"

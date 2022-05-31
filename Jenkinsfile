@@ -33,7 +33,7 @@ pipeline {
             postgres: {
               retry(30) {
                 sleep 1
-                sh "docker run -t --rm --network=${networkName} subfuzion/netcat -z postgres 5432"
+                sh "docker run -t --rm --network=${networkName} subfuzion/netcat -z immudb 3322"
               }
             },
             redis: {
@@ -61,7 +61,7 @@ pipeline {
             string(credentialsId: 'codecov-feditools-democrablock', variable: 'CODECOV_TOKEN')
           ]) {
             sh """#!/bin/bash
-            go test --tags=postgres,redis -race -coverprofile=coverage.txt -covermode=atomic ./...
+            go test --tags=redis -race -coverprofile=coverage.txt -covermode=atomic ./...
             RESULT=\$?
             #gosec -fmt=junit-xml -out=gosec.xml  ./...
             bash <(curl -s https://codecov.io/bash)
