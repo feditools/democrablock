@@ -61,6 +61,19 @@ func (m *Module) initTemplate(_ nethttp.ResponseWriter, r *nethttp.Request, tmpl
 	return nil
 }
 
+func (m *Module) initTemplateAdmin(w nethttp.ResponseWriter, r *nethttp.Request, tmpl template.InitTemplate) error {
+	err := m.initTemplate(w, r, tmpl)
+	if err != nil {
+		return err
+	}
+
+	// make admin navbar
+	navbar := makeAdminNavbar(r)
+	tmpl.SetNavbar(navbar)
+
+	return nil
+}
+
 func (m *Module) initTemplatePublic(w nethttp.ResponseWriter, r *nethttp.Request, tmpl template.InitTemplate) error {
 	err := m.initTemplate(w, r, tmpl)
 	if err != nil {

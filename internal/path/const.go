@@ -12,8 +12,16 @@ const (
 
 	// parts.
 
+	// PartAccounts is used in a path for accounts.
+	PartAccounts = "accounts"
+	// PartAdmin is used in a path for administrative tasks.
+	PartAdmin = "admin"
 	// PartCallback is used in a path for callback.
 	PartCallback = "callback"
+	// PartFediverse is used in a path for federated things.
+	PartFediverse = "fedi"
+	// PartInstances is used in a path for instances.
+	PartInstances = "instances"
 	// PartList is used in a path for a list.
 	PartList = "list"
 	// PartLogin is used in a path for login.
@@ -24,8 +32,33 @@ const (
 	PartOauth = "oauth"
 	// PartStatic is used in a path for static files.
 	PartStatic = "static"
+	// PartSystem is used in a path for system things.
+	PartSystem = "system"
 
 	// paths.
+
+	// Admin is the path for the admin page.
+	Admin = "/" + PartAdmin
+
+	// AdminFediverse is the path for the fediverse admin page.
+	AdminFediverse = Admin + AdminSubFediverse
+	// AdminFediverseAccounts is the path for the fediverse admin page.
+	AdminFediverseAccounts = Admin + AdminSubFediverseAccounts
+	// AdminFediverseInstances is the path for the fediverse instances page.
+	AdminFediverseInstances = Admin + AdminSubFediverseInstances
+
+	// AdminSubFediverse is the sub path for the fediverse admin page.
+	AdminSubFediverse = "/" + PartFediverse
+	// AdminSubFediverseAccounts is the sub path for the fediverse admin accounts page.
+	AdminSubFediverseAccounts = AdminSubFediverse + "/" + PartAccounts
+	// AdminSubFediverseInstances is the sub path for the fediverse admin instances page.
+	AdminSubFediverseInstances = AdminSubFediverse + "/" + PartInstances
+
+	// AdminSystem is the path for the system admin page.
+	AdminSystem = Admin + AdminSubSystem
+
+	// AdminSubSystem is the sub path for the system admin page.
+	AdminSubSystem = "/" + PartSystem
 
 	// CallbackOauth is the path for an oauth callback.
 	CallbackOauth = "/" + PartCallback + "/" + PartOauth + "/" + VarInstance
