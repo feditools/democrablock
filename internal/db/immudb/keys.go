@@ -3,7 +3,7 @@ package immudb
 import "fmt"
 
 const (
-	keyFediAccount           = "fediaccount:"
+	keyFediAccount           = "fedi_account:"
 	keyFediAccountLoginCount = keyFediAccount + "logincount:"
 	keyFediAccountLoginLast  = keyFediAccount + "loginlast:"
 )

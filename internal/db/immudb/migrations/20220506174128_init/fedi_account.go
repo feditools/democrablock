@@ -11,6 +11,7 @@ CREATE TABLE fedi_accounts (
     display_name    VARCHAR NOT NULL,
     last_finger     TIMESTAMP NOT NULL,
     access_token    BLOB,
+    is_admin        BOOLEAN,
     PRIMARY KEY (id)
 );`
 

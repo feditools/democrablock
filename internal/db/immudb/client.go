@@ -2,6 +2,7 @@ package immudb
 
 import (
 	"context"
+
 	immudb "github.com/codenotary/immudb/pkg/client"
 	"github.com/feditools/democrablock/internal/config"
 	"github.com/feditools/democrablock/internal/db"
@@ -47,7 +48,7 @@ func (c *Client) Close(ctx context.Context) db.Error {
 }
 
 // ProcessError replaces any known values with our own db.Error types.
-func (c *Client) ProcessError(err error) db.Error {
+func (*Client) ProcessError(err error) db.Error {
 	switch {
 	case err == nil:
 		return nil

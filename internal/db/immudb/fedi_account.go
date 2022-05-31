@@ -1,8 +1,12 @@
 package immudb
 
 import (
+	"bytes"
 	"context"
 	"time"
+
+	"github.com/codenotary/immudb/pkg/api/schema"
+	"github.com/feditools/democrablock/internal/util"
 
 	"github.com/feditools/democrablock/internal/db"
 	"github.com/feditools/democrablock/internal/models"
@@ -51,7 +55,10 @@ func (c *Client) CreateFediAccount(ctx context.Context, account *models.FediAcco
 	// create transaction
 	tx, err := c.db.NewTx(ctx)
 	if err != nil {
-		return err
+		l.Errorf("NewTx: %s", err.Error())
+		go metric.Done(true)
+
+		return c.ProcessError(err)
 	}
 
 	err = tx.SQLExec(ctx, insertFediAccount(account, createdAt), nil)
@@ -65,10 +72,11 @@ func (c *Client) CreateFediAccount(ctx context.Context, account *models.FediAcco
 	// commit
 	resp, err := tx.Commit(ctx)
 	if err != nil {
-		return err
-	}
+		l.Errorf("Commit: %s", err.Error())
+		go metric.Done(true)
 
-	l.Debugf("inserted pk; %#v", resp.GetLastInsertedPKs())
+		return c.ProcessError(err)
+	}
 
 	account.CreatedAt = createdAt
 	account.UpdatedAt = createdAt
@@ -81,6 +89,50 @@ func (c *Client) CreateFediAccount(ctx context.Context, account *models.FediAcco
 
 func (c *Client) IncFediAccountLoginCount(ctx context.Context, account *models.FediAccount) db.Error {
 	metric := c.metrics.NewDBQuery("IncFediAccountLoginCount")
+	l := logger.WithField("func", "IncFediAccountLoginCount")
+
+	entry, err := c.db.Get(ctx, KeyFediAccountLoginCount(account.ID))
+	if err != nil && err.Error() != KeyNotFoundError {
+		l.Errorf("Get: %s", err.Error())
+		go metric.Done(true)
+
+		return c.ProcessError(err)
+	}
+
+	var preconditions []*schema.Precondition
+	count := int64(1)
+	now := time.Now().UTC()
+	if entry != nil {
+		precondition := schema.PreconditionKeyNotModifiedAfterTX(
+			KeyFediAccountLoginCount(account.ID),
+			entry.Tx,
+		)
+		count = util.BytesToInt64(entry.Value) + 1
+
+		preconditions = append(preconditions, precondition)
+	}
+	_, err = c.db.SetAll(ctx, &schema.SetRequest{
+		KVs: []*schema.KeyValue{
+			{
+				Key:   KeyFediAccountLoginCount(account.ID),
+				Value: util.Int64ToBytes(count),
+			},
+			{
+				Key:   KeyFediAccountLoginLast(account.ID),
+				Value: util.TimeToBytes(now),
+			},
+		},
+		Preconditions: preconditions,
+	})
+	if err != nil {
+		l.Errorf("SetAll: %s", err.Error())
+		go metric.Done(true)
+
+		return c.ProcessError(err)
+	}
+
+	account.LogInCount = count
+	account.LogInLast = now
 
 	go metric.Done(false)
 
@@ -89,18 +141,80 @@ func (c *Client) IncFediAccountLoginCount(ctx context.Context, account *models.F
 
 func (c *Client) ReadFediAccount(ctx context.Context, id int64) (*models.FediAccount, db.Error) {
 	metric := c.metrics.NewDBQuery("ReadFediAccount")
+	l := logger.WithField("func", "ReadFediAccount")
+
+	resp, err := c.db.SQLQuery(ctx, selectFediAccount(id), nil, true)
+	if err != nil {
+		l.Errorf("SQLQuery: %s", err.Error())
+		go metric.Done(true)
+
+		return nil, c.ProcessError(err)
+	}
+
+	if len(resp.GetRows()) == 0 {
+		go metric.Done(false)
+
+		return nil, db.ErrNoEntries
+	}
+
+	// make new account from
+	account := makeFediAccountFromRow(resp.GetRows()[0])
+
+	// get login info
+	loginCount, loginLast, err := c.readFediAccountLoginInfo(ctx, account.ID)
+	if err != nil {
+		l.Errorf("read login info: %s", err.Error())
+		go metric.Done(true)
+
+		return nil, c.ProcessError(err)
+	}
+	if loginCount > 0 {
+		account.LogInCount = loginCount
+		account.LogInLast = loginLast
+	}
 
 	go metric.Done(false)
 
-	return nil, nil
+	return account, nil
 }
 
 func (c *Client) ReadFediAccountByUsername(ctx context.Context, instanceID int64, username string) (*models.FediAccount, db.Error) {
 	metric := c.metrics.NewDBQuery("ReadFediAccountByUsername")
+	l := logger.WithField("func", "ReadFediAccountByUsername")
+
+	resp, err := c.db.SQLQuery(ctx, selectFediAccountByUsername(instanceID, username), nil, true)
+	if err != nil {
+		l.Errorf("SQLQuery: %s", err.Error())
+		go metric.Done(true)
+
+		return nil, c.ProcessError(err)
+	}
+
+	if len(resp.GetRows()) == 0 {
+		go metric.Done(false)
+
+		return nil, db.ErrNoEntries
+	}
+
+	// make new account from
+	account := makeFediAccountFromRow(resp.GetRows()[0])
+
+	// get login info
+	loginCount, loginLast, err := c.readFediAccountLoginInfo(ctx, account.ID)
+	if err != nil {
+		l.Errorf("read login info: %s", err.Error())
+		go metric.Done(true)
+
+		return nil, c.ProcessError(err)
+	}
+	if loginCount > 0 {
+		account.LogInCount = loginCount
+		account.LogInLast = loginLast
+	}
 
 	go metric.Done(false)
 
-	return nil, nil
+	return account, nil
 }
 
 func (c *Client) ReadFediAccountsPage(ctx context.Context, index, count int) ([]*models.FediAccount, db.Error) {
@@ -117,4 +231,55 @@ func (c *Client) UpdateFediAccount(ctx context.Context, account *models.FediAcco
 	go metric.Done(false)
 
 	return nil
+}
+
+// privates
+
+func makeFediAccountFromRow(row *schema.Row) *models.FediAccount {
+	newAccount := models.FediAccount{
+		ID:          row.GetValues()[fediAccountColumnID].GetN(),
+		CreatedAt:   tsToTime(row.GetValues()[fediAccountColumnCreatedAt].GetTs()),
+		UpdatedAt:   tsToTime(row.GetValues()[fediAccountColumnUpdatedAt].GetTs()),
+		Username:    row.GetValues()[fediAccountColumnUsername].GetS(),
+		InstanceID:  row.GetValues()[fediAccountColumnInstanceID].GetN(),
+		ActorURI:    row.GetValues()[fediAccountColumnActorURI].GetS(),
+		DisplayName: row.GetValues()[fediAccountColumnDisplayName].GetS(),
+		LastFinger:  tsToTime(row.GetValues()[fediAccountColumnLastFinger].GetTs()),
+		Admin:       row.GetValues()[fediAccountColumnIsAdmin].GetB(),
+	}
+	if !isNull(row.GetValues()[fediAccountColumnAccessToken]) {
+		newAccount.AccessToken = row.GetValues()[fediAccountColumnAccessToken].GetBs()
+	}
+
+	return &newAccount
+}
+
+func (c *Client) readFediAccountLoginInfo(ctx context.Context, id int64) (int64, time.Time, error) {
+	l := logger.WithField("func", "readFediAccountLoginInfo")
+
+	entries, err := c.db.GetAll(
+		ctx,
+		[][]byte{
+			KeyFediAccountLoginCount(id),
+			KeyFediAccountLoginLast(id),
+		},
+	)
+	if err != nil {
+		l.Errorf("get: %s", err.Error())
+
+		return 0, time.Time{}, err
+	}
+
+	count := int64(0)
+	last := time.Time{}
+	for _, entry := range entries.GetEntries() {
+		switch {
+		case bytes.Equal(entry.GetKey(), KeyFediAccountLoginCount(id)):
+			count = util.BytesToInt64(entry.GetValue())
+		case bytes.Equal(entry.GetKey(), KeyFediAccountLoginLast(id)):
+			last = util.BytesToTime(entry.GetValue())
+		}
+	}
+
+	return count, last, nil
 }

@@ -7,6 +7,30 @@ import (
 	"github.com/feditools/democrablock/internal/models"
 )
 
+const fediAccountAllColumns = "id, " + // 0
+	"created_at, " + // 1
+	"updated_at, " + // 2
+	"username, " + // 3
+	"instance_id, " + // 4
+	"actor_uri, " + // 5
+	"display_name, " + // 6
+	"last_finger, " + // 7
+	"access_token, " + // 8
+	"is_admin" // 9
+
+const (
+	fediAccountColumnID int64 = iota
+	fediAccountColumnCreatedAt
+	fediAccountColumnUpdatedAt
+	fediAccountColumnUsername
+	fediAccountColumnInstanceID
+	fediAccountColumnActorURI
+	fediAccountColumnDisplayName
+	fediAccountColumnLastFinger
+	fediAccountColumnAccessToken
+	fediAccountColumnIsAdmin
+)
+
 const countFediAccountsStatement = `
 SELECT COUNT(*) FROM %s;`
 
@@ -36,7 +60,8 @@ INSERT INTO %s (
     instance_id,
     actor_uri,
     display_name,
-    last_finger
+    last_finger,
+    is_admin
 )
 VALUES (
     CAST(%d AS TIMESTAMP),
@@ -45,7 +70,8 @@ VALUES (
     %d,
     '%s',
     '%s',
-    CAST(%d AS TIMESTAMP)
+    CAST(%d AS TIMESTAMP),
+    %t
 );`
 
 func insertFediAccount(account *models.FediAccount, createdAt time.Time) string {
@@ -59,5 +85,31 @@ func insertFediAccount(account *models.FediAccount, createdAt time.Time) string 
 		account.ActorURI,                // actor_uri
 		account.DisplayName,             // display_name
 		account.LastFinger.UTC().Unix(), // last_finger
+		account.Admin,                   // is_admin
+	)
+}
+
+const selectFediAccountStatement = `
+SELECT %s FROM %s WHERE id = %d;`
+
+func selectFediAccount(accountID int64) string {
+	return fmt.Sprintf(
+		selectFediAccountStatement,
+		fediAccountAllColumns, // Columns
+		TableNameFediAccounts, // Table Name
+		accountID,             // id
+	)
+}
+
+const selectFediAccountByUsernameStatement = `
+SELECT %s FROM %s WHERE username = '%s' AND instance_id = %d;`
+
+func selectFediAccountByUsername(instanceID int64, username string) string {
+	return fmt.Sprintf(
+		selectFediAccountByUsernameStatement,
+		fediAccountAllColumns, // Columns
+		TableNameFediAccounts, // Table Name
+		username,              // username
+		instanceID,            // instance_id
 	)
 }

@@ -42,6 +42,6 @@ func (c *Client) LoadTestData(ctx context.Context) db.Error {
 	panic("implement me")
 }
 
-func (c *Client) ResetCache(_ context.Context) db.Error {
+func (*Client) ResetCache(_ context.Context) db.Error {
 	return nil
 }
