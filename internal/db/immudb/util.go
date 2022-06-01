@@ -5,6 +5,8 @@ import (
 	"reflect"
 	"time"
 
+	"github.com/feditools/democrablock/internal/db/immudb/statements"
+
 	"github.com/codenotary/immudb/pkg/api/schema"
 )
 
@@ -13,14 +15,20 @@ const (
 )
 
 func (c *Client) PageHelper(ctx context.Context, tableName string, index, count int) (int64, error) {
-	l := logger.WithField("func", "FediAccountPageHelper")
+	l := logger.WithField("func", "PageHelper")
 
 	lastReadID := int64(0)
 	for i := 0; i < index; i++ {
+		// prep params
+		params := map[string]interface{}{
+			statements.ParamLastReadID: lastReadID,
+		}
+
+		// run query
 		resp, err := c.db.SQLQuery(
 			ctx,
-			selectPageHelper(tableName, lastReadID, count, "id", true),
-			nil,
+			statements.SelectPageHelper(tableName, true, count),
+			params,
 			true,
 		)
 		if err != nil {

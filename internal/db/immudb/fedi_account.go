@@ -5,6 +5,8 @@ import (
 	"context"
 	"time"
 
+	"github.com/feditools/democrablock/internal/db/immudb/statements"
+
 	"github.com/codenotary/immudb/pkg/api/schema"
 	"github.com/feditools/democrablock/internal/util"
 
@@ -16,7 +18,13 @@ func (c *Client) CountFediAccounts(ctx context.Context) (int64, db.Error) {
 	metric := c.metrics.NewDBQuery("CountFediAccounts")
 	l := logger.WithField("func", "CountFediAccounts")
 
-	resp, err := c.db.SQLQuery(ctx, countFediAccounts(), nil, true)
+	// run query
+	resp, err := c.db.SQLQuery(
+		ctx,
+		statements.CountFediAccounts(),
+		nil,
+		true,
+	)
 	if err != nil {
 		l.Errorf("SQLQuery: %s", err.Error())
 		go metric.Done(true)
@@ -33,7 +41,13 @@ func (c *Client) CountFediAccountsForInstance(ctx context.Context, instanceID in
 	metric := c.metrics.NewDBQuery("CountFediAccountsForInstance")
 	l := logger.WithField("func", "CountFediAccountsForInstance")
 
-	resp, err := c.db.SQLQuery(ctx, countFediAccountsForInstance(instanceID), nil, true)
+	// prep params
+	params := map[string]interface{}{
+		statements.FediAccountColumnNameInstanceID: instanceID,
+	}
+
+	// run query
+	resp, err := c.db.SQLQuery(ctx, statements.CountFediAccountsForInstance(), params, true)
 	if err != nil {
 		l.Errorf("SQLQuery: %s", err.Error())
 		go metric.Done(true)
@@ -50,27 +64,26 @@ func (c *Client) CreateFediAccount(ctx context.Context, account *models.FediAcco
 	metric := c.metrics.NewDBQuery("CreateFediAccount")
 	l := logger.WithField("func", "CreateFediAccount")
 
+	// prep params
 	createdAt := time.Now().UTC()
-
-	// create transaction
-	tx, err := c.db.NewTx(ctx)
-	if err != nil {
-		l.Errorf("NewTx: %s", err.Error())
-		go metric.Done(true)
-
-		return c.ProcessError(err)
+	params := map[string]interface{}{
+		statements.FediAccountColumnNameCreatedAt:   createdAt,
+		statements.FediAccountColumnNameUpdatedAt:   createdAt,
+		statements.FediAccountColumnNameUsername:    account.Username,
+		statements.FediAccountColumnNameInstanceID:  account.InstanceID,
+		statements.FediAccountColumnNameActorURI:    account.ActorURI,
+		statements.FediAccountColumnNameDisplayName: account.DisplayName,
+		statements.FediAccountColumnNameLastFinger:  account.LastFinger,
+		statements.FediAccountColumnNameIsAdmin:     account.IsAdmin,
+	}
+	if len(account.AccessToken) > 0 {
+		params[statements.FediAccountColumnNameAccessToken] = account.AccessToken
+	} else {
+		params[statements.FediAccountColumnNameAccessToken] = nil
 	}
 
-	err = tx.SQLExec(ctx, insertFediAccount(account, createdAt), nil)
-	if err != nil {
-		l.Errorf("SQLQuery: %s", err.Error())
-		go metric.Done(true)
-
-		return c.ProcessError(err)
-	}
-
-	// commit
-	resp, err := tx.Commit(ctx)
+	// run query
+	resp, err := c.db.SQLExec(ctx, statements.InsertFediAccount(), params)
 	if err != nil {
 		l.Errorf("Commit: %s", err.Error())
 		go metric.Done(true)
@@ -80,7 +93,7 @@ func (c *Client) CreateFediAccount(ctx context.Context, account *models.FediAcco
 
 	account.CreatedAt = createdAt
 	account.UpdatedAt = createdAt
-	account.ID = resp.GetLastInsertedPKs()[TableNameFediAccounts].GetN()
+	account.ID = resp.LastInsertedPk()[statements.FediAccountsTableName].GetN()
 
 	go metric.Done(false)
 
@@ -143,7 +156,18 @@ func (c *Client) ReadFediAccount(ctx context.Context, id int64) (*models.FediAcc
 	metric := c.metrics.NewDBQuery("ReadFediAccount")
 	l := logger.WithField("func", "ReadFediAccount")
 
-	resp, err := c.db.SQLQuery(ctx, selectFediAccount(id), nil, true)
+	// prep params
+	params := map[string]interface{}{
+		statements.FediAccountColumnNameID: id,
+	}
+
+	// run query
+	resp, err := c.db.SQLQuery(
+		ctx,
+		statements.SelectFediAccount(),
+		params,
+		true,
+	)
 	if err != nil {
 		l.Errorf("SQLQuery: %s", err.Error())
 		go metric.Done(true)
@@ -182,7 +206,19 @@ func (c *Client) ReadFediAccountByUsername(ctx context.Context, instanceID int64
 	metric := c.metrics.NewDBQuery("ReadFediAccountByUsername")
 	l := logger.WithField("func", "ReadFediAccountByUsername")
 
-	resp, err := c.db.SQLQuery(ctx, selectFediAccountByUsername(instanceID, username), nil, true)
+	// prep params
+	params := map[string]interface{}{
+		statements.FediAccountColumnNameInstanceID: instanceID,
+		statements.FediAccountColumnNameUsername:   username,
+	}
+
+	// run query
+	resp, err := c.db.SQLQuery(
+		ctx,
+		statements.SelectFediAccountByUsername(),
+		params,
+		true,
+	)
 	if err != nil {
 		l.Errorf("SQLQuery: %s", err.Error())
 		go metric.Done(true)
@@ -221,7 +257,7 @@ func (c *Client) ReadFediAccountsPage(ctx context.Context, index, count int) ([]
 	metric := c.metrics.NewDBQuery("ReadFediAccountsPage")
 	l := logger.WithField("func", "ReadFediAccountsPage")
 
-	lastReadID, err := c.PageHelper(ctx, TableNameFediAccounts, index, count)
+	lastReadID, err := c.PageHelper(ctx, statements.FediAccountsTableName, index, count)
 	if err != nil {
 		l.Errorf("page helper: %s", err.Error())
 		go metric.Done(true)
@@ -231,10 +267,16 @@ func (c *Client) ReadFediAccountsPage(ctx context.Context, index, count int) ([]
 
 	l.Debugf("last seen id: %d", lastReadID)
 
+	// prep params
+	params := map[string]interface{}{
+		statements.ParamLastReadID: lastReadID,
+	}
+
+	// run query
 	resp, err := c.db.SQLQuery(
 		ctx,
-		selectFediAccountsPage(lastReadID, count, "id", true),
-		nil,
+		statements.SelectFediAccountsPage(true, count),
+		params,
 		true,
 	)
 	if err != nil {
@@ -274,29 +316,32 @@ func (c *Client) UpdateFediAccount(ctx context.Context, account *models.FediAcco
 	metric := c.metrics.NewDBQuery("UpdateFediAccount")
 	l := logger.WithField("func", "UpdateFediAccount")
 
+	// prep params
 	updatedAt := time.Now().UTC()
-
-	// create transaction
-	tx, err := c.db.NewTx(ctx)
-	if err != nil {
-		l.Errorf("NewTx: %s", err.Error())
-		go metric.Done(true)
-
-		return c.ProcessError(err)
+	params := map[string]interface{}{
+		statements.FediAccountColumnNameID:          account.ID,
+		statements.FediAccountColumnNameUpdatedAt:   updatedAt,
+		statements.FediAccountColumnNameUsername:    account.Username,
+		statements.FediAccountColumnNameInstanceID:  account.InstanceID,
+		statements.FediAccountColumnNameActorURI:    account.ActorURI,
+		statements.FediAccountColumnNameDisplayName: account.DisplayName,
+		statements.FediAccountColumnNameLastFinger:  account.LastFinger,
+		statements.FediAccountColumnNameIsAdmin:     account.IsAdmin,
+	}
+	if len(account.AccessToken) > 0 {
+		params[statements.FediAccountColumnNameAccessToken] = account.AccessToken
+	} else {
+		params[statements.FediAccountColumnNameAccessToken] = nil
 	}
 
-	err = tx.SQLExec(ctx, upsertFediAccount(account, updatedAt), nil)
+	// run query
+	_, err := c.db.SQLExec(
+		ctx,
+		statements.UpsertFediAccount(),
+		params,
+	)
 	if err != nil {
 		l.Errorf("SQLExec: %s", err.Error())
-		go metric.Done(true)
-
-		return c.ProcessError(err)
-	}
-
-	// commit
-	_, err = tx.Commit(ctx)
-	if err != nil {
-		l.Errorf("Commit: %s", err.Error())
 		go metric.Done(true)
 
 		return c.ProcessError(err)
@@ -313,18 +358,18 @@ func (c *Client) UpdateFediAccount(ctx context.Context, account *models.FediAcco
 
 func makeFediAccountFromRow(row *schema.Row) *models.FediAccount {
 	newAccount := models.FediAccount{
-		ID:          row.GetValues()[fediAccountColumnID].GetN(),
-		CreatedAt:   tsToTime(row.GetValues()[fediAccountColumnCreatedAt].GetTs()),
-		UpdatedAt:   tsToTime(row.GetValues()[fediAccountColumnUpdatedAt].GetTs()),
-		Username:    row.GetValues()[fediAccountColumnUsername].GetS(),
-		InstanceID:  row.GetValues()[fediAccountColumnInstanceID].GetN(),
-		ActorURI:    row.GetValues()[fediAccountColumnActorURI].GetS(),
-		DisplayName: row.GetValues()[fediAccountColumnDisplayName].GetS(),
-		LastFinger:  tsToTime(row.GetValues()[fediAccountColumnLastFinger].GetTs()),
-		Admin:       row.GetValues()[fediAccountColumnIsAdmin].GetB(),
+		ID:          row.GetValues()[statements.FediAccountColumnIndexID].GetN(),
+		CreatedAt:   tsToTime(row.GetValues()[statements.FediAccountColumnIndexCreatedAt].GetTs()),
+		UpdatedAt:   tsToTime(row.GetValues()[statements.FediAccountColumnIndexUpdatedAt].GetTs()),
+		Username:    row.GetValues()[statements.FediAccountColumnIndexUsername].GetS(),
+		InstanceID:  row.GetValues()[statements.FediAccountColumnIndexInstanceID].GetN(),
+		ActorURI:    row.GetValues()[statements.FediAccountColumnIndexActorURI].GetS(),
+		DisplayName: row.GetValues()[statements.FediAccountColumnIndexDisplayName].GetS(),
+		LastFinger:  tsToTime(row.GetValues()[statements.FediAccountColumnIndexLastFinger].GetTs()),
+		IsAdmin:     row.GetValues()[statements.FediAccountColumnIndexIsAdmin].GetB(),
 	}
-	if !isNull(row.GetValues()[fediAccountColumnAccessToken]) {
-		newAccount.AccessToken = row.GetValues()[fediAccountColumnAccessToken].GetBs()
+	if !isNull(row.GetValues()[statements.FediAccountColumnIndexAccessToken]) {
+		newAccount.AccessToken = row.GetValues()[statements.FediAccountColumnIndexAccessToken].GetBs()
 	}
 
 	return &newAccount

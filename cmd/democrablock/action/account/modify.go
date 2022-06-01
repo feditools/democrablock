@@ -90,7 +90,7 @@ var Modify action.Action = func(ctx context.Context) error {
 	for _, addGroup := range viper.GetStringSlice(config.Keys.AccountAddGroup) {
 		switch addGroup {
 		case "admin":
-			account.Admin = true
+			account.IsAdmin = true
 		default:
 			l.Warnf("unknown group %s, skipping", addGroup)
 		}

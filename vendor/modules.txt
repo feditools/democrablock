@@ -354,7 +354,7 @@ github.com/tomnomnom/linkheader
 ## explicit; go 1.17
 github.com/tyrm/go-util/middleware
 github.com/tyrm/go-util/mimetype
-# github.com/tyrm/immudb-migrate v0.2.0
+# github.com/tyrm/immudb-migrate v0.2.1
 ## explicit; go 1.17
 github.com/tyrm/immudb-migrate
 # github.com/ugorji/go/codec v1.2.7

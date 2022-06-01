@@ -21,7 +21,7 @@ type FediAccount struct {
 	LogInCount  int64         `validate:"-" bun:",nullzero,notnull,default:0"`
 	LogInLast   time.Time     `validate:"-" bun:",nullzero"`
 	AccessToken []byte        `validate:"-" bun:",nullzero"`
-	Admin       bool          `validate:"-" bun:",notnull"`
+	IsAdmin     bool          `validate:"-" bun:",notnull"`
 }
 
 var _ bun.BeforeAppendModelHook = (*FediAccount)(nil)

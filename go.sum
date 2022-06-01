@@ -739,8 +739,8 @@ github.com/tomnomnom/linkheader v0.0.0-20180905144013-02ca5825eb80 h1:nrZ3ySNYwJ
 github.com/tomnomnom/linkheader v0.0.0-20180905144013-02ca5825eb80/go.mod h1:iFyPdL66DjUD96XmzVL3ZntbzcflLnznH0fr99w5VqE=
 github.com/tyrm/go-util v0.4.2 h1:SFcHyY39tzl2v5tr35vVvRbaTDkLNQeaHgnCf0214D8=
 github.com/tyrm/go-util v0.4.2/go.mod h1:DPIb77f7bqnK517jXiV86pBmdQYRiuTY09YOCPZrxUA=
-github.com/tyrm/immudb-migrate v0.2.0 h1:Y2imiPGcGyqIbGIoDg5GyxkoNpqDFPcXE7vMz5i54I8=
-github.com/tyrm/immudb-migrate v0.2.0/go.mod h1:j2rTvPEt2f5IzjQJfWesqD6ByPZI0UOcl6//VFGYyo4=
+github.com/tyrm/immudb-migrate v0.2.1 h1:pMDaQPucTbkTwlRbPz7NZVd29lcf7G3IKHiHAV9bijs=
+github.com/tyrm/immudb-migrate v0.2.1/go.mod h1:j2rTvPEt2f5IzjQJfWesqD6ByPZI0UOcl6//VFGYyo4=
 github.com/ugorji/go v1.1.7/go.mod h1:kZn38zHttfInRq0xu/PH0az30d+z6vm202qpg1oXVMw=
 github.com/ugorji/go v1.2.7/go.mod h1:nF9osbDWLy6bDVv/Rtoh6QgnvNDpmCalQV5urGCCS6M=
 github.com/ugorji/go/codec v1.1.7/go.mod h1:Ax+UKWsSmolVDwsd+7N3ZtXu+yMGCf907BLYF3GoBXY=
