@@ -10,8 +10,8 @@ import (
 	"github.com/spf13/viper"
 )
 
-// New creates a new bun database immudb.
-func New(ctx context.Context, m metrics.Collector) (db.DB, error) {
+// New creates a new immudb database client.
+func New(ctx context.Context, m metrics.Collector) (*Client, error) {
 	l := logger.WithField("func", "New")
 
 	opts := immudb.DefaultOptions().

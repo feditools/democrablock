@@ -219,10 +219,55 @@ func (c *Client) ReadFediAccountByUsername(ctx context.Context, instanceID int64
 
 func (c *Client) ReadFediAccountsPage(ctx context.Context, index, count int) ([]*models.FediAccount, db.Error) {
 	metric := c.metrics.NewDBQuery("ReadFediAccountsPage")
+	l := logger.WithField("func", "ReadFediAccountsPage")
+
+	lastReadID, err := c.PageHelper(ctx, TableNameFediAccounts, index, count)
+	if err != nil {
+		l.Errorf("page helper: %s", err.Error())
+		go metric.Done(true)
+
+		return nil, c.ProcessError(err)
+	}
+
+	l.Debugf("last seen id: %d", lastReadID)
+
+	resp, err := c.db.SQLQuery(
+		ctx,
+		selectFediAccountsPage(lastReadID, count, "id", true),
+		nil,
+		true,
+	)
+	if err != nil {
+		l.Errorf("SQLQuery: %s", err.Error())
+		go metric.Done(true)
+
+		return nil, c.ProcessError(err)
+	}
+
+	accounts := make([]*models.FediAccount, len(resp.GetRows()))
+	for i, row := range resp.GetRows() {
+		// make new account from
+		account := makeFediAccountFromRow(row)
+
+		// get login info
+		loginCount, loginLast, err := c.readFediAccountLoginInfo(ctx, account.ID)
+		if err != nil {
+			l.Errorf("read login info: %s", err.Error())
+			go metric.Done(true)
+
+			return nil, c.ProcessError(err)
+		}
+		if loginCount > 0 {
+			account.LogInCount = loginCount
+			account.LogInLast = loginLast
+		}
+
+		accounts[i] = account
+	}
 
 	go metric.Done(false)
 
-	return nil, nil
+	return accounts, nil
 }
 
 func (c *Client) UpdateFediAccount(ctx context.Context, account *models.FediAccount) db.Error {

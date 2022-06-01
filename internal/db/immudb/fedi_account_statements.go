@@ -113,3 +113,18 @@ func selectFediAccountByUsername(instanceID int64, username string) string {
 		instanceID,            // instance_id
 	)
 }
+
+const selectFediAccountsPageStatement = `
+SELECT %s FROM %s WHERE id > %d ORDER BY %s %s LIMIT %d;`
+
+func selectFediAccountsPage(lastReadID int64, count int, orderBy string, ascending bool) string {
+	return fmt.Sprintf(
+		selectFediAccountsPageStatement,
+		fediAccountAllColumns, // Columns
+		TableNameFediAccounts, // Table Name
+		lastReadID,            // Where id
+		orderBy,               // Order By
+		sortOrder(ascending),  // Sorting Order
+		count,                 // Limit
+	)
+}
