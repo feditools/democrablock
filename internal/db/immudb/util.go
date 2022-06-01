@@ -43,6 +43,8 @@ func isNull(v *schema.SQLValue) bool {
 	return reflect.TypeOf(v.GetValue()) == reflect.TypeOf(&schema.SQLValue_Null{})
 }
 
+//revive:disable:flag-parameter
+
 func sortOrder(ascending bool) string {
 	if ascending {
 		return "ASC"
@@ -50,6 +52,8 @@ func sortOrder(ascending bool) string {
 
 	return "DESC"
 }
+
+//revive:enable:flag-parameter
 
 func tsToTime(ts int64) time.Time {
 	return time.Unix(0, ts*microsecondsToNanoseconds).UTC()

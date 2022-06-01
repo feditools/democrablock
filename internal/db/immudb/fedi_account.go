@@ -272,6 +272,37 @@ func (c *Client) ReadFediAccountsPage(ctx context.Context, index, count int) ([]
 
 func (c *Client) UpdateFediAccount(ctx context.Context, account *models.FediAccount) db.Error {
 	metric := c.metrics.NewDBQuery("UpdateFediAccount")
+	l := logger.WithField("func", "UpdateFediAccount")
+
+	updatedAt := time.Now().UTC()
+
+	// create transaction
+	tx, err := c.db.NewTx(ctx)
+	if err != nil {
+		l.Errorf("NewTx: %s", err.Error())
+		go metric.Done(true)
+
+		return c.ProcessError(err)
+	}
+
+	err = tx.SQLExec(ctx, upsertFediAccount(account, updatedAt), nil)
+	if err != nil {
+		l.Errorf("SQLExec: %s", err.Error())
+		go metric.Done(true)
+
+		return c.ProcessError(err)
+	}
+
+	// commit
+	_, err = tx.Commit(ctx)
+	if err != nil {
+		l.Errorf("Commit: %s", err.Error())
+		go metric.Done(true)
+
+		return c.ProcessError(err)
+	}
+
+	account.UpdatedAt = updatedAt
 
 	go metric.Done(false)
 

@@ -128,3 +128,40 @@ func selectFediAccountsPage(lastReadID int64, count int, orderBy string, ascendi
 		count,                 // Limit
 	)
 }
+
+const upsertFediAccountStatement = `
+UPSERT INTO %s (
+    id,
+    updated_at,
+    username,
+    instance_id,
+    actor_uri,
+    display_name,
+    last_finger,
+    is_admin
+)
+VALUES (
+    %d,
+    CAST(%d AS TIMESTAMP),
+    '%s',
+    %d,
+    '%s',
+    '%s',
+    CAST(%d AS TIMESTAMP),
+    %t
+);`
+
+func upsertFediAccount(account *models.FediAccount, updatedAt time.Time) string {
+	return fmt.Sprintf(
+		upsertFediAccountStatement,
+		TableNameFediAccounts,           // Table Name
+		account.ID,                      // id
+		updatedAt.Unix(),                // updated_at
+		account.Username,                // username
+		account.InstanceID,              // instance_id
+		account.ActorURI,                // actor_uri
+		account.DisplayName,             // display_name
+		account.LastFinger.UTC().Unix(), // last_finger
+		account.Admin,                   // is_admin
+	)
+}
