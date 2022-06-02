@@ -320,6 +320,7 @@ func (c *Client) UpdateFediAccount(ctx context.Context, account *models.FediAcco
 	updatedAt := time.Now().UTC()
 	params := map[string]interface{}{
 		statements.FediAccountColumnNameID:          account.ID,
+		statements.FediAccountColumnNameCreatedAt:   account.CreatedAt,
 		statements.FediAccountColumnNameUpdatedAt:   updatedAt,
 		statements.FediAccountColumnNameUsername:    account.Username,
 		statements.FediAccountColumnNameInstanceID:  account.InstanceID,
@@ -335,6 +336,7 @@ func (c *Client) UpdateFediAccount(ctx context.Context, account *models.FediAcco
 	}
 
 	// run query
+	l.Debugf("statement:%s\nparams:\n%+v", statements.UpsertFediAccount(), params)
 	_, err := c.db.SQLExec(
 		ctx,
 		statements.UpsertFediAccount(),

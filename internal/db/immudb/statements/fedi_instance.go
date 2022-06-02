@@ -135,7 +135,8 @@ UPSERT INTO %[1]s (
     %[6]s,
     %[7]s,
     %[8]s,
-    %[9]s
+    %[9]s,
+    %[10]s
 )
 VALUES (
     @%[2]s,
@@ -146,6 +147,7 @@ VALUES (
     @%[7]s,
     @%[8]s,
     @%[9]s,
+    @%[10]s
 );`
 
 func UpsertFediInstance() string {
@@ -153,12 +155,13 @@ func UpsertFediInstance() string {
 		upsertFediInstanceStatement,
 		FediInstancesTableName,               // 1-Table Name
 		FediInstanceColumnNameID,             // 2
-		FediInstanceColumnNameUpdatedAt,      // 3
-		FediInstanceColumnNameDomain,         // 4
-		FediInstanceColumnNameActorURI,       // 5
-		FediInstanceColumnNameServerHostname, // 6
-		FediInstanceColumnNameSoftware,       // 7
-		FediInstanceColumnNameClientID,       // 8
-		FediInstanceColumnNameClientSecret,   // 9
+		FediInstanceColumnNameCreatedAt,      // 3
+		FediInstanceColumnNameUpdatedAt,      // 4
+		FediInstanceColumnNameDomain,         // 5
+		FediInstanceColumnNameActorURI,       // 6
+		FediInstanceColumnNameServerHostname, // 7
+		FediInstanceColumnNameSoftware,       // 8
+		FediInstanceColumnNameClientID,       // 9
+		FediInstanceColumnNameClientSecret,   // 10
 	)
 }

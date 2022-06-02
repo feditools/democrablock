@@ -200,12 +200,13 @@ func (c *Client) ReadFediInstancesPage(ctx context.Context, index, count int) ([
 
 func (c *Client) UpdateFediInstance(ctx context.Context, instance *models.FediInstance) db.Error {
 	metric := c.metrics.NewDBQuery("UpdateFediInstance")
-	l := logger.WithField("func", "UpdateFediAccount")
+	l := logger.WithField("func", "UpdateFediInstance")
 
 	// prep params
 	updatedAt := time.Now().UTC()
 	params := map[string]interface{}{
 		statements.FediInstanceColumnNameID:             instance.ID,
+		statements.FediInstanceColumnNameCreatedAt:      instance.CreatedAt,
 		statements.FediInstanceColumnNameUpdatedAt:      updatedAt,
 		statements.FediInstanceColumnNameDomain:         instance.Domain,
 		statements.FediInstanceColumnNameActorURI:       instance.ActorURI,
@@ -224,6 +225,7 @@ func (c *Client) UpdateFediInstance(ctx context.Context, instance *models.FediIn
 	}
 
 	// run query
+	l.Debugf("statement:%s\nparams:\n%+v", statements.UpsertFediAccount(), params)
 	_, err := c.db.SQLExec(
 		ctx,
 		statements.UpsertFediInstance(),

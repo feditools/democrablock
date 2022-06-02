@@ -154,7 +154,8 @@ UPSERT INTO %[1]s (
     %[7]s,
     %[8]s,
     %[9]s,
-    %[10]s
+    %[10]s,
+    %[11]s
 )
 VALUES (
     @%[2]s,
@@ -165,7 +166,8 @@ VALUES (
     @%[7]s,
     @%[8]s,
     @%[9]s,
-    @%[10]s
+    @%[10]s,
+    @%[11]s
 );`
 
 func UpsertFediAccount() string {
@@ -173,13 +175,14 @@ func UpsertFediAccount() string {
 		upsertFediAccountStatement,
 		FediAccountsTableName,            // 1- Table Name
 		FediAccountColumnNameID,          // 2
-		FediAccountColumnNameUpdatedAt,   // 3
-		FediAccountColumnNameUsername,    // 4
-		FediAccountColumnNameInstanceID,  // 5
-		FediAccountColumnNameActorURI,    // 6
-		FediAccountColumnNameDisplayName, // 7
-		FediAccountColumnNameLastFinger,  // 8
-		FediAccountColumnNameAccessToken, // 9
-		FediAccountColumnNameIsAdmin,     // 10
+		FediAccountColumnNameCreatedAt,   // 3
+		FediAccountColumnNameUpdatedAt,   // 4
+		FediAccountColumnNameUsername,    // 5
+		FediAccountColumnNameInstanceID,  // 6
+		FediAccountColumnNameActorURI,    // 7
+		FediAccountColumnNameDisplayName, // 8
+		FediAccountColumnNameLastFinger,  // 9
+		FediAccountColumnNameAccessToken, // 10
+		FediAccountColumnNameIsAdmin,     // 11
 	)
 }

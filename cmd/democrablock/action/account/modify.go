@@ -3,9 +3,10 @@ package account
 import (
 	"context"
 
+	"github.com/feditools/democrablock/internal/db/immudb"
+
 	"github.com/feditools/democrablock/cmd/democrablock/action"
 	"github.com/feditools/democrablock/internal/config"
-	"github.com/feditools/democrablock/internal/db/bun"
 	"github.com/feditools/go-lib"
 	"github.com/feditools/go-lib/metrics/statsd"
 	"github.com/spf13/viper"
@@ -35,7 +36,7 @@ var Modify action.Action = func(ctx context.Context) error {
 
 	// create database client
 	l.Info("creating database client")
-	dbClient, err := bun.New(ctx, metricsCollector)
+	dbClient, err := immudb.New(ctx, metricsCollector)
 	if err != nil {
 		l.Errorf("db: %s", err.Error())
 
