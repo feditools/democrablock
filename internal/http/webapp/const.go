@@ -1,6 +1,8 @@
 package webapp
 
 const (
+	defaultCount = 20
+
 	// COAnonymous is an anonymous cross origin.
 	COAnonymous = "anonymous"
 

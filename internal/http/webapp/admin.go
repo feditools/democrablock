@@ -11,7 +11,7 @@ import (
 
 func makeAdminNavbar(r *nethttp.Request) template.Navbar {
 	// get localizer
-	l := r.Context().Value(http.ContextKeyLocalizer).(*language.Localizer)
+	l := r.Context().Value(http.ContextKeyLocalizer).(*language.Localizer) // nolint
 
 	// create navbar
 	newNavbar := template.Navbar{

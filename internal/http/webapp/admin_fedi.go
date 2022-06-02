@@ -15,7 +15,7 @@ func (m *Module) AdminFediGetHandler(w nethttp.ResponseWriter, r *nethttp.Reques
 	l := logger.WithField("func", "AdminFediverseGetHandler")
 
 	// get localizer
-	localizer := r.Context().Value(http.ContextKeyLocalizer).(*language.Localizer)
+	localizer := r.Context().Value(http.ContextKeyLocalizer).(*language.Localizer) // nolint
 
 	// Init template variables
 	tmplVars := &template.AdminFedi{
@@ -42,7 +42,7 @@ func (m *Module) AdminFediGetHandler(w nethttp.ResponseWriter, r *nethttp.Reques
 
 func makeAdminFediverseSidebar(r *nethttp.Request) libtemplate.Sidebar {
 	// get localizer
-	localizer := r.Context().Value(http.ContextKeyLocalizer).(*language.Localizer)
+	localizer := r.Context().Value(http.ContextKeyLocalizer).(*language.Localizer) // nolint
 
 	// create sidebar
 	newSidebar := libtemplate.Sidebar{
