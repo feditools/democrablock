@@ -4,6 +4,8 @@ import (
 	"context"
 	nethttp "net/http"
 
+	"github.com/feditools/go-lib/language"
+
 	"github.com/feditools/democrablock/internal/http"
 	libhttp "github.com/feditools/go-lib/http"
 	"github.com/go-http-utils/etag"
@@ -69,4 +71,24 @@ func (m *Module) Middleware(next nethttp.Handler) nethttp.Handler {
 		// Do Request
 		next.ServeHTTP(w, r.WithContext(ctx))
 	}), false)
+}
+
+// MiddlewareRequireAdmin will redirect a user to login page if user not in context and will return unauthorized for
+// a non admin user.
+func (m *Module) MiddlewareRequireAdmin(next nethttp.Handler) nethttp.Handler {
+	return nethttp.HandlerFunc(func(w nethttp.ResponseWriter, r *nethttp.Request) {
+		account, shouldReturn := m.authRequireLoggedIn(w, r)
+		if shouldReturn {
+			return
+		}
+
+		if !account.IsAdmin {
+			localizer := r.Context().Value(http.ContextKeyLocalizer).(*language.Localizer) // nolint
+			m.returnErrorPage(w, r, nethttp.StatusUnauthorized, localizer.TextUnauthorized().String())
+
+			return
+		}
+
+		next.ServeHTTP(w, r)
+	})
 }

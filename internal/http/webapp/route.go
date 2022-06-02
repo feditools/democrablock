@@ -30,5 +30,14 @@ func (m *Module) Route(s *http.Server) error {
 	webapp.HandleFunc(path.Login, m.LoginPostHandler).Methods(nethttp.MethodPost)
 	webapp.HandleFunc(path.Logout, m.LogoutGetHandler).Methods(nethttp.MethodGet)
 
+	admin := webapp.PathPrefix(path.Admin).Subrouter()
+	admin.Use(m.MiddlewareRequireAdmin)
+	admin.NotFoundHandler = m.notFoundHandler()
+	admin.MethodNotAllowedHandler = m.methodNotAllowedHandler()
+
+	admin.HandleFunc(path.AdminSubFediverse, m.AdminFediGetHandler).Methods(nethttp.MethodGet)
+	admin.HandleFunc(path.AdminSubFediverseAccounts, m.AdminFediAccountsGetHandler).Methods(nethttp.MethodGet)
+	admin.HandleFunc(path.AdminSubFediverseInstances, m.AdminFediInstancesGetHandler).Methods(nethttp.MethodGet)
+
 	return nil
 }
