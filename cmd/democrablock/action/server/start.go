@@ -7,6 +7,8 @@ import (
 	"os/signal"
 	"syscall"
 
+	"github.com/feditools/democrablock/internal/db/immudb"
+
 	"github.com/feditools/democrablock/internal/config"
 	"github.com/feditools/democrablock/internal/fedi"
 	"github.com/feditools/democrablock/internal/http"
@@ -16,8 +18,6 @@ import (
 	"github.com/spf13/viper"
 
 	"github.com/feditools/democrablock/cmd/democrablock/action"
-	"github.com/feditools/democrablock/internal/db/bun"
-	cachemem "github.com/feditools/democrablock/internal/db/cache_mem"
 	"github.com/feditools/democrablock/internal/kv/redis"
 	"github.com/feditools/go-lib"
 	"github.com/feditools/go-lib/metrics/statsd"
@@ -46,20 +46,14 @@ var Start action.Action = func(ctx context.Context) error {
 	}()
 
 	// create db client
-	dbClient, err := bun.New(ctx, metricsCollector)
+	dbClient, err := immudb.New(ctx, metricsCollector)
 	if err != nil {
 		l.Errorf("db: %s", err.Error())
 
 		return err
 	}
-	cachedDBClient, err := cachemem.New(ctx, dbClient, metricsCollector)
-	if err != nil {
-		l.Errorf("db-cachemem: %s", err.Error())
-
-		return err
-	}
 	defer func() {
-		err := cachedDBClient.Close(ctx)
+		err := dbClient.Close(ctx)
 		if err != nil {
 			l.Errorf("closing db: %s", err.Error())
 		}
@@ -104,7 +98,7 @@ var Start action.Action = func(ctx context.Context) error {
 	}
 
 	// create fedi module
-	fediMod, err := fedi.New(cachedDBClient, httpClient, redisClient, tokz)
+	fediMod, err := fedi.New(dbClient, httpClient, redisClient, tokz)
 	if err != nil {
 		l.Errorf("fedi: %s", err.Error())
 
@@ -124,7 +118,7 @@ var Start action.Action = func(ctx context.Context) error {
 	var webModules []http.Module
 	if lib.ContainsString(viper.GetStringSlice(config.Keys.ServerRoles), config.ServerRoleWebapp) {
 		l.Infof("adding webapp module")
-		webMod, err := webapp.New(ctx, cachedDBClient, redisClient, fediMod, languageMod, tokz, metricsCollector)
+		webMod, err := webapp.New(ctx, dbClient, redisClient, fediMod, languageMod, tokz, metricsCollector)
 		if err != nil {
 			l.Errorf("webapp module: %s", err.Error())
 
