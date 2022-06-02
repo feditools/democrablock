@@ -63,12 +63,12 @@ var Defaults = Values{
 	ApplicationWebsite: "https://github.com/feditools/democrablock",
 
 	// database
-	DBType:         "postgres",
-	DBAddress:      "",
-	DBPort:         5432,
-	DBUser:         "",
-	DBPassword:     "",
-	DBDatabase:     "ft_login",
+	DBType:         "immudb",
+	DBAddress:      "localhost",
+	DBPort:         3322,
+	DBUser:         "immudb",
+	DBPassword:     "immudb",
+	DBDatabase:     "defaultdb",
 	DBTLSMode:      "disable",
 	DBTLSCACert:    "",
 	DBLoadTestData: false,

@@ -140,11 +140,6 @@ func (c *CacheMem) Close(ctx context.Context) db.Error {
 	return c.db.Close(ctx)
 }
 
-// Create is a pass through.
-func (c *CacheMem) Create(ctx context.Context, i interface{}) db.Error {
-	return c.db.Create(ctx, i)
-}
-
 // DoMigration is a pass through.
 func (c *CacheMem) DoMigration(ctx context.Context) db.Error {
 	return c.db.DoMigration(ctx)
@@ -155,11 +150,6 @@ func (c *CacheMem) LoadTestData(ctx context.Context) db.Error {
 	return c.db.LoadTestData(ctx)
 }
 
-// ReadByID is a pass through.
-func (c *CacheMem) ReadByID(ctx context.Context, id int64, i interface{}) db.Error {
-	return c.db.ReadByID(ctx, id, i)
-}
-
 // ResetCache clears all the caches.
 func (c *CacheMem) ResetCache(ctx context.Context) db.Error {
 	for _, cache := range c.allCaches {
@@ -167,9 +157,4 @@ func (c *CacheMem) ResetCache(ctx context.Context) db.Error {
 	}
 
 	return c.db.ResetCache(ctx)
-}
-
-// Update is a pass through.
-func (c *CacheMem) Update(ctx context.Context, i interface{}) db.Error {
-	return c.db.Update(ctx, i)
 }

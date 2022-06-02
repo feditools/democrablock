@@ -1,0 +1,3416 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "immudb REST API",
+    "description": "\u003cb\u003eIMPORTANT\u003c/b\u003e: All \u003ccode\u003eget\u003c/code\u003e and \u003ccode\u003esafeget\u003c/code\u003e functions return \u003cu\u003ebase64-encoded\u003c/u\u003e keys and values, while all \u003ccode\u003eset\u003c/code\u003e and \u003ccode\u003esafeset\u003c/code\u003e functions expect \u003cu\u003ebase64-encoded\u003c/u\u003e inputs.",
+    "version": "version not set"
+  },
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/db/compactindex": {
+      "get": {
+        "operationId": "ImmuService_CompactIndex",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "properties": {}
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
+            }
+          }
+        },
+        "tags": [
+          "ImmuService"
+        ]
+      }
+    },
+    "/db/count/{prefix}": {
+      "get": {
+        "summary": "NOT YET SUPPORTED",
+        "operationId": "ImmuService_Count",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/schemaEntryCount"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "prefix",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "byte"
+          }
+        ],
+        "tags": [
+          "ImmuService"
+        ]
+      }
+    },
+    "/db/countall": {
+      "get": {
+        "summary": "NOT YET SUPPORTED",
+        "operationId": "ImmuService_CountAll",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/schemaEntryCount"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
+            }
+          }
+        },
+        "tags": [
+          "ImmuService"
+        ]
+      }
+    },
+    "/db/create": {
+      "post": {
+        "summary": "DEPRECATED: Use CreateDatabaseV2",
+        "operationId": "ImmuService_CreateDatabase",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "properties": {}
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/schemaDatabase"
+            }
+          }
+        ],
+        "tags": [
+          "ImmuService"
+        ]
+      }
+    },
+    "/db/create/v2": {
+      "post": {
+        "operationId": "ImmuService_CreateDatabaseV2",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/schemaCreateDatabaseResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/schemaCreateDatabaseRequest"
+            }
+          }
+        ],
+        "tags": [
+          "ImmuService"
+        ]
+      }
+    },
+    "/db/createwith": {
+      "post": {
+        "summary": "DEPRECATED: Use CreateDatabaseV2",
+        "operationId": "ImmuService_CreateDatabaseWith",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "properties": {}
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/schemaDatabaseSettings"
+            }
+          }
+        ],
+        "tags": [
+          "ImmuService"
+        ]
+      }
+    },
+    "/db/delete": {
+      "post": {
+        "operationId": "ImmuService_DeleteDatabase",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/schemaDeleteDatabaseResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/schemaDeleteDatabaseRequest"
+            }
+          }
+        ],
+        "tags": [
+          "ImmuService"
+        ]
+      }
+    },
+    "/db/execall": {
+      "post": {
+        "operationId": "ImmuService_ExecAll",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/schemaTxHeader"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/schemaExecAllRequest"
+            }
+          }
+        ],
+        "tags": [
+          "ImmuService"
+        ]
+      }
+    },
+    "/db/flushindex": {
+      "get": {
+        "operationId": "ImmuService_FlushIndex",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/schemaFlushIndexResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "cleanupPercentage",
+            "in": "query",
+            "required": false,
+            "type": "number",
+            "format": "float"
+          },
+          {
+            "name": "synced",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          }
+        ],
+        "tags": [
+          "ImmuService"
+        ]
+      }
+    },
+    "/db/get/{key}": {
+      "get": {
+        "operationId": "ImmuService_Get",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/schemaEntry"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "key",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "byte"
+          },
+          {
+            "name": "atTx",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "uint64"
+          },
+          {
+            "name": "sinceTx",
+            "description": "if 0 (and nowait=false), wait for the index to be up=to-date.",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "uint64"
+          },
+          {
+            "name": "noWait",
+            "description": "if set to true - do not wait for any indexing update considering only the currently indexed state.",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "name": "atRevision",
+            "description": "if \u003e 0, get the nth version of the value, 1 being the first version, 2 being the second and so on\nif \u003c 0, get the historical nth value of the key, -1 being the previous version, -2 being the one before and so on.",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "int64"
+          }
+        ],
+        "tags": [
+          "ImmuService"
+        ]
+      }
+    },
+    "/db/getall": {
+      "post": {
+        "operationId": "ImmuService_GetAll",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/schemaEntries"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/schemaKeyListRequest"
+            }
+          }
+        ],
+        "tags": [
+          "ImmuService"
+        ]
+      }
+    },
+    "/db/health": {
+      "get": {
+        "operationId": "ImmuService_DatabaseHealth",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/schemaDatabaseHealthResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
+            }
+          }
+        },
+        "tags": [
+          "ImmuService"
+        ],
+        "security": []
+      }
+    },
+    "/db/history": {
+      "post": {
+        "operationId": "ImmuService_History",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/schemaEntries"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/schemaHistoryRequest"
+            }
+          }
+        ],
+        "tags": [
+          "ImmuService"
+        ]
+      }
+    },
+    "/db/list": {
+      "post": {
+        "summary": "DEPRECATED: Use DatabaseListV2",
+        "operationId": "ImmuService_DatabaseList",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/schemaDatabaseListResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "properties": {}
+            }
+          }
+        ],
+        "tags": [
+          "ImmuService"
+        ]
+      }
+    },
+    "/db/list/v2": {
+      "post": {
+        "operationId": "ImmuService_DatabaseListV2",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/schemaDatabaseListResponseV2"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/schemaDatabaseListRequestV2"
+            }
+          }
+        ],
+        "tags": [
+          "ImmuService"
+        ]
+      }
+    },
+    "/db/load": {
+      "post": {
+        "operationId": "ImmuService_LoadDatabase",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/schemaLoadDatabaseResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/schemaLoadDatabaseRequest"
+            }
+          }
+        ],
+        "tags": [
+          "ImmuService"
+        ]
+      }
+    },
+    "/db/scan": {
+      "post": {
+        "operationId": "ImmuService_Scan",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/schemaEntries"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/schemaScanRequest"
+            }
+          }
+        ],
+        "tags": [
+          "ImmuService"
+        ]
+      }
+    },
+    "/db/set": {
+      "post": {
+        "operationId": "ImmuService_Set",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/schemaTxHeader"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/schemaSetRequest"
+            }
+          }
+        ],
+        "tags": [
+          "ImmuService"
+        ]
+      }
+    },
+    "/db/setreference": {
+      "post": {
+        "operationId": "ImmuService_SetReference",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/schemaTxHeader"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/schemaReferenceRequest"
+            }
+          }
+        ],
+        "tags": [
+          "ImmuService"
+        ]
+      }
+    },
+    "/db/settings": {
+      "post": {
+        "summary": "DEPRECATED: Use GetDatabaseSettingsV2",
+        "operationId": "ImmuService_GetDatabaseSettings",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/schemaDatabaseSettings"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "properties": {}
+            }
+          }
+        ],
+        "tags": [
+          "ImmuService"
+        ]
+      }
+    },
+    "/db/settings/v2": {
+      "post": {
+        "operationId": "ImmuService_GetDatabaseSettingsV2",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/schemaDatabaseSettingsResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/schemaDatabaseSettingsRequest"
+            }
+          }
+        ],
+        "tags": [
+          "ImmuService"
+        ]
+      }
+    },
+    "/db/sqlexec": {
+      "post": {
+        "operationId": "ImmuService_SQLExec",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/schemaSQLExecResult"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/schemaSQLExecRequest"
+            }
+          }
+        ],
+        "tags": [
+          "ImmuService"
+        ]
+      }
+    },
+    "/db/sqlquery": {
+      "post": {
+        "operationId": "ImmuService_SQLQuery",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/schemaSQLQueryResult"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/schemaSQLQueryRequest"
+            }
+          }
+        ],
+        "tags": [
+          "ImmuService"
+        ]
+      }
+    },
+    "/db/state": {
+      "get": {
+        "operationId": "ImmuService_CurrentState",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/schemaImmutableState"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
+            }
+          }
+        },
+        "tags": [
+          "ImmuService"
+        ],
+        "security": []
+      }
+    },
+    "/db/table/list": {
+      "get": {
+        "operationId": "ImmuService_ListTables",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/schemaSQLQueryResult"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
+            }
+          }
+        },
+        "tags": [
+          "ImmuService"
+        ]
+      }
+    },
+    "/db/tables": {
+      "post": {
+        "operationId": "ImmuService_DescribeTable",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/schemaSQLQueryResult"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/schemaTable"
+            }
+          }
+        ],
+        "tags": [
+          "ImmuService"
+        ]
+      }
+    },
+    "/db/tx": {
+      "post": {
+        "operationId": "ImmuService_TxScan",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/schemaTxList"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/schemaTxScanRequest"
+            }
+          }
+        ],
+        "tags": [
+          "ImmuService"
+        ]
+      }
+    },
+    "/db/tx/{tx}": {
+      "get": {
+        "operationId": "ImmuService_TxById",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/schemaTx"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "tx",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "uint64"
+          },
+          {
+            "name": "entriesSpec.kvEntriesSpec.action",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "EXCLUDE",
+              "ONLY_DIGEST",
+              "RAW_VALUE",
+              "RESOLVE"
+            ],
+            "default": "EXCLUDE"
+          },
+          {
+            "name": "entriesSpec.zEntriesSpec.action",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "EXCLUDE",
+              "ONLY_DIGEST",
+              "RAW_VALUE",
+              "RESOLVE"
+            ],
+            "default": "EXCLUDE"
+          },
+          {
+            "name": "entriesSpec.sqlEntriesSpec.action",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "EXCLUDE",
+              "ONLY_DIGEST",
+              "RAW_VALUE",
+              "RESOLVE"
+            ],
+            "default": "EXCLUDE"
+          },
+          {
+            "name": "sinceTx",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "uint64"
+          },
+          {
+            "name": "noWait",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "name": "keepReferencesUnresolved",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          }
+        ],
+        "tags": [
+          "ImmuService"
+        ]
+      }
+    },
+    "/db/unload": {
+      "post": {
+        "operationId": "ImmuService_UnloadDatabase",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/schemaUnloadDatabaseResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/schemaUnloadDatabaseRequest"
+            }
+          }
+        ],
+        "tags": [
+          "ImmuService"
+        ]
+      }
+    },
+    "/db/update": {
+      "post": {
+        "summary": "DEPRECATED: Use UpdateDatabaseV2",
+        "operationId": "ImmuService_UpdateDatabase",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "properties": {}
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/schemaDatabaseSettings"
+            }
+          }
+        ],
+        "tags": [
+          "ImmuService"
+        ]
+      }
+    },
+    "/db/update/v2": {
+      "post": {
+        "operationId": "ImmuService_UpdateDatabaseV2",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/schemaUpdateDatabaseResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/schemaUpdateDatabaseRequest"
+            }
+          }
+        ],
+        "tags": [
+          "ImmuService"
+        ]
+      }
+    },
+    "/db/use/{databaseName}": {
+      "get": {
+        "operationId": "ImmuService_UseDatabase",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/schemaUseDatabaseReply"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "databaseName",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "ImmuService"
+        ]
+      }
+    },
+    "/db/verifiable/get": {
+      "post": {
+        "operationId": "ImmuService_VerifiableGet",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/schemaVerifiableEntry"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/schemaVerifiableGetRequest"
+            }
+          }
+        ],
+        "tags": [
+          "ImmuService"
+        ]
+      }
+    },
+    "/db/verifiable/set": {
+      "post": {
+        "operationId": "ImmuService_VerifiableSet",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/schemaVerifiableTx"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/schemaVerifiableSetRequest"
+            }
+          }
+        ],
+        "tags": [
+          "ImmuService"
+        ]
+      }
+    },
+    "/db/verifiable/setreference": {
+      "post": {
+        "operationId": "ImmuService_VerifiableSetReference",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/schemaVerifiableTx"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/schemaVerifiableReferenceRequest"
+            }
+          }
+        ],
+        "tags": [
+          "ImmuService"
+        ]
+      }
+    },
+    "/db/verifiable/sqlget": {
+      "post": {
+        "operationId": "ImmuService_VerifiableSQLGet",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/schemaVerifiableSQLEntry"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/schemaVerifiableSQLGetRequest"
+            }
+          }
+        ],
+        "tags": [
+          "ImmuService"
+        ]
+      }
+    },
+    "/db/verifiable/tx/{tx}": {
+      "get": {
+        "operationId": "ImmuService_VerifiableTxById",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/schemaVerifiableTx"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "tx",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "uint64"
+          },
+          {
+            "name": "proveSinceTx",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "uint64"
+          },
+          {
+            "name": "entriesSpec.kvEntriesSpec.action",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "EXCLUDE",
+              "ONLY_DIGEST",
+              "RAW_VALUE",
+              "RESOLVE"
+            ],
+            "default": "EXCLUDE"
+          },
+          {
+            "name": "entriesSpec.zEntriesSpec.action",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "EXCLUDE",
+              "ONLY_DIGEST",
+              "RAW_VALUE",
+              "RESOLVE"
+            ],
+            "default": "EXCLUDE"
+          },
+          {
+            "name": "entriesSpec.sqlEntriesSpec.action",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "EXCLUDE",
+              "ONLY_DIGEST",
+              "RAW_VALUE",
+              "RESOLVE"
+            ],
+            "default": "EXCLUDE"
+          },
+          {
+            "name": "sinceTx",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "uint64"
+          },
+          {
+            "name": "noWait",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "name": "keepReferencesUnresolved",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          }
+        ],
+        "tags": [
+          "ImmuService"
+        ]
+      }
+    },
+    "/db/verifiable/zadd": {
+      "post": {
+        "operationId": "ImmuService_VerifiableZAdd",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/schemaVerifiableTx"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/schemaVerifiableZAddRequest"
+            }
+          }
+        ],
+        "tags": [
+          "ImmuService"
+        ]
+      }
+    },
+    "/db/zadd": {
+      "post": {
+        "operationId": "ImmuService_ZAdd",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/schemaTxHeader"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/schemaZAddRequest"
+            }
+          }
+        ],
+        "tags": [
+          "ImmuService"
+        ]
+      }
+    },
+    "/db/zscan": {
+      "post": {
+        "operationId": "ImmuService_ZScan",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/schemaZEntries"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/schemaZScanRequest"
+            }
+          }
+        ],
+        "tags": [
+          "ImmuService"
+        ]
+      }
+    },
+    "/health": {
+      "get": {
+        "operationId": "ImmuService_Health",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/schemaHealthResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
+            }
+          }
+        },
+        "tags": [
+          "ImmuService"
+        ],
+        "security": []
+      }
+    },
+    "/login": {
+      "post": {
+        "operationId": "ImmuService_Login",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/schemaLoginResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/schemaLoginRequest"
+            }
+          }
+        ],
+        "tags": [
+          "ImmuService"
+        ],
+        "security": []
+      }
+    },
+    "/logout": {
+      "post": {
+        "operationId": "ImmuService_Logout",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "properties": {}
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "properties": {}
+            }
+          }
+        ],
+        "tags": [
+          "ImmuService"
+        ]
+      }
+    },
+    "/user": {
+      "post": {
+        "operationId": "ImmuService_CreateUser",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "properties": {}
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/schemaCreateUserRequest"
+            }
+          }
+        ],
+        "tags": [
+          "ImmuService"
+        ]
+      }
+    },
+    "/user/changepermission": {
+      "post": {
+        "operationId": "ImmuService_ChangePermission",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "properties": {}
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/schemaChangePermissionRequest"
+            }
+          }
+        ],
+        "tags": [
+          "ImmuService"
+        ]
+      }
+    },
+    "/user/list": {
+      "get": {
+        "operationId": "ImmuService_ListUsers",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/schemaUserList"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
+            }
+          }
+        },
+        "tags": [
+          "ImmuService"
+        ]
+      }
+    },
+    "/user/password/change": {
+      "post": {
+        "operationId": "ImmuService_ChangePassword",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "properties": {}
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/schemaChangePasswordRequest"
+            }
+          }
+        ],
+        "tags": [
+          "ImmuService"
+        ]
+      }
+    },
+    "/user/setactiveUser": {
+      "post": {
+        "operationId": "ImmuService_SetActiveUser",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "properties": {}
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/schemaSetActiveUserRequest"
+            }
+          }
+        ],
+        "tags": [
+          "ImmuService"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "PreconditionKeyMustExistPrecondition": {
+      "type": "object",
+      "properties": {
+        "key": {
+          "type": "string",
+          "format": "byte"
+        }
+      }
+    },
+    "PreconditionKeyMustNotExistPrecondition": {
+      "type": "object",
+      "properties": {
+        "key": {
+          "type": "string",
+          "format": "byte"
+        }
+      }
+    },
+    "PreconditionKeyNotModifiedAfterTXPrecondition": {
+      "type": "object",
+      "properties": {
+        "key": {
+          "type": "string",
+          "format": "byte"
+        },
+        "txID": {
+          "type": "string",
+          "format": "uint64"
+        }
+      }
+    },
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "type_url": {
+          "type": "string",
+          "description": "A URL/resource name that uniquely identifies the type of the serialized\nprotocol buffer message. The last segment of the URL's path must represent\nthe fully qualified name of the type (as in\n`path/google.protobuf.Duration`). The name should be in a canonical form\n(e.g., leading \".\" is not accepted).\n\nIn practice, teams usually precompile into the binary all types that they\nexpect it to use in the context of Any. However, for URLs which use the\nscheme `http`, `https`, or no scheme, one can optionally set up a type\nserver that maps type URLs to message definitions as follows:\n\n* If no scheme is provided, `https` is assumed.\n* An HTTP GET on the URL must yield a [google.protobuf.Type][]\n  value in binary format, or produce an error.\n* Applications are allowed to cache lookup results based on the\n  URL, or have them precompiled into a binary to avoid any\n  lookup. Therefore, binary compatibility needs to be preserved\n  on changes to types. (Use versioned type names to manage\n  breaking changes.)\n\nNote: this functionality is not currently available in the official\nprotobuf release, and it is not used for type URLs beginning with\ntype.googleapis.com.\n\nSchemes other than `http`, `https` (or the empty scheme) might be\nused with implementation specific semantics."
+        },
+        "value": {
+          "type": "string",
+          "format": "byte",
+          "description": "Must be a valid serialized protocol buffer of the above specified type."
+        }
+      },
+      "description": "`Any` contains an arbitrary serialized protocol buffer message along with a\nURL that describes the type of the serialized message.\n\nProtobuf library provides support to pack/unpack Any values in the form\nof utility functions or additional generated methods of the Any type.\n\nExample 1: Pack and unpack a message in C++.\n\n    Foo foo = ...;\n    Any any;\n    any.PackFrom(foo);\n    ...\n    if (any.UnpackTo(\u0026foo)) {\n      ...\n    }\n\nExample 2: Pack and unpack a message in Java.\n\n    Foo foo = ...;\n    Any any = Any.pack(foo);\n    ...\n    if (any.is(Foo.class)) {\n      foo = any.unpack(Foo.class);\n    }\n\n Example 3: Pack and unpack a message in Python.\n\n    foo = Foo(...)\n    any = Any()\n    any.Pack(foo)\n    ...\n    if any.Is(Foo.DESCRIPTOR):\n      any.Unpack(foo)\n      ...\n\n Example 4: Pack and unpack a message in Go\n\n     foo := \u0026pb.Foo{...}\n     any, err := ptypes.MarshalAny(foo)\n     ...\n     foo := \u0026pb.Foo{}\n     if err := ptypes.UnmarshalAny(any, foo); err != nil {\n       ...\n     }\n\nThe pack methods provided by protobuf library will by default use\n'type.googleapis.com/full.type.name' as the type URL and the unpack\nmethods only use the fully qualified type name after the last '/'\nin the type URL, for example \"foo.bar.com/x/y.z\" will yield type\nname \"y.z\".\n\n\nJSON\n====\nThe JSON representation of an `Any` value uses the regular\nrepresentation of the deserialized, embedded message, with an\nadditional field `@type` which contains the type URL. Example:\n\n    package google.profile;\n    message Person {\n      string first_name = 1;\n      string last_name = 2;\n    }\n\n    {\n      \"@type\": \"type.googleapis.com/google.profile.Person\",\n      \"firstName\": \u003cstring\u003e,\n      \"lastName\": \u003cstring\u003e\n    }\n\nIf the embedded message type is well-known and has a custom JSON\nrepresentation, that representation will be embedded adding a field\n`value` which holds the custom JSON in addition to the `@type`\nfield. Example (for message [google.protobuf.Duration][]):\n\n    {\n      \"@type\": \"type.googleapis.com/google.protobuf.Duration\",\n      \"value\": \"1.212s\"\n    }"
+    },
+    "protobufNullValue": {
+      "type": "string",
+      "enum": [
+        "NULL_VALUE"
+      ],
+      "default": "NULL_VALUE",
+      "description": "`NullValue` is a singleton enumeration to represent the null value for the\n`Value` type union.\n\n The JSON representation for `NullValue` is JSON `null`.\n\n - NULL_VALUE: Null value."
+    },
+    "runtimeError": {
+      "type": "object",
+      "properties": {
+        "error": {
+          "type": "string"
+        },
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    },
+    "runtimeStreamError": {
+      "type": "object",
+      "properties": {
+        "grpc_code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "http_code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "http_status": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    },
+    "schemaChangePasswordRequest": {
+      "type": "object",
+      "properties": {
+        "user": {
+          "type": "string",
+          "format": "byte"
+        },
+        "oldPassword": {
+          "type": "string",
+          "format": "byte"
+        },
+        "newPassword": {
+          "type": "string",
+          "format": "byte"
+        }
+      }
+    },
+    "schemaChangePermissionRequest": {
+      "type": "object",
+      "properties": {
+        "action": {
+          "$ref": "#/definitions/schemaPermissionAction"
+        },
+        "username": {
+          "type": "string"
+        },
+        "database": {
+          "type": "string"
+        },
+        "permission": {
+          "type": "integer",
+          "format": "int64"
+        }
+      }
+    },
+    "schemaChunk": {
+      "type": "object",
+      "properties": {
+        "content": {
+          "type": "string",
+          "format": "byte"
+        }
+      }
+    },
+    "schemaColumn": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        }
+      }
+    },
+    "schemaCommittedSQLTx": {
+      "type": "object",
+      "properties": {
+        "header": {
+          "$ref": "#/definitions/schemaTxHeader"
+        },
+        "updatedRows": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "lastInsertedPKs": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/schemaSQLValue"
+          }
+        },
+        "firstInsertedPKs": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/schemaSQLValue"
+          }
+        }
+      }
+    },
+    "schemaCreateDatabaseRequest": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "settings": {
+          "$ref": "#/definitions/schemaDatabaseNullableSettings"
+        },
+        "ifNotExists": {
+          "type": "boolean"
+        }
+      }
+    },
+    "schemaCreateDatabaseResponse": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "settings": {
+          "$ref": "#/definitions/schemaDatabaseNullableSettings"
+        },
+        "alreadyExisted": {
+          "type": "boolean"
+        }
+      }
+    },
+    "schemaCreateUserRequest": {
+      "type": "object",
+      "properties": {
+        "user": {
+          "type": "string",
+          "format": "byte"
+        },
+        "password": {
+          "type": "string",
+          "format": "byte"
+        },
+        "permission": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "database": {
+          "type": "string"
+        }
+      }
+    },
+    "schemaDatabase": {
+      "type": "object",
+      "properties": {
+        "databaseName": {
+          "type": "string"
+        }
+      }
+    },
+    "schemaDatabaseHealthResponse": {
+      "type": "object",
+      "properties": {
+        "pendingRequests": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "lastRequestCompletedAt": {
+          "type": "string",
+          "format": "int64"
+        }
+      }
+    },
+    "schemaDatabaseListRequestV2": {
+      "type": "object"
+    },
+    "schemaDatabaseListResponse": {
+      "type": "object",
+      "properties": {
+        "databases": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/schemaDatabase"
+          }
+        }
+      }
+    },
+    "schemaDatabaseListResponseV2": {
+      "type": "object",
+      "properties": {
+        "databases": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/schemaDatabaseWithSettings"
+          }
+        }
+      }
+    },
+    "schemaDatabaseNullableSettings": {
+      "type": "object",
+      "properties": {
+        "replicationSettings": {
+          "$ref": "#/definitions/schemaReplicationNullableSettings"
+        },
+        "fileSize": {
+          "$ref": "#/definitions/schemaNullableUint32"
+        },
+        "maxKeyLen": {
+          "$ref": "#/definitions/schemaNullableUint32"
+        },
+        "maxValueLen": {
+          "$ref": "#/definitions/schemaNullableUint32"
+        },
+        "maxTxEntries": {
+          "$ref": "#/definitions/schemaNullableUint32"
+        },
+        "excludeCommitTime": {
+          "$ref": "#/definitions/schemaNullableBool"
+        },
+        "maxConcurrency": {
+          "$ref": "#/definitions/schemaNullableUint32"
+        },
+        "maxIOConcurrency": {
+          "$ref": "#/definitions/schemaNullableUint32"
+        },
+        "txLogCacheSize": {
+          "$ref": "#/definitions/schemaNullableUint32"
+        },
+        "vLogMaxOpenedFiles": {
+          "$ref": "#/definitions/schemaNullableUint32"
+        },
+        "txLogMaxOpenedFiles": {
+          "$ref": "#/definitions/schemaNullableUint32"
+        },
+        "commitLogMaxOpenedFiles": {
+          "$ref": "#/definitions/schemaNullableUint32"
+        },
+        "indexSettings": {
+          "$ref": "#/definitions/schemaIndexNullableSettings"
+        },
+        "writeTxHeaderVersion": {
+          "$ref": "#/definitions/schemaNullableUint32"
+        },
+        "autoload": {
+          "$ref": "#/definitions/schemaNullableBool"
+        }
+      }
+    },
+    "schemaDatabaseSettings": {
+      "type": "object",
+      "properties": {
+        "databaseName": {
+          "type": "string"
+        },
+        "replica": {
+          "type": "boolean"
+        },
+        "masterDatabase": {
+          "type": "string"
+        },
+        "masterAddress": {
+          "type": "string"
+        },
+        "masterPort": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "followerUsername": {
+          "type": "string"
+        },
+        "followerPassword": {
+          "type": "string"
+        },
+        "fileSize": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "maxKeyLen": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "maxValueLen": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "maxTxEntries": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "excludeCommitTime": {
+          "type": "boolean"
+        }
+      }
+    },
+    "schemaDatabaseSettingsRequest": {
+      "type": "object"
+    },
+    "schemaDatabaseSettingsResponse": {
+      "type": "object",
+      "properties": {
+        "database": {
+          "type": "string"
+        },
+        "settings": {
+          "$ref": "#/definitions/schemaDatabaseNullableSettings"
+        }
+      }
+    },
+    "schemaDatabaseWithSettings": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "settings": {
+          "$ref": "#/definitions/schemaDatabaseNullableSettings"
+        },
+        "loaded": {
+          "type": "boolean"
+        }
+      }
+    },
+    "schemaDeleteDatabaseRequest": {
+      "type": "object",
+      "properties": {
+        "database": {
+          "type": "string"
+        }
+      }
+    },
+    "schemaDeleteDatabaseResponse": {
+      "type": "object",
+      "properties": {
+        "database": {
+          "type": "string"
+        }
+      }
+    },
+    "schemaDeleteKeysRequest": {
+      "type": "object",
+      "properties": {
+        "keys": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "byte"
+          }
+        },
+        "sinceTx": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "noWait": {
+          "type": "boolean"
+        }
+      }
+    },
+    "schemaDualProof": {
+      "type": "object",
+      "properties": {
+        "sourceTxHeader": {
+          "$ref": "#/definitions/schemaTxHeader"
+        },
+        "targetTxHeader": {
+          "$ref": "#/definitions/schemaTxHeader"
+        },
+        "inclusionProof": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "byte"
+          }
+        },
+        "consistencyProof": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "byte"
+          }
+        },
+        "targetBlTxAlh": {
+          "type": "string",
+          "format": "byte"
+        },
+        "lastInclusionProof": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "byte"
+          }
+        },
+        "linearProof": {
+          "$ref": "#/definitions/schemaLinearProof"
+        }
+      }
+    },
+    "schemaEntries": {
+      "type": "object",
+      "properties": {
+        "entries": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/schemaEntry"
+          }
+        }
+      }
+    },
+    "schemaEntriesSpec": {
+      "type": "object",
+      "properties": {
+        "kvEntriesSpec": {
+          "$ref": "#/definitions/schemaEntryTypeSpec"
+        },
+        "zEntriesSpec": {
+          "$ref": "#/definitions/schemaEntryTypeSpec"
+        },
+        "sqlEntriesSpec": {
+          "$ref": "#/definitions/schemaEntryTypeSpec"
+        }
+      }
+    },
+    "schemaEntry": {
+      "type": "object",
+      "properties": {
+        "tx": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "key": {
+          "type": "string",
+          "format": "byte"
+        },
+        "value": {
+          "type": "string",
+          "format": "byte"
+        },
+        "referencedBy": {
+          "$ref": "#/definitions/schemaReference"
+        },
+        "metadata": {
+          "$ref": "#/definitions/schemaKVMetadata"
+        },
+        "expired": {
+          "type": "boolean"
+        },
+        "revision": {
+          "type": "string",
+          "format": "uint64"
+        }
+      }
+    },
+    "schemaEntryCount": {
+      "type": "object",
+      "properties": {
+        "count": {
+          "type": "string",
+          "format": "uint64"
+        }
+      }
+    },
+    "schemaEntryTypeAction": {
+      "type": "string",
+      "enum": [
+        "EXCLUDE",
+        "ONLY_DIGEST",
+        "RAW_VALUE",
+        "RESOLVE"
+      ],
+      "default": "EXCLUDE"
+    },
+    "schemaEntryTypeSpec": {
+      "type": "object",
+      "properties": {
+        "action": {
+          "$ref": "#/definitions/schemaEntryTypeAction"
+        }
+      }
+    },
+    "schemaExecAllRequest": {
+      "type": "object",
+      "properties": {
+        "Operations": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/schemaOp"
+          }
+        },
+        "noWait": {
+          "type": "boolean"
+        },
+        "preconditions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/schemaPrecondition"
+          }
+        }
+      }
+    },
+    "schemaExpiration": {
+      "type": "object",
+      "properties": {
+        "expiresAt": {
+          "type": "string",
+          "format": "int64"
+        }
+      }
+    },
+    "schemaFlushIndexResponse": {
+      "type": "object",
+      "properties": {
+        "database": {
+          "type": "string"
+        }
+      }
+    },
+    "schemaHealthResponse": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "boolean"
+        },
+        "version": {
+          "type": "string"
+        }
+      }
+    },
+    "schemaHistoryRequest": {
+      "type": "object",
+      "properties": {
+        "key": {
+          "type": "string",
+          "format": "byte"
+        },
+        "offset": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "limit": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "desc": {
+          "type": "boolean"
+        },
+        "sinceTx": {
+          "type": "string",
+          "format": "uint64"
+        }
+      }
+    },
+    "schemaImmutableState": {
+      "type": "object",
+      "properties": {
+        "db": {
+          "type": "string"
+        },
+        "txId": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "txHash": {
+          "type": "string",
+          "format": "byte"
+        },
+        "signature": {
+          "$ref": "#/definitions/schemaSignature"
+        }
+      }
+    },
+    "schemaInclusionProof": {
+      "type": "object",
+      "properties": {
+        "leaf": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "width": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "terms": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "byte"
+          }
+        }
+      }
+    },
+    "schemaIndexNullableSettings": {
+      "type": "object",
+      "properties": {
+        "flushThreshold": {
+          "$ref": "#/definitions/schemaNullableUint32"
+        },
+        "syncThreshold": {
+          "$ref": "#/definitions/schemaNullableUint32"
+        },
+        "cacheSize": {
+          "$ref": "#/definitions/schemaNullableUint32"
+        },
+        "maxNodeSize": {
+          "$ref": "#/definitions/schemaNullableUint32"
+        },
+        "maxActiveSnapshots": {
+          "$ref": "#/definitions/schemaNullableUint32"
+        },
+        "renewSnapRootAfter": {
+          "$ref": "#/definitions/schemaNullableUint64"
+        },
+        "compactionThld": {
+          "$ref": "#/definitions/schemaNullableUint32"
+        },
+        "delayDuringCompaction": {
+          "$ref": "#/definitions/schemaNullableUint32"
+        },
+        "nodesLogMaxOpenedFiles": {
+          "$ref": "#/definitions/schemaNullableUint32"
+        },
+        "historyLogMaxOpenedFiles": {
+          "$ref": "#/definitions/schemaNullableUint32"
+        },
+        "commitLogMaxOpenedFiles": {
+          "$ref": "#/definitions/schemaNullableUint32"
+        },
+        "flushBufferSize": {
+          "$ref": "#/definitions/schemaNullableUint32"
+        },
+        "cleanupPercentage": {
+          "$ref": "#/definitions/schemaNullableFloat"
+        }
+      }
+    },
+    "schemaKVMetadata": {
+      "type": "object",
+      "properties": {
+        "deleted": {
+          "type": "boolean"
+        },
+        "expiration": {
+          "$ref": "#/definitions/schemaExpiration"
+        },
+        "nonIndexable": {
+          "type": "boolean"
+        }
+      }
+    },
+    "schemaKeyListRequest": {
+      "type": "object",
+      "properties": {
+        "keys": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "byte"
+          }
+        },
+        "sinceTx": {
+          "type": "string",
+          "format": "uint64"
+        }
+      }
+    },
+    "schemaKeyRequest": {
+      "type": "object",
+      "properties": {
+        "key": {
+          "type": "string",
+          "format": "byte"
+        },
+        "atTx": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "sinceTx": {
+          "type": "string",
+          "format": "uint64",
+          "title": "if 0 (and nowait=false), wait for the index to be up=to-date"
+        },
+        "noWait": {
+          "type": "boolean",
+          "title": "if set to true - do not wait for any indexing update considering only the currently indexed state"
+        },
+        "atRevision": {
+          "type": "string",
+          "format": "int64",
+          "title": "if \u003e 0, get the nth version of the value, 1 being the first version, 2 being the second and so on\nif \u003c 0, get the historical nth value of the key, -1 being the previous version, -2 being the one before and so on"
+        }
+      }
+    },
+    "schemaKeyValue": {
+      "type": "object",
+      "properties": {
+        "key": {
+          "type": "string",
+          "format": "byte"
+        },
+        "value": {
+          "type": "string",
+          "format": "byte"
+        },
+        "metadata": {
+          "$ref": "#/definitions/schemaKVMetadata"
+        }
+      }
+    },
+    "schemaLinearProof": {
+      "type": "object",
+      "properties": {
+        "sourceTxId": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "TargetTxId": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "terms": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "byte"
+          }
+        }
+      }
+    },
+    "schemaLoadDatabaseRequest": {
+      "type": "object",
+      "properties": {
+        "database": {
+          "type": "string"
+        }
+      }
+    },
+    "schemaLoadDatabaseResponse": {
+      "type": "object",
+      "properties": {
+        "database": {
+          "type": "string"
+        }
+      }
+    },
+    "schemaLoginRequest": {
+      "type": "object",
+      "properties": {
+        "user": {
+          "type": "string",
+          "format": "byte"
+        },
+        "password": {
+          "type": "string",
+          "format": "byte"
+        }
+      }
+    },
+    "schemaLoginResponse": {
+      "type": "object",
+      "properties": {
+        "token": {
+          "type": "string"
+        },
+        "warning": {
+          "type": "string",
+          "format": "byte"
+        }
+      }
+    },
+    "schemaNamedParam": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "value": {
+          "$ref": "#/definitions/schemaSQLValue"
+        }
+      }
+    },
+    "schemaNewTxResponse": {
+      "type": "object",
+      "properties": {
+        "transactionID": {
+          "type": "string"
+        }
+      }
+    },
+    "schemaNullableBool": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "boolean"
+        }
+      }
+    },
+    "schemaNullableFloat": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "number",
+          "format": "float"
+        }
+      }
+    },
+    "schemaNullableString": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "string"
+        }
+      }
+    },
+    "schemaNullableUint32": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "integer",
+          "format": "int64"
+        }
+      }
+    },
+    "schemaNullableUint64": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "string",
+          "format": "uint64"
+        }
+      }
+    },
+    "schemaOp": {
+      "type": "object",
+      "properties": {
+        "kv": {
+          "$ref": "#/definitions/schemaKeyValue"
+        },
+        "zAdd": {
+          "$ref": "#/definitions/schemaZAddRequest"
+        },
+        "ref": {
+          "$ref": "#/definitions/schemaReferenceRequest"
+        }
+      }
+    },
+    "schemaOpenSessionResponse": {
+      "type": "object",
+      "properties": {
+        "sessionID": {
+          "type": "string"
+        },
+        "serverUUID": {
+          "type": "string"
+        }
+      }
+    },
+    "schemaPermission": {
+      "type": "object",
+      "properties": {
+        "database": {
+          "type": "string"
+        },
+        "permission": {
+          "type": "integer",
+          "format": "int64"
+        }
+      }
+    },
+    "schemaPermissionAction": {
+      "type": "string",
+      "enum": [
+        "GRANT",
+        "REVOKE"
+      ],
+      "default": "GRANT"
+    },
+    "schemaPrecondition": {
+      "type": "object",
+      "properties": {
+        "keyMustExist": {
+          "$ref": "#/definitions/PreconditionKeyMustExistPrecondition"
+        },
+        "keyMustNotExist": {
+          "$ref": "#/definitions/PreconditionKeyMustNotExistPrecondition"
+        },
+        "keyNotModifiedAfterTX": {
+          "$ref": "#/definitions/PreconditionKeyNotModifiedAfterTXPrecondition"
+        }
+      }
+    },
+    "schemaReference": {
+      "type": "object",
+      "properties": {
+        "tx": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "key": {
+          "type": "string",
+          "format": "byte"
+        },
+        "atTx": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "metadata": {
+          "$ref": "#/definitions/schemaKVMetadata"
+        },
+        "revision": {
+          "type": "string",
+          "format": "uint64"
+        }
+      }
+    },
+    "schemaReferenceRequest": {
+      "type": "object",
+      "properties": {
+        "key": {
+          "type": "string",
+          "format": "byte"
+        },
+        "referencedKey": {
+          "type": "string",
+          "format": "byte"
+        },
+        "atTx": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "boundRef": {
+          "type": "boolean"
+        },
+        "noWait": {
+          "type": "boolean"
+        },
+        "preconditions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/schemaPrecondition"
+          }
+        }
+      }
+    },
+    "schemaReplicationNullableSettings": {
+      "type": "object",
+      "properties": {
+        "replica": {
+          "$ref": "#/definitions/schemaNullableBool"
+        },
+        "masterDatabase": {
+          "$ref": "#/definitions/schemaNullableString"
+        },
+        "masterAddress": {
+          "$ref": "#/definitions/schemaNullableString"
+        },
+        "masterPort": {
+          "$ref": "#/definitions/schemaNullableUint32"
+        },
+        "followerUsername": {
+          "$ref": "#/definitions/schemaNullableString"
+        },
+        "followerPassword": {
+          "$ref": "#/definitions/schemaNullableString"
+        }
+      }
+    },
+    "schemaRow": {
+      "type": "object",
+      "properties": {
+        "columns": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "values": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/schemaSQLValue"
+          }
+        }
+      }
+    },
+    "schemaSQLEntry": {
+      "type": "object",
+      "properties": {
+        "tx": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "key": {
+          "type": "string",
+          "format": "byte"
+        },
+        "value": {
+          "type": "string",
+          "format": "byte"
+        },
+        "metadata": {
+          "$ref": "#/definitions/schemaKVMetadata"
+        }
+      }
+    },
+    "schemaSQLExecRequest": {
+      "type": "object",
+      "properties": {
+        "sql": {
+          "type": "string"
+        },
+        "params": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/schemaNamedParam"
+          }
+        },
+        "noWait": {
+          "type": "boolean"
+        }
+      }
+    },
+    "schemaSQLExecResult": {
+      "type": "object",
+      "properties": {
+        "txs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/schemaCommittedSQLTx"
+          }
+        },
+        "ongoingTx": {
+          "type": "boolean"
+        }
+      }
+    },
+    "schemaSQLGetRequest": {
+      "type": "object",
+      "properties": {
+        "table": {
+          "type": "string"
+        },
+        "pkValues": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/schemaSQLValue"
+          }
+        },
+        "atTx": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "sinceTx": {
+          "type": "string",
+          "format": "uint64"
+        }
+      }
+    },
+    "schemaSQLQueryRequest": {
+      "type": "object",
+      "properties": {
+        "sql": {
+          "type": "string"
+        },
+        "params": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/schemaNamedParam"
+          }
+        },
+        "reuseSnapshot": {
+          "type": "boolean"
+        }
+      }
+    },
+    "schemaSQLQueryResult": {
+      "type": "object",
+      "properties": {
+        "columns": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/schemaColumn"
+          }
+        },
+        "rows": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/schemaRow"
+          }
+        }
+      }
+    },
+    "schemaSQLValue": {
+      "type": "object",
+      "properties": {
+        "null": {
+          "type": "string"
+        },
+        "n": {
+          "type": "string",
+          "format": "int64"
+        },
+        "s": {
+          "type": "string"
+        },
+        "b": {
+          "type": "boolean"
+        },
+        "bs": {
+          "type": "string",
+          "format": "byte"
+        },
+        "ts": {
+          "type": "string",
+          "format": "int64"
+        }
+      }
+    },
+    "schemaScanRequest": {
+      "type": "object",
+      "properties": {
+        "seekKey": {
+          "type": "string",
+          "format": "byte"
+        },
+        "endKey": {
+          "type": "string",
+          "format": "byte"
+        },
+        "prefix": {
+          "type": "string",
+          "format": "byte"
+        },
+        "desc": {
+          "type": "boolean"
+        },
+        "limit": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "sinceTx": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "noWait": {
+          "type": "boolean"
+        },
+        "inclusiveSeek": {
+          "type": "boolean"
+        },
+        "inclusiveEnd": {
+          "type": "boolean"
+        }
+      }
+    },
+    "schemaScore": {
+      "type": "object",
+      "properties": {
+        "score": {
+          "type": "number",
+          "format": "double"
+        }
+      }
+    },
+    "schemaSetActiveUserRequest": {
+      "type": "object",
+      "properties": {
+        "active": {
+          "type": "boolean"
+        },
+        "username": {
+          "type": "string"
+        }
+      }
+    },
+    "schemaSetRequest": {
+      "type": "object",
+      "properties": {
+        "KVs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/schemaKeyValue"
+          }
+        },
+        "noWait": {
+          "type": "boolean"
+        },
+        "preconditions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/schemaPrecondition"
+          }
+        }
+      }
+    },
+    "schemaSignature": {
+      "type": "object",
+      "properties": {
+        "publicKey": {
+          "type": "string",
+          "format": "byte"
+        },
+        "signature": {
+          "type": "string",
+          "format": "byte"
+        }
+      }
+    },
+    "schemaTable": {
+      "type": "object",
+      "properties": {
+        "tableName": {
+          "type": "string"
+        }
+      }
+    },
+    "schemaTx": {
+      "type": "object",
+      "properties": {
+        "header": {
+          "$ref": "#/definitions/schemaTxHeader"
+        },
+        "entries": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/schemaTxEntry"
+          }
+        },
+        "kvEntries": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/schemaEntry"
+          }
+        },
+        "zEntries": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/schemaZEntry"
+          }
+        }
+      }
+    },
+    "schemaTxEntry": {
+      "type": "object",
+      "properties": {
+        "key": {
+          "type": "string",
+          "format": "byte"
+        },
+        "hValue": {
+          "type": "string",
+          "format": "byte"
+        },
+        "vLen": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "metadata": {
+          "$ref": "#/definitions/schemaKVMetadata"
+        },
+        "value": {
+          "type": "string",
+          "format": "byte"
+        }
+      }
+    },
+    "schemaTxHeader": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "prevAlh": {
+          "type": "string",
+          "format": "byte"
+        },
+        "ts": {
+          "type": "string",
+          "format": "int64"
+        },
+        "nentries": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "eH": {
+          "type": "string",
+          "format": "byte"
+        },
+        "blTxId": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "blRoot": {
+          "type": "string",
+          "format": "byte"
+        },
+        "version": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "metadata": {
+          "$ref": "#/definitions/schemaTxMetadata"
+        }
+      }
+    },
+    "schemaTxList": {
+      "type": "object",
+      "properties": {
+        "txs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/schemaTx"
+          }
+        }
+      }
+    },
+    "schemaTxMetadata": {
+      "type": "object"
+    },
+    "schemaTxMode": {
+      "type": "string",
+      "enum": [
+        "ReadOnly",
+        "WriteOnly",
+        "ReadWrite"
+      ],
+      "default": "ReadOnly"
+    },
+    "schemaTxScanRequest": {
+      "type": "object",
+      "properties": {
+        "initialTx": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "limit": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "desc": {
+          "type": "boolean"
+        },
+        "entriesSpec": {
+          "$ref": "#/definitions/schemaEntriesSpec"
+        },
+        "sinceTx": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "noWait": {
+          "type": "boolean"
+        }
+      }
+    },
+    "schemaUnloadDatabaseRequest": {
+      "type": "object",
+      "properties": {
+        "database": {
+          "type": "string"
+        }
+      }
+    },
+    "schemaUnloadDatabaseResponse": {
+      "type": "object",
+      "properties": {
+        "database": {
+          "type": "string"
+        }
+      }
+    },
+    "schemaUpdateDatabaseRequest": {
+      "type": "object",
+      "properties": {
+        "database": {
+          "type": "string"
+        },
+        "settings": {
+          "$ref": "#/definitions/schemaDatabaseNullableSettings"
+        }
+      }
+    },
+    "schemaUpdateDatabaseResponse": {
+      "type": "object",
+      "properties": {
+        "database": {
+          "type": "string"
+        },
+        "settings": {
+          "$ref": "#/definitions/schemaDatabaseNullableSettings"
+        }
+      }
+    },
+    "schemaUseDatabaseReply": {
+      "type": "object",
+      "properties": {
+        "token": {
+          "type": "string"
+        }
+      }
+    },
+    "schemaUser": {
+      "type": "object",
+      "properties": {
+        "user": {
+          "type": "string",
+          "format": "byte"
+        },
+        "permissions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/schemaPermission"
+          }
+        },
+        "createdby": {
+          "type": "string"
+        },
+        "createdat": {
+          "type": "string"
+        },
+        "active": {
+          "type": "boolean"
+        }
+      }
+    },
+    "schemaUserList": {
+      "type": "object",
+      "properties": {
+        "users": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/schemaUser"
+          }
+        }
+      }
+    },
+    "schemaVerifiableEntry": {
+      "type": "object",
+      "properties": {
+        "entry": {
+          "$ref": "#/definitions/schemaEntry"
+        },
+        "verifiableTx": {
+          "$ref": "#/definitions/schemaVerifiableTx"
+        },
+        "inclusionProof": {
+          "$ref": "#/definitions/schemaInclusionProof"
+        }
+      }
+    },
+    "schemaVerifiableGetRequest": {
+      "type": "object",
+      "properties": {
+        "keyRequest": {
+          "$ref": "#/definitions/schemaKeyRequest"
+        },
+        "proveSinceTx": {
+          "type": "string",
+          "format": "uint64"
+        }
+      }
+    },
+    "schemaVerifiableReferenceRequest": {
+      "type": "object",
+      "properties": {
+        "referenceRequest": {
+          "$ref": "#/definitions/schemaReferenceRequest"
+        },
+        "proveSinceTx": {
+          "type": "string",
+          "format": "uint64"
+        }
+      }
+    },
+    "schemaVerifiableSQLEntry": {
+      "type": "object",
+      "properties": {
+        "sqlEntry": {
+          "$ref": "#/definitions/schemaSQLEntry"
+        },
+        "verifiableTx": {
+          "$ref": "#/definitions/schemaVerifiableTx"
+        },
+        "inclusionProof": {
+          "$ref": "#/definitions/schemaInclusionProof"
+        },
+        "DatabaseId": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "TableId": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "PKIDs": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "format": "int64"
+          }
+        },
+        "ColNamesById": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "ColIdsByName": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "integer",
+            "format": "int64"
+          }
+        },
+        "ColTypesById": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "ColLenById": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      }
+    },
+    "schemaVerifiableSQLGetRequest": {
+      "type": "object",
+      "properties": {
+        "sqlGetRequest": {
+          "$ref": "#/definitions/schemaSQLGetRequest"
+        },
+        "proveSinceTx": {
+          "type": "string",
+          "format": "uint64"
+        }
+      }
+    },
+    "schemaVerifiableSetRequest": {
+      "type": "object",
+      "properties": {
+        "setRequest": {
+          "$ref": "#/definitions/schemaSetRequest"
+        },
+        "proveSinceTx": {
+          "type": "string",
+          "format": "uint64"
+        }
+      }
+    },
+    "schemaVerifiableTx": {
+      "type": "object",
+      "properties": {
+        "tx": {
+          "$ref": "#/definitions/schemaTx"
+        },
+        "dualProof": {
+          "$ref": "#/definitions/schemaDualProof"
+        },
+        "signature": {
+          "$ref": "#/definitions/schemaSignature"
+        }
+      }
+    },
+    "schemaVerifiableZAddRequest": {
+      "type": "object",
+      "properties": {
+        "zAddRequest": {
+          "$ref": "#/definitions/schemaZAddRequest"
+        },
+        "proveSinceTx": {
+          "type": "string",
+          "format": "uint64"
+        }
+      }
+    },
+    "schemaZAddRequest": {
+      "type": "object",
+      "properties": {
+        "set": {
+          "type": "string",
+          "format": "byte"
+        },
+        "score": {
+          "type": "number",
+          "format": "double"
+        },
+        "key": {
+          "type": "string",
+          "format": "byte"
+        },
+        "atTx": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "boundRef": {
+          "type": "boolean"
+        },
+        "noWait": {
+          "type": "boolean"
+        }
+      }
+    },
+    "schemaZEntries": {
+      "type": "object",
+      "properties": {
+        "entries": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/schemaZEntry"
+          }
+        }
+      }
+    },
+    "schemaZEntry": {
+      "type": "object",
+      "properties": {
+        "set": {
+          "type": "string",
+          "format": "byte"
+        },
+        "key": {
+          "type": "string",
+          "format": "byte"
+        },
+        "entry": {
+          "$ref": "#/definitions/schemaEntry"
+        },
+        "score": {
+          "type": "number",
+          "format": "double"
+        },
+        "atTx": {
+          "type": "string",
+          "format": "uint64"
+        }
+      }
+    },
+    "schemaZScanRequest": {
+      "type": "object",
+      "properties": {
+        "set": {
+          "type": "string",
+          "format": "byte"
+        },
+        "seekKey": {
+          "type": "string",
+          "format": "byte"
+        },
+        "seekScore": {
+          "type": "number",
+          "format": "double"
+        },
+        "seekAtTx": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "inclusiveSeek": {
+          "type": "boolean"
+        },
+        "limit": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "desc": {
+          "type": "boolean"
+        },
+        "minScore": {
+          "$ref": "#/definitions/schemaScore"
+        },
+        "maxScore": {
+          "$ref": "#/definitions/schemaScore"
+        },
+        "sinceTx": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "noWait": {
+          "type": "boolean"
+        }
+      }
+    }
+  },
+  "securityDefinitions": {
+    "bearer": {
+      "type": "apiKey",
+      "description": "Authentication token, prefixed by Bearer: Bearer \u003ctoken\u003e",
+      "name": "Authorization",
+      "in": "header"
+    }
+  },
+  "security": [
+    {
+      "bearer": []
+    }
+  ]
+}
