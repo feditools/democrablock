@@ -23,6 +23,16 @@ type KeyNames struct {
 	DBLoadTestData  string
 	DBEncryptionKey string
 
+	// filestore
+	FileStoreType            string
+	FileStorePath            string
+	FileStoreBucket          string
+	FileStoreEndpoint        string
+	FileStoreRegion          string
+	FileStoreAccessKeyID     string
+	FileStoreSecretAccessKey string
+	FileStoreUseTLS          string
+
 	// redis
 	RedisAddress  string
 	RedisDB       string
