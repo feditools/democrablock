@@ -93,7 +93,7 @@ var Defaults = Values{
 	FileStoreEndpoint:               "play.min.io",
 	FileStoreRegion:                 "us-east-1",
 	FileStoreUseTLS:                 true,
-	FileStorePresignedURLExpiration: 60 * time.Second,
+	FileStorePresignedURLExpiration: 5 * time.Minute,
 
 	// redis
 	RedisAddress:  "localhost:6379",

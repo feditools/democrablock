@@ -6,7 +6,13 @@ import (
 )
 
 const (
-	// reToken is regex to match a token.
+	// reHex matches a hex number.
+	reHex = `[a-z0-9]`
+	// reHexByte matches a single byte of hex.
+	reHexByte = reHex + `{2}`
+	// reHexByte matches a single byte of hex.
+	reHexSHA256 = reHex + `{64}`
+	// reToken matches a token.
 	reToken = `[a-zA-Z0-9_]{16,}` //#nosec G101
 )
 

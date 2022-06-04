@@ -8,12 +8,11 @@ import (
 
 	"github.com/feditools/democrablock/internal/http"
 	libhttp "github.com/feditools/go-lib/http"
-	"github.com/go-http-utils/etag"
 )
 
 // Middleware runs on every http request.
 func (m *Module) Middleware(next nethttp.Handler) nethttp.Handler {
-	return etag.Handler(nethttp.HandlerFunc(func(w nethttp.ResponseWriter, r *nethttp.Request) {
+	return nethttp.HandlerFunc(func(w nethttp.ResponseWriter, r *nethttp.Request) {
 		l := logger.WithField("func", "Middleware")
 
 		// Init Session
@@ -70,7 +69,7 @@ func (m *Module) Middleware(next nethttp.Handler) nethttp.Handler {
 
 		// Do Request
 		next.ServeHTTP(w, r.WithContext(ctx))
-	}), false)
+	})
 }
 
 // MiddlewareRequireAdmin will redirect a user to login page if user not in context and will return unauthorized for

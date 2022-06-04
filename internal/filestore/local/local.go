@@ -1,6 +1,8 @@
 package local
 
 import (
+	"github.com/feditools/democrablock/internal/path"
+	nethttp "net/http"
 	"os"
 	"strings"
 	"time"
@@ -14,16 +16,16 @@ import (
 func New(k kv.KV) (*Module, error) {
 	l := logger.WithField("func", "New")
 
-	path := viper.GetString(config.Keys.FileStorePath)
-	if !strings.HasSuffix(path, "/") {
-		path = path + "/"
+	fspath := viper.GetString(config.Keys.FileStorePath)
+	if !strings.HasSuffix(fspath, "/") {
+		fspath = fspath + "/"
 	}
 
-	if _, err := os.Stat(path); os.IsNotExist(err) {
-		l.Debugf("directory '%s' doesn't exist, creating", path)
-		err = os.Mkdir(path, 0755)
+	if _, err := os.Stat(fspath); os.IsNotExist(err) {
+		l.Debugf("directory '%s' doesn't exist, creating", fspath)
+		err = os.Mkdir(fspath, 0755)
 		if err != nil {
-			l.Errorf("can't create directory '%s': %s", path, err.Error())
+			l.Errorf("can't create directory '%s': %s", fspath, err.Error())
 
 			return nil, err
 		}
@@ -32,7 +34,7 @@ func New(k kv.KV) (*Module, error) {
 	return &Module{
 		kv: k,
 
-		path:                   path,
+		path:                   fspath,
 		presignedURLExpiration: viper.GetDuration(config.Keys.FileStorePresignedURLExpiration),
 	}, nil
 }
@@ -46,10 +48,17 @@ type Module struct {
 }
 
 func (*Module) Name() string {
-	return "filestore-minio"
+	return "filestore-local"
 }
 
 func (m Module) Route(s *http.Server) error {
+	fs := s.PathPrefix(path.Filestore).Subrouter()
+	fs.Use(m.Middleware)
+	fs.NotFoundHandler = m.notFoundHandler()
+	fs.MethodNotAllowedHandler = m.methodNotAllowedHandler()
+
+	fs.HandleFunc(path.FilestoreSubFile, m.handleGet).Methods(nethttp.MethodGet)
+
 	return nil
 }
 

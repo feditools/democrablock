@@ -5,9 +5,16 @@ package redis
 import (
 	"context"
 	"github.com/feditools/democrablock/internal/config"
+	"github.com/feditools/democrablock/internal/kv"
 	"github.com/spf13/viper"
 	"testing"
 )
+
+func TestClient_ImplementsFileStore(t *testing.T) {
+	t.Parallel()
+
+	var _ kv.KV = (*Client)(nil)
+}
 
 func TestNew(t *testing.T) {
 	viper.Reset()
