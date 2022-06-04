@@ -20,6 +20,8 @@ const (
 	PartCallback = "callback"
 	// PartFediverse is used in a path for federated things.
 	PartFediverse = "fedi"
+	// PartFilestore is used in a path for the filestore.
+	PartFilestore = "filestore"
 	// PartInstances is used in a path for instances.
 	PartInstances = "instances"
 	// PartList is used in a path for a list.

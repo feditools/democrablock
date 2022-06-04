@@ -24,14 +24,15 @@ type KeyNames struct {
 	DBEncryptionKey string
 
 	// filestore
-	FileStoreType            string
-	FileStorePath            string
-	FileStoreBucket          string
-	FileStoreEndpoint        string
-	FileStoreRegion          string
-	FileStoreAccessKeyID     string
-	FileStoreSecretAccessKey string
-	FileStoreUseTLS          string
+	FileStoreType                   string
+	FileStorePath                   string
+	FileStoreBucket                 string
+	FileStoreEndpoint               string
+	FileStoreRegion                 string
+	FileStoreAccessKeyID            string
+	FileStoreSecretAccessKey        string
+	FileStoreUseTLS                 string
+	FileStorePresignedURLExpiration string
 
 	// redis
 	RedisAddress  string
@@ -85,6 +86,17 @@ var Keys = KeyNames{
 	DBTLSCACert:     "db-tls-ca-cert",
 	DBLoadTestData:  "test-data", // CLI only
 	DBEncryptionKey: "db-crypto-key",
+
+	// filestore
+	FileStoreType:                   "filestore-type",
+	FileStorePath:                   "filestore-path",
+	FileStoreBucket:                 "filestore-bucket",
+	FileStoreEndpoint:               "filestore-endpoint",
+	FileStoreRegion:                 "filestore-region",
+	FileStoreAccessKeyID:            "filestore-access-key-id",
+	FileStoreSecretAccessKey:        "filestore-secret-access-key",
+	FileStoreUseTLS:                 "filestore-use-tls",
+	FileStorePresignedURLExpiration: "filestore-presigned-utl-expiration",
 
 	// redis
 	RedisAddress:  "redis-address",
