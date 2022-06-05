@@ -11,13 +11,18 @@ import (
 type FileStore interface {
 	http.Module
 
-	GetFile(ctx context.Context, group string, hash []byte, suffix string) ([]byte, error)
-	GetPresignedURL(ctx context.Context, group string, hash []byte, suffix string) (*url.URL, error)
-	PutFile(ctx context.Context, group string, hash []byte, suffix string, data []byte) error
+	GetFile(ctx context.Context, group string, hash []byte, suffix string) ([]byte, Error)
+	GetPresignedURL(ctx context.Context, group string, hash []byte, suffix string) (*url.URL, Error)
+	PutFile(ctx context.Context, group string, hash []byte, suffix string, data []byte) Error
+}
 
-	// GetEvidenceFile(ctx context.Context, hash []byte, kind string) ([]byte, error)
-	// GetEvidencePresignedURL(ctx context.Context, hash []byte, kind string) (*url.URL, error)
-	//PutEvidenceFile(ctx context.Context, hash []byte, kind string, data []byte) error
+func MakeObjectPath(group string, hash []byte, suffix string) string {
+	return fmt.Sprintf(
+		"%s%x.%s",
+		MakePath(group, hash),
+		hash,
+		suffix,
+	)
 }
 
 func MakePath(group string, hash []byte) string {

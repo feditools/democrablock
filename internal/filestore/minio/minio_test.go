@@ -6,7 +6,7 @@ import (
 	"github.com/feditools/democrablock/internal/filestore"
 )
 
-func TestClient_ImplementsDB(t *testing.T) {
+func TestModule_ImplementsFileStore(t *testing.T) {
 	t.Parallel()
 
 	var _ filestore.FileStore = (*Module)(nil)

@@ -2,10 +2,21 @@ package local
 
 import (
 	"fmt"
+	"github.com/feditools/democrablock/internal/filestore"
 	"net/http"
 
 	"github.com/tyrm/go-util/mimetype"
 )
+
+// ProcessError replaces any known values with our own db.Error types.
+func (m *Module) ProcessError(err error) filestore.Error {
+	switch {
+	case err == nil:
+		return nil
+	default:
+		return err
+	}
+}
 
 func returnErrorPage(w http.ResponseWriter, code int) {
 	w.Header().Set("Content-Type", mimetype.TextPlain)
@@ -31,7 +42,7 @@ func (m *Module) notFoundHandler() http.Handler {
 
 func (m *Module) WrapInMiddlewares(h http.Handler) http.Handler {
 	return m.srv.WrapInMiddlewares(
-		m.Middleware(
+		m.middleware(
 			h,
 		),
 	)

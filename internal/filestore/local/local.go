@@ -54,7 +54,7 @@ func (*Module) Name() string {
 
 func (m Module) Route(s *http.Server) error {
 	fs := s.PathPrefix(path.Filestore).Subrouter()
-	fs.Use(m.Middleware)
+	fs.Use(m.middleware)
 	fs.NotFoundHandler = m.notFoundHandler()
 	fs.MethodNotAllowedHandler = m.methodNotAllowedHandler()
 

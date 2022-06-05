@@ -9,10 +9,10 @@ import (
 	"github.com/feditools/democrablock/internal/path"
 )
 
-// Middleware runs on every http request.
-func (m *Module) Middleware(next nethttp.Handler) nethttp.Handler {
+// middleware runs on every http request.
+func (m *Module) middleware(next nethttp.Handler) nethttp.Handler {
 	return nethttp.HandlerFunc(func(w nethttp.ResponseWriter, r *nethttp.Request) {
-		l := logger.WithField("func", "Middleware")
+		l := logger.WithField("func", "middleware")
 
 		// get token from query
 		token, ok := r.URL.Query()[QueryToken]

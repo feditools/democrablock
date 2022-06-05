@@ -41,12 +41,12 @@ type Module struct {
 	presignedURLExpiration time.Duration
 }
 
-func (m Module) Name() string {
+func (m *Module) Name() string {
 	return "filestore-minio"
 }
 
-func (m Module) Route(_ *http.Server) error {
+func (m *Module) Route(_ *http.Server) error {
 	return nil
 }
 
-func (m Module) SetServer(_ *http.Server) {}
+func (m *Module) SetServer(_ *http.Server) {}

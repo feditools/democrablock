@@ -37,11 +37,10 @@ func (c *Client) DoMigration(ctx context.Context) db.Error {
 	return nil
 }
 
-func (c *Client) LoadTestData(ctx context.Context) db.Error {
-	// TODO implement me
-	panic("implement me")
+func (c *Client) LoadTestData(_ context.Context) db.Error {
+	return c.ProcessError(nil)
 }
 
-func (*Client) ResetCache(_ context.Context) db.Error {
-	return nil
+func (c *Client) ResetCache(_ context.Context) db.Error {
+	return c.ProcessError(nil)
 }
