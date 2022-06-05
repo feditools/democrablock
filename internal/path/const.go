@@ -62,11 +62,11 @@ const (
 	// AdminSubSystem is the sub path for the system admin page.
 	AdminSubSystem = "/" + PartSystem
 
-	// filestore
+	// filestore.
 
-	// Filestore is the path for the filestore
+	// Filestore is the path for the filestore.
 	Filestore = "/" + PartFilestore
-	// FilestoreSubFile is the path for the filestore
+	// FilestoreSubFile is the path for the filestore.
 	FilestoreSubFile = "/" + VarGroup + "/" + VarHash1 + "/" + VarHash2 + "/" + VarHash3 + "/" + VarFileStoreHash + "." + VarFileStoreSuffix
 
 	// CallbackOauth is the path for an oauth callback.

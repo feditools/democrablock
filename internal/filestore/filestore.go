@@ -16,7 +16,7 @@ type FileStore interface {
 	PutFile(ctx context.Context, group string, hash []byte, suffix string, data []byte) error
 
 	// GetEvidenceFile(ctx context.Context, hash []byte, kind string) ([]byte, error)
-	//GetEvidencePresignedURL(ctx context.Context, hash []byte, kind string) (*url.URL, error)
+	// GetEvidencePresignedURL(ctx context.Context, hash []byte, kind string) (*url.URL, error)
 	//PutEvidenceFile(ctx context.Context, hash []byte, kind string, data []byte) error
 }
 

@@ -1,11 +1,12 @@
 package local
 
 import (
-	"github.com/feditools/democrablock/internal/path"
 	nethttp "net/http"
 	"os"
 	"strings"
 	"time"
+
+	"github.com/feditools/democrablock/internal/path"
 
 	"github.com/feditools/democrablock/internal/config"
 	"github.com/feditools/democrablock/internal/http"

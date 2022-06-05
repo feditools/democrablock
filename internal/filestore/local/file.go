@@ -4,10 +4,11 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"github.com/feditools/democrablock/internal/path"
-	"github.com/google/uuid"
 	"net/url"
 	"os"
+
+	"github.com/feditools/democrablock/internal/path"
+	"github.com/google/uuid"
 
 	"github.com/feditools/democrablock/internal/filestore"
 )

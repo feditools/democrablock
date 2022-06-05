@@ -2,8 +2,9 @@ package local
 
 import (
 	"fmt"
-	"github.com/tyrm/go-util/mimetype"
 	"net/http"
+
+	"github.com/tyrm/go-util/mimetype"
 )
 
 func returnErrorPage(w http.ResponseWriter, code int) {

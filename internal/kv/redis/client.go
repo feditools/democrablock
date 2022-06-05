@@ -2,7 +2,9 @@ package redis
 
 import (
 	"context"
+
 	"github.com/feditools/democrablock/internal/config"
+	"github.com/feditools/democrablock/internal/kv"
 	"github.com/go-redis/redis/v8"
 	"github.com/go-redsync/redsync/v4"
 	"github.com/go-redsync/redsync/v4/redis/goredis/v8"
@@ -38,7 +40,7 @@ type Client struct {
 }
 
 // Close closes the redis pool.
-func (c *Client) Close(_ context.Context) error {
+func (c *Client) Close(_ context.Context) kv.Error {
 	return c.redis.Close()
 }
 
