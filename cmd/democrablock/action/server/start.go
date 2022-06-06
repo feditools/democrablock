@@ -7,6 +7,10 @@ import (
 	"os/signal"
 	"syscall"
 
+	"github.com/feditools/democrablock/internal/filestore"
+	fslocal "github.com/feditools/democrablock/internal/filestore/local"
+	"github.com/feditools/democrablock/internal/filestore/minio"
+
 	"github.com/feditools/democrablock/internal/db/immudb"
 
 	"github.com/feditools/democrablock/internal/config"
@@ -105,6 +109,31 @@ var Start action.Action = func(ctx context.Context) error {
 		return err
 	}
 
+	// create filestore module
+	var fsMod filestore.FileStore
+
+	switch viper.GetString(config.Keys.FileStoreType) {
+	case config.FileStoreTypeLocal:
+		fsMod, err = fslocal.New(redisClient)
+		if err != nil {
+			l.Errorf("filestore-local: %s", err.Error())
+
+			return err
+		}
+	case config.FileStoreTypeMinio:
+		fsMod, err = minio.New()
+		if err != nil {
+			l.Errorf("filestore-minio: %s", err.Error())
+
+			return err
+		}
+	default:
+		err = fmt.Errorf("unknow filestore type: %s", viper.GetString(config.Keys.FileStoreType))
+		l.Error(err)
+
+		return err
+	}
+
 	// create http server
 	l.Debug("creating http server")
 	httpServer, err := http.NewServer(ctx, metricsCollector)
@@ -115,7 +144,7 @@ var Start action.Action = func(ctx context.Context) error {
 	}
 
 	// create web modules
-	var webModules []http.Module
+	webModules := []http.Module{fsMod}
 	if lib.ContainsString(viper.GetStringSlice(config.Keys.ServerRoles), config.ServerRoleWebapp) {
 		l.Infof("adding webapp module")
 		webMod, err := webapp.New(ctx, dbClient, redisClient, fediMod, languageMod, tokz, metricsCollector)

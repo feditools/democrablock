@@ -20,6 +20,8 @@ const (
 	PartCallback = "callback"
 	// PartFediverse is used in a path for federated things.
 	PartFediverse = "fedi"
+	// PartFilestore is used in a path for the filestore.
+	PartFilestore = "filestore"
 	// PartInstances is used in a path for instances.
 	PartInstances = "instances"
 	// PartList is used in a path for a list.
@@ -60,6 +62,13 @@ const (
 	// AdminSubSystem is the sub path for the system admin page.
 	AdminSubSystem = "/" + PartSystem
 
+	// filestore.
+
+	// Filestore is the path for the filestore.
+	Filestore = "/" + PartFilestore
+	// FilestoreSubFile is the path for the filestore.
+	FilestoreSubFile = "/" + VarGroup + "/" + VarHash1 + "/" + VarHash2 + "/" + VarHash3 + "/" + VarFileStoreHash + "." + VarFileStoreSuffix
+
 	// CallbackOauth is the path for an oauth callback.
 	CallbackOauth = "/" + PartCallback + "/" + PartOauth + "/" + VarInstance
 	// Home is the path for the home page.
@@ -77,6 +86,30 @@ const (
 
 	// vars.
 
+	// VarFileStoreHashID is the id of the filestore hash variable.
+	VarFileStoreHashID = "filestorehash"
+	// VarFileStoreHash is the var path of the filestore hash variable.
+	VarFileStoreHash = "{" + VarFileStoreHashID + ":" + reHexSHA256 + "}"
+	// VarFileStoreSuffixID is the id of the filestore suffix variable.
+	VarFileStoreSuffixID = "filestoresuffix"
+	// VarFileStoreSuffix is the var path of the filestore suffix variable.
+	VarFileStoreSuffix = "{" + VarFileStoreSuffixID + ":[a-z0-9]{3,4}}"
+	// VarGroupID is the id of the group variable.
+	VarGroupID = "group"
+	// VarGroup is the var path of the group variable.
+	VarGroup = "{" + VarGroupID + ":[a-zA-Z0-9_-]+}"
+	// VarHash1ID is the id of the hash1 1 variable.
+	VarHash1ID = "hash1"
+	// VarHash1 is the var path of the hash 1 variable.
+	VarHash1 = "{" + VarHash1ID + ":" + reHexByte + "}"
+	// VarHash2ID is the id of the hash1 2 variable.
+	VarHash2ID = "hash2"
+	// VarHash2 is the var path of the hash 2 variable.
+	VarHash2 = "{" + VarHash2ID + ":" + reHexByte + "}"
+	// VarHash3ID is the id of the hash1 3 variable.
+	VarHash3ID = "hash3"
+	// VarHash3 is the var path of the hash 3 variable.
+	VarHash3 = "{" + VarHash3ID + ":" + reHexByte + "}"
 	// VarInstanceID is the id of the instance variable.
 	VarInstanceID = "instance"
 	// VarInstance is the var path of the instance variable.

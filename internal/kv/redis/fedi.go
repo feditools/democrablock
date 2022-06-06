@@ -13,7 +13,7 @@ import (
 func (c *Client) DeleteFediNodeInfo(ctx context.Context, domain string) error {
 	_, err := c.redis.Del(ctx, kv.KeyFediNodeInfo(domain)).Result()
 	if err != nil {
-		return err
+		return c.ProcessError(err)
 	}
 
 	return nil
@@ -23,7 +23,7 @@ func (c *Client) DeleteFediNodeInfo(ctx context.Context, domain string) error {
 func (c *Client) GetFediNodeInfo(ctx context.Context, domain string) (string, error) {
 	resp, err := c.redis.Get(ctx, kv.KeyFediNodeInfo(domain)).Result()
 	if err != nil {
-		return "", err
+		return "", c.ProcessError(err)
 	}
 
 	return resp, nil
@@ -33,7 +33,7 @@ func (c *Client) GetFediNodeInfo(ctx context.Context, domain string) (string, er
 func (c *Client) SetFediNodeInfo(ctx context.Context, domain string, nodeinfo string, expire time.Duration) error {
 	_, err := c.redis.SetEX(ctx, kv.KeyFediNodeInfo(domain), nodeinfo, expire).Result()
 	if err != nil {
-		return err
+		return c.ProcessError(err)
 	}
 
 	return nil

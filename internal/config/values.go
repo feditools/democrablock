@@ -1,5 +1,7 @@
 package config
 
+import "time"
+
 // Values contains the type of each value.
 type Values struct {
 	ConfigPath string
@@ -22,6 +24,17 @@ type Values struct {
 	DBTLSCACert     string
 	DBLoadTestData  bool
 	DBEncryptionKey string
+
+	// filestore
+	FileStoreType                   string
+	FileStorePath                   string
+	FileStoreBucket                 string
+	FileStoreEndpoint               string
+	FileStoreRegion                 string
+	FileStoreAccessKeyID            string
+	FileStoreSecretAccessKey        string
+	FileStoreUseTLS                 bool
+	FileStorePresignedURLExpiration time.Duration
 
 	// redis
 	RedisAddress  string
@@ -72,6 +85,15 @@ var Defaults = Values{
 	DBTLSMode:      "disable",
 	DBTLSCACert:    "",
 	DBLoadTestData: false,
+
+	// filestore
+	FileStoreType:                   FileStoreTypeLocal,
+	FileStorePath:                   "filestore",
+	FileStoreBucket:                 "democrablock",
+	FileStoreEndpoint:               "play.min.io",
+	FileStoreRegion:                 "us-east-1",
+	FileStoreUseTLS:                 true,
+	FileStorePresignedURLExpiration: 5 * time.Minute,
 
 	// redis
 	RedisAddress:  "localhost:6379",

@@ -92,7 +92,7 @@ func (f *FediHelper) GetWellknownWebFinger(ctx context.Context, username, domain
 func FindActorURI(webfinger *models.WebFinger) (*url.URL, error) {
 	var actorURIstr string
 	for _, link := range webfinger.Links {
-		if link.Rel == "self" || link.Type == libhttp.MimeAppActivityJSON {
+		if link.Rel == "self" || link.Type == string(libhttp.MimeAppActivityJSON) {
 			actorURIstr = link.HRef
 
 			break
