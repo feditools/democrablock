@@ -23,7 +23,7 @@ require (
 	github.com/spf13/cobra v1.4.0
 	github.com/spf13/pflag v1.0.5
 	github.com/spf13/viper v1.9.0
-	github.com/tdewolff/minify/v2 v2.11.8
+	github.com/tdewolff/minify/v2 v2.11.9
 	github.com/tmthrgd/go-hex v0.0.0-20190904060850-447a3041c3bc
 	github.com/tyrm/go-util v0.4.2
 	github.com/tyrm/immudb-migrate v0.2.1
