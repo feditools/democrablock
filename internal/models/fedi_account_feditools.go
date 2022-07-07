@@ -17,6 +17,11 @@ func (f *FediAccount) GetDisplayName() (displayName string) {
 	return f.DisplayName
 }
 
+// GetID returns the account's database id.
+func (f *FediAccount) GetID() (accountID int64) {
+	return f.ID
+}
+
 // GetInstance returns the instance of the account.
 func (f *FediAccount) GetInstance() (instance fedihelper.Instance) {
 	return f.Instance

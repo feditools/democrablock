@@ -1,4 +1,4 @@
-package models
+package util
 
 import (
 	"fmt"
@@ -14,11 +14,11 @@ import (
 func TestDecrypt(t *testing.T) {
 	viper.Reset()
 
-	viper.Set(config.Keys.DBEncryptionKey, "0123456789012345")
+	viper.Set(config.Keys.EncryptionKey, "0123456789012345")
 
 	byts := hex.MustDecodeString("43dc49ab017fbde685011bc75e7aeecf46e2e6ca2d960681ebca6b7d9b5a74ad0348cfcadbdb71bebb")
 
-	val, err := decrypt(byts)
+	val, err := Decrypt(byts)
 	if err != nil {
 		t.Errorf("unexpected error getting scanning, got: '%s', want: 'nil", err)
 
@@ -32,11 +32,11 @@ func TestDecrypt(t *testing.T) {
 func TestDecrypt_NoData(t *testing.T) {
 	viper.Reset()
 
-	viper.Set(config.Keys.DBEncryptionKey, "0123456789012345")
+	viper.Set(config.Keys.EncryptionKey, "0123456789012345")
 
 	var byts []byte
 
-	_, err := decrypt(byts)
+	_, err := Decrypt(byts)
 	errMsg := "data too small"
 	if err == nil {
 		t.Errorf("expected error getting scanning, got: 'nil', want: '%s", errMsg)
@@ -53,7 +53,7 @@ func TestDecrypt_NoData(t *testing.T) {
 func TestEncrypt(t *testing.T) {
 	viper.Reset()
 
-	viper.Set(config.Keys.DBEncryptionKey, "0123456789012345")
+	viper.Set(config.Keys.EncryptionKey, "0123456789012345")
 
 	tables := []struct {
 		n string
@@ -69,7 +69,7 @@ func TestEncrypt(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			data, err := encrypt([]byte(table.n))
+			data, err := Encrypt([]byte(table.n))
 			if err != nil {
 				t.Errorf("unexpected error getting value: %s", err.Error())
 
@@ -107,14 +107,14 @@ func TestEncrypt(t *testing.T) {
 func BenchmarkDecrypt(b *testing.B) {
 	viper.Reset()
 
-	viper.Set(config.Keys.DBEncryptionKey, "0123456789012345")
+	viper.Set(config.Keys.EncryptionKey, "0123456789012345")
 
 	byts := hex.MustDecodeString("43dc49ab017fbde685011bc75e7aeecf46e2e6ca2d960681ebca6b7d9b5a74ad0348cfcadbdb71bebb")
 
 	b.ResetTimer()
 	b.RunParallel(func(pb *testing.PB) {
 		for pb.Next() {
-			_, _ = decrypt(byts)
+			_, _ = Decrypt(byts)
 		}
 	})
 }
@@ -122,14 +122,14 @@ func BenchmarkDecrypt(b *testing.B) {
 func BenchmarkEncrypt(b *testing.B) {
 	viper.Reset()
 
-	viper.Set(config.Keys.DBEncryptionKey, "0123456789012345")
+	viper.Set(config.Keys.EncryptionKey, "0123456789012345")
 
 	byts := []byte("test string")
 
 	b.ResetTimer()
 	b.RunParallel(func(pb *testing.PB) {
 		for pb.Next() {
-			_, _ = encrypt(byts)
+			_, _ = Encrypt(byts)
 		}
 	})
 }

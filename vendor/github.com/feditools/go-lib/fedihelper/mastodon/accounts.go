@@ -91,18 +91,19 @@ func (h *Helper) GetCurrentAccount(ctx context.Context, instance fedihelper.Inst
 	newFediAccount.SetInstance(instance)
 	newFediAccount.SetLastFinger(time.Now())
 	newFediAccount.SetUsername(retrievedAccount.Username)
-	err = newFediAccount.SetAccessToken(accessToken)
-	if err != nil {
-		fhErr := fedihelper.NewErrorf("set access token: %s", err.Error())
-		l.Error(fhErr.Error())
-
-		return nil, fhErr
-	}
 
 	// write new federated account to database
 	err = h.fedi.CreateAccountHandler(ctx, newFediAccount)
 	if err != nil {
 		fhErr := fedihelper.NewErrorf("db create: %s", err.Error())
+		l.Error(fhErr.Error())
+
+		return nil, fhErr
+	}
+
+	err = h.kv.SetAccessToken(ctx, newFediAccount.GetID(), accessToken)
+	if err != nil {
+		fhErr := fedihelper.NewErrorf("set access token: %s", err.Error())
 		l.Error(fhErr.Error())
 
 		return nil, fhErr

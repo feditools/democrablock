@@ -2,6 +2,7 @@ package models
 
 import (
 	"context"
+	"github.com/feditools/democrablock/internal/util"
 	"time"
 
 	"github.com/uptrace/bun"
@@ -48,14 +49,14 @@ func (f *FediInstance) BeforeAppendModel(_ context.Context, query bun.Query) err
 
 // GetClientSecret returns unencrypted client secret.
 func (f *FediInstance) GetClientSecret() (string, error) {
-	data, err := decrypt(f.ClientSecret)
+	data, err := util.Decrypt(f.ClientSecret)
 
 	return string(data), err
 }
 
 // SetClientSecret sets encrypted client secret.
 func (f *FediInstance) SetClientSecret(s string) error {
-	data, err := encrypt([]byte(s))
+	data, err := util.Encrypt([]byte(s))
 	if err != nil {
 		return err
 	}

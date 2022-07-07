@@ -25,3 +25,11 @@ func TestKeySession(t *testing.T) {
 		t.Errorf("enexpected value for TestKeySession, got: '%s', want: '%s'.", v, want)
 	}
 }
+
+func TestKeyUserAccessToken(t *testing.T) {
+	want := "democrablock:user:at:75044825"
+
+	if v := KeyUserAccessToken(75044825); v != want {
+		t.Errorf("enexpected value for KeyUserAccessToken, got: '%s', want: '%s'.", v, want)
+	}
+}

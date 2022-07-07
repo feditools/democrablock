@@ -15,7 +15,6 @@ type FediAccount struct {
 	LastFinger  time.Time     `validate:"-" bun:",notnull"`
 	LogInCount  int64         `validate:"-" bun:",nullzero,notnull,default:0"`
 	LogInLast   time.Time     `validate:"-" bun:",nullzero"`
-	AccessToken []byte        `validate:"-" bun:",nullzero"`
 
 	// login stuff
 	Admin bool `validate:"-" bun:",notnull"`
