@@ -5,18 +5,13 @@ import (
 )
 
 type Instance interface {
-	IsOAuthSet() bool
-
 	GetActorURI() (actorURI string)
-	GetClientID() (clientID string)
-	GetClientSecret() (clientID string, err error)
 	GetDomain() (domain string)
+	GetID() (id int64)
 	GetServerHostname() (hostname string)
 	GetSoftware() (software string)
 
 	SetActorURI(actorURI string)
-	SetClientID(clientID string)
-	SetClientSecret(clientID string) (err error)
 	SetDomain(domain string)
 	SetServerHostname(hostname string)
 	SetSoftware(software string)

@@ -7,11 +7,11 @@ import (
 	"os/signal"
 	"syscall"
 
+	"github.com/feditools/democrablock/internal/db/bun"
+
 	"github.com/feditools/democrablock/internal/filestore"
 	fslocal "github.com/feditools/democrablock/internal/filestore/local"
 	"github.com/feditools/democrablock/internal/filestore/minio"
-
-	"github.com/feditools/democrablock/internal/db/immudb"
 
 	"github.com/feditools/democrablock/internal/config"
 	"github.com/feditools/democrablock/internal/fedi"
@@ -50,7 +50,7 @@ var Start action.Action = func(ctx context.Context) error {
 	}()
 
 	// create db client
-	dbClient, err := immudb.New(ctx, metricsCollector)
+	dbClient, err := bun.New(ctx, metricsCollector)
 	if err != nil {
 		l.Errorf("db: %s", err.Error())
 

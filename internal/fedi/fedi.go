@@ -4,6 +4,8 @@ import (
 	"context"
 	"net/url"
 
+	"github.com/feditools/democrablock/internal/kv"
+
 	"github.com/feditools/democrablock/internal/config"
 	"github.com/feditools/democrablock/internal/db"
 	"github.com/feditools/democrablock/internal/token"
@@ -12,7 +14,7 @@ import (
 	"github.com/spf13/viper"
 )
 
-func New(d db.DB, h fedihelper.HTTP, k fedihelper.KV, t *token.Tokenizer) (*Module, error) {
+func New(d db.DB, h fedihelper.HTTP, k kv.KV, t *token.Tokenizer) (*Module, error) {
 	appName := viper.GetString(config.Keys.ApplicationName)
 	appWebsite := viper.GetString(config.Keys.ApplicationWebsite)
 	externalURL := viper.GetString(config.Keys.ServerExternalURL)

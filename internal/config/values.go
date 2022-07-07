@@ -10,20 +10,20 @@ type Values struct {
 	// application
 	ApplicationName    string
 	ApplicationWebsite string
+	EncryptionKey      string
 	SoftwareVersion    string
 	TokenSalt          string
 
 	// database
-	DBType          string
-	DBAddress       string
-	DBPort          int
-	DBUser          string
-	DBPassword      string
-	DBDatabase      string
-	DBTLSMode       string
-	DBTLSCACert     string
-	DBLoadTestData  bool
-	DBEncryptionKey string
+	DBType         string
+	DBAddress      string
+	DBPort         int
+	DBUser         string
+	DBPassword     string
+	DBDatabase     string
+	DBTLSMode      string
+	DBTLSCACert    string
+	DBLoadTestData bool
 
 	// filestore
 	FileStoreType                   string
@@ -76,12 +76,11 @@ var Defaults = Values{
 	ApplicationWebsite: "https://github.com/feditools/democrablock",
 
 	// database
-	DBType:         "immudb",
+	DBType:         "postgres",
 	DBAddress:      "localhost",
-	DBPort:         3322,
-	DBUser:         "immudb",
-	DBPassword:     "immudb",
-	DBDatabase:     "defaultdb",
+	DBPort:         5432,
+	DBUser:         "democrablock",
+	DBDatabase:     "democrablock",
 	DBTLSMode:      "disable",
 	DBTLSCACert:    "",
 	DBLoadTestData: false,

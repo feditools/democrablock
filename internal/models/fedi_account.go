@@ -20,7 +20,6 @@ type FediAccount struct {
 	LastFinger  time.Time     `validate:"-" bun:",notnull"`
 	LogInCount  int64         `validate:"-" bun:",nullzero,notnull,default:0"`
 	LogInLast   time.Time     `validate:"-" bun:",nullzero"`
-	AccessToken []byte        `validate:"-" bun:",nullzero"`
 	IsAdmin     bool          `validate:"-" bun:",notnull"`
 }
 
@@ -46,24 +45,6 @@ func (f *FediAccount) BeforeAppendModel(_ context.Context, query bun.Query) erro
 			return err
 		}
 	}
-
-	return nil
-}
-
-// GetAccessToken returns unencrypted access token.
-func (f *FediAccount) GetAccessToken() (string, error) {
-	data, err := decrypt(f.AccessToken)
-
-	return string(data), err
-}
-
-// SetAccessToken sets encrypted access token.
-func (f *FediAccount) SetAccessToken(a string) error {
-	data, err := encrypt([]byte(a))
-	if err != nil {
-		return err
-	}
-	f.AccessToken = data
 
 	return nil
 }

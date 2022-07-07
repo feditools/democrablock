@@ -2,8 +2,9 @@ package local
 
 import (
 	"fmt"
-	"github.com/feditools/democrablock/internal/filestore"
 	"net/http"
+
+	"github.com/feditools/democrablock/internal/filestore"
 
 	"github.com/tyrm/go-util/mimetype"
 )

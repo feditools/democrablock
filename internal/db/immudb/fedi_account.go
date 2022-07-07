@@ -5,11 +5,11 @@ import (
 	"context"
 	"time"
 
+	"github.com/feditools/go-lib"
+
 	"github.com/feditools/democrablock/internal/db/immudb/statements"
 
 	"github.com/codenotary/immudb/pkg/api/schema"
-	"github.com/feditools/democrablock/internal/util"
-
 	"github.com/feditools/democrablock/internal/db"
 	"github.com/feditools/democrablock/internal/models"
 )
@@ -76,11 +76,6 @@ func (c *Client) CreateFediAccount(ctx context.Context, account *models.FediAcco
 		statements.FediAccountColumnNameLastFinger:  account.LastFinger,
 		statements.FediAccountColumnNameIsAdmin:     account.IsAdmin,
 	}
-	if len(account.AccessToken) > 0 {
-		params[statements.FediAccountColumnNameAccessToken] = account.AccessToken
-	} else {
-		params[statements.FediAccountColumnNameAccessToken] = nil
-	}
 
 	// run query
 	resp, err := c.db.SQLExec(ctx, statements.InsertFediAccount(), params)
@@ -120,7 +115,7 @@ func (c *Client) IncFediAccountLoginCount(ctx context.Context, account *models.F
 			KeyFediAccountLoginCount(account.ID),
 			entry.Tx,
 		)
-		count = util.BytesToInt64(entry.Value) + 1
+		count = lib.BytesToInt64(entry.Value) + 1
 
 		preconditions = append(preconditions, precondition)
 	}
@@ -128,11 +123,11 @@ func (c *Client) IncFediAccountLoginCount(ctx context.Context, account *models.F
 		KVs: []*schema.KeyValue{
 			{
 				Key:   KeyFediAccountLoginCount(account.ID),
-				Value: util.Int64ToBytes(count),
+				Value: lib.Int64ToBytes(count),
 			},
 			{
 				Key:   KeyFediAccountLoginLast(account.ID),
-				Value: util.TimeToBytes(now),
+				Value: lib.TimeToBytes(now),
 			},
 		},
 		Preconditions: preconditions,
@@ -329,11 +324,6 @@ func (c *Client) UpdateFediAccount(ctx context.Context, account *models.FediAcco
 		statements.FediAccountColumnNameLastFinger:  account.LastFinger,
 		statements.FediAccountColumnNameIsAdmin:     account.IsAdmin,
 	}
-	if len(account.AccessToken) > 0 {
-		params[statements.FediAccountColumnNameAccessToken] = account.AccessToken
-	} else {
-		params[statements.FediAccountColumnNameAccessToken] = nil
-	}
 
 	// run query
 	l.Debugf("statement:%s\nparams:\n%+v", statements.UpsertFediAccount(), params)
@@ -370,9 +360,6 @@ func makeFediAccountFromRow(row *schema.Row) *models.FediAccount {
 		LastFinger:  tsToTime(row.GetValues()[statements.FediAccountColumnIndexLastFinger].GetTs()),
 		IsAdmin:     row.GetValues()[statements.FediAccountColumnIndexIsAdmin].GetB(),
 	}
-	if !isNull(row.GetValues()[statements.FediAccountColumnIndexAccessToken]) {
-		newAccount.AccessToken = row.GetValues()[statements.FediAccountColumnIndexAccessToken].GetBs()
-	}
 
 	return &newAccount
 }
@@ -398,9 +385,9 @@ func (c *Client) readFediAccountLoginInfo(ctx context.Context, id int64) (int64,
 	for _, entry := range entries.GetEntries() {
 		switch {
 		case bytes.Equal(entry.GetKey(), KeyFediAccountLoginCount(id)):
-			count = util.BytesToInt64(entry.GetValue())
+			count = lib.BytesToInt64(entry.GetValue())
 		case bytes.Equal(entry.GetKey(), KeyFediAccountLoginLast(id)):
-			last = util.BytesToTime(entry.GetValue())
+			last = lib.BytesToTime(entry.GetValue())
 		}
 	}
 

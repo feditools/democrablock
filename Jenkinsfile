@@ -33,7 +33,7 @@ pipeline {
             postgres: {
               retry(30) {
                 sleep 1
-                sh "docker run -t --rm --network=${networkName} subfuzion/netcat -z immudb 3322"
+                sh "docker run -t --rm --network=${networkName} subfuzion/netcat -z postgres 5432"
               }
             },
             redis: {

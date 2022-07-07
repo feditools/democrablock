@@ -19,7 +19,7 @@ func New(k kv.KV) (*Module, error) {
 
 	fspath := viper.GetString(config.Keys.FileStorePath)
 	if !strings.HasSuffix(fspath, "/") {
-		fspath = fspath + "/"
+		fspath += "/"
 	}
 
 	if _, err := os.Stat(fspath); os.IsNotExist(err) {

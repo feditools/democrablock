@@ -22,6 +22,17 @@ clean:
 	@find . -name ".DS_Store" -exec rm -v {} \;
 	@rm -Rvf web/static/css/default.min.css web/static/css/error.min.css
 
+docker-pull:
+	docker-compose --project-name ${PROJECT_NAME} -f deployments/docker-compose-test.yaml pull
+
+docker-restart: docker-stop docker-start
+
+docker-start:
+	docker-compose --project-name ${PROJECT_NAME} -f deployments/docker-compose-test.yaml up -d
+
+docker-stop:
+	docker-compose --project-name ${PROJECT_NAME} -f deployments/docker-compose-test.yaml down
+
 fmt:
 	@echo formatting
 	@go fmt $(shell go list ./... | grep -v /vendor/)
@@ -34,17 +45,6 @@ stage-static:
 test:  tidy fmt
 	go test -race -cover ./...
 
-test-docker-pull:
-	docker-compose --project-name ${PROJECT_NAME} -f deployments/docker-compose-test.yaml pull
-
-test-docker-restart: test-docker-stop test-docker-start
-
-test-docker-start:
-	docker-compose --project-name ${PROJECT_NAME} -f deployments/docker-compose-test.yaml up -d
-
-test-docker-stop:
-	docker-compose --project-name ${PROJECT_NAME} -f deployments/docker-compose-test.yaml down
-
 test-ext: tidy fmt
 	go test --tags=postgres,redis -cover ./...
 
@@ -54,4 +54,4 @@ tidy:
 vendor: tidy
 	go mod vendor
 
-.PHONY: build-snapshot bun-new-migration check check-fix fmt stage-static test test-docker-restart test-docker-start test-docker-stop test-ext tidy vendor
+.PHONY: build-snapshot bun-new-migration check check-fix docker-pull docker-restart docker-start docker-stop fmt stage-static test test-ext tidy vendor

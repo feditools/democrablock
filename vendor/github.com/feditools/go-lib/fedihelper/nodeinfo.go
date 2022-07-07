@@ -38,7 +38,7 @@ func (f *FediHelper) GetNodeInfo20(ctx context.Context, domain string, infoURI *
 	v, err, _ := f.requestGroup.Do(infoURI.String(), func() (interface{}, error) {
 		// check cache
 		cache, err := f.kv.GetFediNodeInfo(ctx, domain)
-		if err != nil && err.Error() != "redis: nil" {
+		if err != nil && err.Error() != "nil" {
 			fhErr := NewErrorf("redis get: %s", err.Error())
 			l.Error(fhErr.Error())
 

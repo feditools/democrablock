@@ -97,7 +97,7 @@ func checkPathSanity(hash string, bits ...string) bool {
 	// generate prefix
 	var prefix string
 	for _, b := range bits {
-		prefix = prefix + b
+		prefix += b
 	}
 
 	// check for prefix

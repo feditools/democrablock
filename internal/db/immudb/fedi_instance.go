@@ -48,16 +48,6 @@ func (c *Client) CreateFediInstance(ctx context.Context, instance *models.FediIn
 		statements.FediInstanceColumnNameServerHostname: instance.ServerHostname,
 		statements.FediInstanceColumnNameSoftware:       instance.Software,
 	}
-	if instance.ClientID != "" {
-		params[statements.FediInstanceColumnNameClientID] = instance.ClientID
-	} else {
-		params[statements.FediInstanceColumnNameClientID] = nil
-	}
-	if len(instance.ClientSecret) > 0 {
-		params[statements.FediInstanceColumnNameClientSecret] = instance.ClientSecret
-	} else {
-		params[statements.FediInstanceColumnNameClientSecret] = nil
-	}
 
 	// run query
 	resp, err := c.db.SQLExec(
@@ -213,16 +203,6 @@ func (c *Client) UpdateFediInstance(ctx context.Context, instance *models.FediIn
 		statements.FediInstanceColumnNameServerHostname: instance.ServerHostname,
 		statements.FediInstanceColumnNameSoftware:       instance.Software,
 	}
-	if instance.ClientID != "" {
-		params[statements.FediInstanceColumnNameClientID] = instance.ClientID
-	} else {
-		params[statements.FediInstanceColumnNameClientID] = nil
-	}
-	if len(instance.ClientSecret) > 0 {
-		params[statements.FediInstanceColumnNameClientSecret] = instance.ClientSecret
-	} else {
-		params[statements.FediInstanceColumnNameClientSecret] = nil
-	}
 
 	// run query
 	l.Debugf("statement:%s\nparams:\n%+v", statements.UpsertFediAccount(), params)
@@ -256,12 +236,6 @@ func makeFediInstanceFromRow(row *schema.Row) *models.FediInstance {
 		ActorURI:       row.GetValues()[statements.FediInstanceColumnIndexActorURI].GetS(),
 		ServerHostname: row.GetValues()[statements.FediInstanceColumnIndexServerHostname].GetS(),
 		Software:       row.GetValues()[statements.FediInstanceColumnIndexSoftware].GetS(),
-	}
-	if !isNull(row.GetValues()[statements.FediInstanceColumnIndexClientID]) {
-		newInstance.ClientID = row.GetValues()[statements.FediInstanceColumnIndexClientID].GetS()
-	}
-	if !isNull(row.GetValues()[statements.FediInstanceColumnIndexClientSecret]) {
-		newInstance.ClientSecret = row.GetValues()[statements.FediInstanceColumnIndexClientSecret].GetBs()
 	}
 
 	return &newInstance

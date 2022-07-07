@@ -8,20 +8,20 @@ type KeyNames struct {
 	// application
 	ApplicationName    string
 	ApplicationWebsite string
+	EncryptionKey      string
 	SoftwareVersion    string
 	TokenSalt          string
 
 	// database
-	DBType          string
-	DBAddress       string
-	DBPort          string
-	DBUser          string
-	DBPassword      string
-	DBDatabase      string
-	DBTLSMode       string
-	DBTLSCACert     string
-	DBLoadTestData  string
-	DBEncryptionKey string
+	DBType         string
+	DBAddress      string
+	DBPort         string
+	DBUser         string
+	DBPassword     string
+	DBDatabase     string
+	DBTLSMode      string
+	DBTLSCACert    string
+	DBLoadTestData string
 
 	// filestore
 	FileStoreType                   string
@@ -74,18 +74,18 @@ var Keys = KeyNames{
 	ApplicationWebsite: "application-website",
 	SoftwareVersion:    "software-version", // Set at build
 	TokenSalt:          "token-salt",
+	EncryptionKey:      "encryption-key",
 
 	// database
-	DBType:          "db-type",
-	DBAddress:       "db-address",
-	DBPort:          "db-port",
-	DBUser:          "db-user",
-	DBPassword:      "db-password",
-	DBDatabase:      "db-database",
-	DBTLSMode:       "db-tls-mode",
-	DBTLSCACert:     "db-tls-ca-cert",
-	DBLoadTestData:  "test-data", // CLI only
-	DBEncryptionKey: "db-crypto-key",
+	DBType:         "db-type",
+	DBAddress:      "db-address",
+	DBPort:         "db-port",
+	DBUser:         "db-user",
+	DBPassword:     "db-password",
+	DBDatabase:     "db-database",
+	DBTLSMode:      "db-tls-mode",
+	DBTLSCACert:    "db-tls-ca-cert",
+	DBLoadTestData: "test-data", // CLI only
 
 	// filestore
 	FileStoreType:                   "filestore-type",

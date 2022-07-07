@@ -12,9 +12,9 @@ log-level: "debug"
 ##############
 
 # String. Database type.
-# Options: ["postgres","sqlite","postgres"]
-# Default: "immudb"
-db-type: "immudb"
+# Options: ["postgres","sqlite"]
+# Default: "postgres"
+db-type: "postgres"
 
 # String. Database address or parameters.
 #
@@ -33,23 +33,22 @@ db-address: "localhost"
 
 # Int. Port for database connection.
 # Examples: [5432, 3322, 1234, 6969]
-# Default: 3322
-db-port: 3322
+# Default: 5432
+db-port: 5432
 
 # String. Username for the database connection.
 # Examples: ["mydbuser","postgres","democrablock"]
-# Default: "immudb"
-db-user: "immudb"
+# Default: "democrablock"
+db-user: "test"
 
 # String. Password to use for the database connection
 # Examples: ["password123","omgiloveyou","postgres"]
-# Default: "immudb"
-db-password: "immudb"
+db-password: "test"
 
 # String. Name of the database to use within the provided database type.
-# Examples: ["mydb","postgres","relay"]
-# Default: "defaultdb"
-db-database: "defaultdb"
+# Examples: ["mydb","postgres","democrablock"]
+# Default: "democrablock"
+db-database: "test"
 
 # String. Disable, enable, or require SSL/TLS connection to the database.
 # If "disable" then no TLS connection will be attempted.

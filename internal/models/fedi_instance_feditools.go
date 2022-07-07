@@ -1,19 +1,15 @@
 package models
 
-func (f *FediInstance) IsOAuthSet() bool {
-	return f.ClientID != "" && len(f.ClientSecret) > 0
-}
-
 func (f *FediInstance) GetActorURI() (actorURI string) {
 	return f.ActorURI
 }
 
-func (f *FediInstance) GetClientID() (clientID string) {
-	return f.ClientID
-}
-
 func (f *FediInstance) GetDomain() (domain string) {
 	return f.Domain
+}
+
+func (f *FediInstance) GetID() (instanceID int64) {
+	return f.ID
 }
 
 func (f *FediInstance) GetServerHostname() (hostname string) {
@@ -26,10 +22,6 @@ func (f *FediInstance) GetSoftware() (software string) {
 
 func (f *FediInstance) SetActorURI(actorURI string) {
 	f.ActorURI = actorURI
-}
-
-func (f *FediInstance) SetClientID(clientID string) {
-	f.ClientID = clientID
 }
 
 func (f *FediInstance) SetDomain(domain string) {
