@@ -3,6 +3,7 @@ package redis
 import (
 	"context"
 	"encoding/json"
+
 	"github.com/feditools/democrablock/internal/kv"
 	"github.com/feditools/democrablock/internal/util"
 )

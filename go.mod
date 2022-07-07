@@ -5,7 +5,7 @@ go 1.17
 require (
 	github.com/allegro/bigcache/v3 v3.0.2
 	github.com/codenotary/immudb v1.3.1
-	github.com/feditools/go-lib v0.11.2-0.20220707042427-48f9f2d1929d
+	github.com/feditools/go-lib v0.11.2-0.20220707043858-2afbaf75365e
 	github.com/go-http-utils/etag v0.0.0-20161124023236-513ea8f21eb1
 	github.com/go-playground/validator/v10 v10.11.0
 	github.com/go-redis/redis/v8 v8.11.5

@@ -59,7 +59,7 @@ github.com/dustin/go-humanize
 # github.com/fatih/color v1.13.0
 ## explicit; go 1.13
 github.com/fatih/color
-# github.com/feditools/go-lib v0.11.2-0.20220707042427-48f9f2d1929d
+# github.com/feditools/go-lib v0.11.2-0.20220707043858-2afbaf75365e
 ## explicit; go 1.17
 github.com/feditools/go-lib
 github.com/feditools/go-lib/database

@@ -17,5 +17,5 @@ type FediAccount struct {
 	LogInLast   time.Time     `validate:"-" bun:",nullzero"`
 
 	// login stuff
-	Admin bool `validate:"-" bun:",notnull"`
+	IsAdmin bool `validate:"-" bun:",notnull"`
 }

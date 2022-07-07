@@ -2,12 +2,9 @@ package immudb
 
 import (
 	"context"
-	"reflect"
 	"time"
 
 	"github.com/feditools/democrablock/internal/db/immudb/statements"
-
-	"github.com/codenotary/immudb/pkg/api/schema"
 )
 
 const (
@@ -47,9 +44,9 @@ func (c *Client) PageHelper(ctx context.Context, tableName string, index, count 
 	return lastReadID, nil
 }
 
-func isNull(v *schema.SQLValue) bool {
+/* func isNull(v *schema.SQLValue) bool {
 	return reflect.TypeOf(v.GetValue()) == reflect.TypeOf(&schema.SQLValue_Null{})
-}
+} */
 
 func tsToTime(ts int64) time.Time {
 	return time.Unix(0, ts*microsecondsToNanoseconds).UTC()
