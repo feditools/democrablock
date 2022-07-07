@@ -4,10 +4,11 @@ import (
 	"bytes"
 	"context"
 	"fmt"
+	"net/url"
+
 	"github.com/feditools/democrablock/internal/filestore"
 	libhttp "github.com/feditools/go-lib/http"
 	"github.com/minio/minio-go/v7"
-	"net/url"
 )
 
 func (m *Module) GetFile(ctx context.Context, group string, hash []byte, suffix string) ([]byte, filestore.Error) {
@@ -45,8 +46,10 @@ func (m *Module) GetPresignedURL(ctx context.Context, group string, hash []byte,
 	presignedURL, err := m.mc.PresignedGetObject(ctx, m.bucket, objectPath, m.presignedURLExpiration, reqParams)
 	if err != nil {
 		l.Errorf("getting prosigned url %s:%s: %s", m.bucket, objectPath, err.Error())
+
 		return nil, err
 	}
+
 	return presignedURL, nil
 }
 
@@ -60,9 +63,10 @@ func (m *Module) PutFile(ctx context.Context, group string, hash []byte, suffix 
 	n, err := m.mc.PutObject(ctx, m.bucket, objectPath, reader, reader.Size(), minio.PutObjectOptions{ContentType: contentType})
 	if err != nil {
 		l.Errorf("can't put image to %s:%s: %s", m.bucket, objectPath, err.Error())
+
 		return err
 	}
-
 	l.Debugf("wrote %d bytes to %s:%s", n.Size, m.bucket, objectPath)
+
 	return nil
 }

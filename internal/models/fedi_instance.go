@@ -2,8 +2,9 @@ package models
 
 import (
 	"context"
-	"github.com/feditools/democrablock/internal/util"
 	"time"
+
+	"github.com/feditools/democrablock/internal/util"
 
 	"github.com/uptrace/bun"
 )

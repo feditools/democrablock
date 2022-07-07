@@ -17,7 +17,7 @@ type EncryptionError struct {
 
 // Error returns the error message as a string.
 func (e *EncryptionError) Error() string {
-	return fmt.Sprintf("encrpytion: %s", e.message)
+	return fmt.Sprintf("encryption: %s", e.message)
 }
 
 // NewEncryptionError wraps a message in an EncryptionError object.

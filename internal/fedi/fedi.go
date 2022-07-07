@@ -2,8 +2,9 @@ package fedi
 
 import (
 	"context"
-	"github.com/feditools/democrablock/internal/kv"
 	"net/url"
+
+	"github.com/feditools/democrablock/internal/kv"
 
 	"github.com/feditools/democrablock/internal/config"
 	"github.com/feditools/democrablock/internal/db"

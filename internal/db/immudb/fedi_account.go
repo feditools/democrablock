@@ -3,8 +3,9 @@ package immudb
 import (
 	"bytes"
 	"context"
-	"github.com/feditools/go-lib"
 	"time"
+
+	"github.com/feditools/go-lib"
 
 	"github.com/feditools/democrablock/internal/db/immudb/statements"
 
