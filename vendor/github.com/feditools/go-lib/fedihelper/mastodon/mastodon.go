@@ -1,6 +1,8 @@
 package mastodon
 
 import (
+	"context"
+
 	"github.com/feditools/go-lib/fedihelper"
 	mastodon "github.com/mattn/go-mastodon"
 	"golang.org/x/sync/singleflight"
@@ -30,13 +32,13 @@ func New(k fedihelper.KV, appClientName, appWebsite, externalURL string) (*Helpe
 }
 
 // newClient return new mastodon API client.
-func (h *Helper) newClient(instance fedihelper.Instance, accessToken string) (*mastodon.Client, error) {
+func (h *Helper) newClient(ctx context.Context, instance fedihelper.Instance, accessToken string) (*mastodon.Client, error) {
 	l := logger.WithField("func", "newClient")
 
-	// decrypt secret
-	clientSecret, err := instance.GetClientSecret()
+	// get oauth config
+	clientID, clientSecret, err := h.kv.GetInstanceOAuth(ctx, instance.GetID())
 	if err != nil {
-		l.Errorf("decrypting client secret: %s", err.Error())
+		l.Errorf("kv get: %s", err.Error())
 
 		return nil, err
 	}
@@ -44,7 +46,7 @@ func (h *Helper) newClient(instance fedihelper.Instance, accessToken string) (*m
 	// create client
 	client := mastodon.NewClient(&mastodon.Config{
 		Server:       "https://" + instance.GetDomain(),
-		ClientID:     instance.GetClientID(),
+		ClientID:     clientID,
 		ClientSecret: clientSecret,
 		AccessToken:  accessToken,
 	})

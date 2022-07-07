@@ -12,7 +12,7 @@ func (h *Helper) GetCurrentAccount(ctx context.Context, instance fedihelper.Inst
 	l := logger.WithField("func", "GetCurrentAccount")
 
 	// create mastodon client
-	client, err := h.newClient(instance, accessToken)
+	client, err := h.newClient(ctx, instance, accessToken)
 	if err != nil {
 		fhErr := fedihelper.NewErrorf("find actor url: %s", err.Error())
 		l.Error(fhErr.Error())

@@ -73,27 +73,27 @@ func (f *FediHelper) loginURLForInstance(ctx context.Context, instance Instance)
 		return nil, NewErrorf("no helper for '%s'", instance.GetSoftware())
 	}
 
-	if !instance.IsOAuthSet() {
-		clientID, clientSecret, err := f.helpers[SoftwareMastodon].RegisterApp(ctx, instance)
+	_, _, err := f.kv.GetInstanceOAuth(ctx, instance.GetID())
+	if err != nil {
+		if err.Error() != "nil" {
+			fhErr := NewErrorf("kv get: %s", err.Error())
+			l.Error(fhErr.Error())
+
+			return nil, fhErr
+		}
+
+		var newClientID, newClientSecret string
+		newClientID, newClientSecret, err = f.helpers[SoftwareMastodon].RegisterApp(ctx, instance)
 		if err != nil {
 			fhErr := NewErrorf("registering app: %s", err.Error())
 			l.Error(fhErr.Error())
 
 			return nil, fhErr
 		}
-		l.Debugf("got app: %s, %s", clientID, clientSecret)
-		instance.SetClientID(clientID)
-		err = instance.SetClientSecret(clientSecret)
-		if err != nil {
-			fhErr := NewErrorf("setting secret: %s", err.Error())
-			l.Error(fhErr.Error())
 
-			return nil, fhErr
-		}
-
-		err = f.UpdateInstanceHandler(ctx, instance)
+		err = f.kv.SetInstanceOAuth(ctx, instance.GetID(), newClientID, newClientSecret)
 		if err != nil {
-			fhErr := NewErrorf("db update: %s", err.Error())
+			fhErr := NewErrorf("kv set: %s", err.Error())
 			l.Error(fhErr.Error())
 
 			return nil, fhErr

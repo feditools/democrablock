@@ -4,15 +4,19 @@ import (
 	"crypto/aes"
 	gocipher "crypto/cipher"
 	"crypto/rand"
+	"crypto/sha256"
 	"errors"
 	"io"
-	"strings"
+	"sync"
 
 	"github.com/feditools/democrablock/internal/config"
 	"github.com/spf13/viper"
 )
 
 var (
+	cryptoKey     [32]byte
+	cryptoKeyOnce sync.Once
+
 	ErrDataTooSmall = errors.New("data too small")
 )
 
@@ -51,8 +55,7 @@ func Encrypt(b []byte) ([]byte, error) {
 }
 
 func getCrypto() (gocipher.AEAD, error) {
-	key := []byte(strings.ToLower(viper.GetString(config.Keys.EncryptionKey)))
-	cipher, err := aes.NewCipher(key)
+	cipher, err := aes.NewCipher(getKey())
 	if err != nil {
 		return nil, err
 	}
@@ -63,4 +66,12 @@ func getCrypto() (gocipher.AEAD, error) {
 	}
 
 	return gcm, nil
+}
+
+func getKey() []byte {
+	cryptoKeyOnce.Do(func() {
+		cryptoKey = sha256.Sum256([]byte(viper.GetString(config.Keys.EncryptionKey)))
+	})
+
+	return cryptoKey[:]
 }

@@ -11,6 +11,4 @@ type FediInstance struct {
 	ActorURI       string    `validate:"url" bun:",nullzero,notnull"`
 	ServerHostname string    `validate:"-" bun:",nullzero,notnull,unique"`
 	Software       string    `validate:"-" bun:",nullzero,notnull"`
-	ClientID       string    `validate:"-" bun:",nullzero"`
-	ClientSecret   []byte    `validate:"-" bun:",nullzero"`
 }

@@ -16,7 +16,7 @@ func TestDecrypt(t *testing.T) {
 
 	viper.Set(config.Keys.EncryptionKey, "0123456789012345")
 
-	byts := hex.MustDecodeString("43dc49ab017fbde685011bc75e7aeecf46e2e6ca2d960681ebca6b7d9b5a74ad0348cfcadbdb71bebb")
+	byts := hex.MustDecodeString("c9e49c7ee9fc8ca13f331d6347c09bcfc168bec2a80f26a58e7e6a3a72e047d5480f623f107567db60")
 
 	val, err := Decrypt(byts)
 	if err != nil {
