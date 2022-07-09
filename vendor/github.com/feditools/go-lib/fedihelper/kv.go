@@ -12,6 +12,12 @@ type KV interface {
 	GetAccessToken(ctx context.Context, accountID int64) (accessToken string, err error)
 	SetAccessToken(ctx context.Context, accountID int64, accessToken string) (err error)
 
+	// federated instance node info
+
+	DeleteHostMeta(ctx context.Context, domain string) (err error)
+	GetHostMeta(ctx context.Context, domain string) (hostmeta []byte, err error)
+	SetHostMeta(ctx context.Context, domain string, hostmeta []byte, expire time.Duration) (err error)
+
 	// instance oauth
 
 	DeleteInstanceOAuth(ctx context.Context, instanceID int64) (err error)
@@ -21,6 +27,6 @@ type KV interface {
 	// federated instance node info
 
 	DeleteFediNodeInfo(ctx context.Context, domain string) (err error)
-	GetFediNodeInfo(ctx context.Context, domain string) (nodeinfo string, err error)
-	SetFediNodeInfo(ctx context.Context, domain string, nodeinfo string, expire time.Duration) (err error)
+	GetFediNodeInfo(ctx context.Context, domain string) (nodeinfo []byte, err error)
+	SetFediNodeInfo(ctx context.Context, domain string, nodeinfo []byte, expire time.Duration) (err error)
 }

@@ -12,6 +12,8 @@ var (
 	ErrNoEntries Error = fmt.Errorf("no entries")
 	// ErrMultipleEntries is returned when a caller expected ONE entry for a query, but multiples were found.
 	ErrMultipleEntries Error = fmt.Errorf("multiple entries")
+	// ErrTxNotFound is returned when a transaction is request, but not found.
+	ErrTxNotFound Error = fmt.Errorf("transaction not found")
 	// ErrUnknown denotes an unknown database error.
 	ErrUnknown Error = fmt.Errorf("unknown error")
 )

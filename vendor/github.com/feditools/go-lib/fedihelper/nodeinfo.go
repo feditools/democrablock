@@ -67,21 +67,20 @@ func (f *FediHelper) GetNodeInfo20(ctx context.Context, domain string, infoURI *
 
 			return nil, fhErr
 		}
-		bodyString := string(bodyBytes)
 
-		// marshal
-		nodeinfo, err := unmarshalNodeInfo20(bodyString)
+		// write cache
+		err = f.kv.SetFediNodeInfo(ctx, domain, bodyBytes, f.nodeinfoCacheExp)
 		if err != nil {
-			fhErr := NewErrorf("marshal: %s", err.Error())
+			fhErr := NewErrorf("redis set: %s", err.Error())
 			l.Error(fhErr.Error())
 
 			return nil, fhErr
 		}
 
-		// write cache
-		err = f.kv.SetFediNodeInfo(ctx, domain, bodyString, f.nodeinfoCacheExp)
+		// marshal
+		nodeinfo, err := unmarshalNodeInfo20(bodyBytes)
 		if err != nil {
-			fhErr := NewErrorf("redis set: %s", err.Error())
+			fhErr := NewErrorf("marshal: %s", err.Error())
 			l.Error(fhErr.Error())
 
 			return nil, fhErr
@@ -105,9 +104,9 @@ func (f *FediHelper) GetNodeInfo20(ctx context.Context, domain string, infoURI *
 	return nodeinfo, nil
 }
 
-func unmarshalNodeInfo20(body string) (*models.NodeInfo2, error) {
+func unmarshalNodeInfo20(body []byte) (*models.NodeInfo2, error) {
 	var nodeinfo *models.NodeInfo2
-	if err := json.Unmarshal([]byte(body), &nodeinfo); err != nil {
+	if err := json.Unmarshal(body, &nodeinfo); err != nil {
 		return nil, NewErrorf("unmarshal: %s", err.Error())
 	}
 

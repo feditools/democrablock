@@ -60,6 +60,11 @@ func (c *Client) CountFediAccountsForInstance(ctx context.Context, instanceID in
 	return resp.GetRows()[0].GetValues()[0].GetN(), nil
 }
 
+func (*Client) CountFediAccountsWithCouncil(_ context.Context) (count int64, err db.Error) {
+	// TODO implement me
+	panic("implement me")
+}
+
 func (c *Client) CreateFediAccount(ctx context.Context, account *models.FediAccount) db.Error {
 	metric := c.metrics.NewDBQuery("CreateFediAccount")
 	l := logger.WithField("func", "CreateFediAccount")

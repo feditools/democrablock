@@ -4,6 +4,8 @@ import (
 	"context"
 	"net/url"
 
+	"github.com/feditools/democrablock/internal/models"
+
 	"github.com/feditools/democrablock/internal/kv"
 
 	"github.com/feditools/democrablock/internal/config"
@@ -65,4 +67,26 @@ func (m *Module) GetLoginURL(ctx context.Context, act string) (*url.URL, error) 
 
 func (m *Module) Helper(s fedihelper.Software) fedihelper.Helper {
 	return m.helper.Helper(s)
+}
+
+func (m *Module) NewFediAccountFromUsername(ctx context.Context, username string, instance *models.FediInstance) (*models.FediAccount, error) {
+	account := new(models.FediAccount)
+
+	err := m.helper.GenerateFediAccountFromUsername(ctx, username, instance, account)
+	if err != nil {
+		return nil, err
+	}
+
+	return account, nil
+}
+
+func (m *Module) NewFediInstanceFromDomain(ctx context.Context, domain string) (*models.FediInstance, error) {
+	instance := new(models.FediInstance)
+
+	err := m.helper.GenerateFediInstanceFromDomain(ctx, domain, instance)
+	if err != nil {
+		return nil, err
+	}
+
+	return instance, nil
 }

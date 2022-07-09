@@ -6,6 +6,8 @@ import (
 	"github.com/feditools/democrablock/internal/models"
 )
 
+type TxID string
+
 // DB represents a database client.
 type DB interface {
 	// Close closes the db connections
@@ -17,10 +19,18 @@ type DB interface {
 	// ResetCache clears any caches in the module
 	ResetCache(ctx context.Context) Error
 
+	// db tx
+
+	TxNew(ctx context.Context) (TxID, Error)
+	TxCommit(ctx context.Context, id TxID) Error
+	TxRollback(ctx context.Context, id TxID) Error
+
 	// FediAccount
 
 	// CountFediAccounts returns the number of federated social account
 	CountFediAccounts(ctx context.Context) (count int64, err Error)
+	// CountFediAccountsWithCouncil returns the number of federated social accounts which are on the council
+	CountFediAccountsWithCouncil(ctx context.Context) (count int64, err Error)
 	// CountFediAccountsForInstance returns the number of federated social account for an instance
 	CountFediAccountsForInstance(ctx context.Context, instanceID int64) (count int64, err Error)
 	// CreateFediAccount stores the federated social account
@@ -50,4 +60,17 @@ type DB interface {
 	ReadFediInstancesPage(ctx context.Context, index, count int) (instances []*models.FediInstance, err Error)
 	// UpdateFediInstance updates the stored federated instance
 	UpdateFediInstance(ctx context.Context, instance *models.FediInstance) (err Error)
+
+	// Transaction Log Entry
+
+	// CountTransactions returns the number of federated instances
+	CountTransactions(ctx context.Context) (count int64, err Error)
+	// CreateTransaction stores the federated instance
+	CreateTransaction(ctx context.Context, transaction *models.Transaction) (err Error)
+	// CreateTransactionTX stores the federated instance using a transaction
+	CreateTransactionTX(ctx context.Context, txID TxID, transaction *models.Transaction) (err Error)
+	// ReadTransaction returns one federated social instance
+	ReadTransaction(ctx context.Context, id int64) (transaction *models.Transaction, err Error)
+	// ReadTransactionsPage returns a page of federated social instances
+	ReadTransactionsPage(ctx context.Context, index, count int) (transactions []*models.Transaction, err Error)
 }

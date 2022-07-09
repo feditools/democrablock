@@ -10,7 +10,7 @@ import (
 )
 
 // ProcessError replaces any known values with our own db.Error types.
-func (m *Module) ProcessError(err error) filestore.Error {
+func (*Module) ProcessError(err error) filestore.Error {
 	switch {
 	case err == nil:
 		return nil

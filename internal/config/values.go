@@ -45,6 +45,9 @@ type Values struct {
 	Account         string
 	AccountAddGroup []string
 
+	// council
+	CouncilMembers []string
+
 	// server
 	ServerExternalURL string
 	ServerHTTPBind    string

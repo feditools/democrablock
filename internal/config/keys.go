@@ -43,6 +43,9 @@ type KeyNames struct {
 	Account         string
 	AccountAddGroup string
 
+	// council
+	CouncilMembers string
+
 	// server
 	ServerExternalURL string
 	ServerHTTPBind    string
@@ -106,6 +109,9 @@ var Keys = KeyNames{
 	// account
 	Account:         "account",
 	AccountAddGroup: "add-group",
+
+	// council
+	CouncilMembers: "member",
 
 	// server
 	ServerExternalURL: "external-url",

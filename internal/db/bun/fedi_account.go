@@ -17,6 +17,25 @@ func (c *Client) CountFediAccounts(ctx context.Context) (int64, db.Error) {
 	metric := c.metrics.NewDBQuery("CountFediAccounts")
 
 	count, err := c.newFediAccountQ((*models.FediAccount)(nil)).Count(ctx)
+
+	if err != nil {
+		go metric.Done(true)
+
+		return 0, c.bun.errProc(err)
+	}
+
+	go metric.Done(false)
+
+	return int64(count), nil
+}
+
+// CountFediAccountsWithCouncil returns the number of federated social accounts which are on the council.
+func (c *Client) CountFediAccountsWithCouncil(ctx context.Context) (int64, db.Error) {
+	metric := c.metrics.NewDBQuery("CountFediAccountsWithCouncil")
+
+	count, err := c.newFediAccountQ((*models.FediAccount)(nil)).
+		Where("is_council = TRUE").
+		Count(ctx)
 	if err != nil {
 		go metric.Done(true)
 
@@ -48,7 +67,7 @@ func (c *Client) CountFediAccountsForInstance(ctx context.Context, instanceID in
 func (c *Client) CreateFediAccount(ctx context.Context, account *models.FediAccount) db.Error {
 	metric := c.metrics.NewDBQuery("CreateFediAccount")
 
-	if err := c.Create(ctx, account); err != nil {
+	if err := create(ctx, c.bun, account); err != nil {
 		go metric.Done(true)
 
 		return c.bun.errProc(err)
@@ -168,7 +187,29 @@ func (c *Client) ReadFediAccountsPage(ctx context.Context, index, count int) ([]
 func (c *Client) UpdateFediAccount(ctx context.Context, account *models.FediAccount) db.Error {
 	metric := c.metrics.NewDBQuery("UpdateFediAccount")
 
-	if err := c.Update(ctx, account); err != nil {
+	if err := update(ctx, c.bun, account); err != nil {
+		go metric.Done(true)
+
+		return c.bun.errProc(err)
+	}
+
+	go metric.Done(false)
+
+	return nil
+}
+
+// UpdateFediAccountTX updates the stored federated social account inside a transaction.
+func (c *Client) UpdateFediAccountTX(ctx context.Context, txID db.TxID, account *models.FediAccount) db.Error {
+	metric := c.metrics.NewDBQuery("UpdateFediAccountTX")
+
+	tx, err := c.getTx(txID)
+	if err != nil {
+		go metric.Done(true)
+
+		return c.bun.errProc(err)
+	}
+
+	if err := update(ctx, tx, account); err != nil {
 		go metric.Done(true)
 
 		return c.bun.errProc(err)

@@ -30,7 +30,7 @@ func (c *Client) CountFediInstances(ctx context.Context) (int64, db.Error) {
 func (c *Client) CreateFediInstance(ctx context.Context, instance *models.FediInstance) db.Error {
 	metric := c.metrics.NewDBQuery("CreateFediInstance")
 
-	if err := c.Create(ctx, instance); err != nil {
+	if err := create(ctx, c.bun, instance); err != nil {
 		go metric.Done(true)
 
 		return c.bun.errProc(err)
@@ -116,7 +116,7 @@ func (c *Client) ReadFediInstancesPage(ctx context.Context, index, count int) ([
 func (c *Client) UpdateFediInstance(ctx context.Context, instance *models.FediInstance) db.Error {
 	metric := c.metrics.NewDBQuery("UpdateFediInstance")
 
-	if err := c.Update(ctx, instance); err != nil {
+	if err := update(ctx, c.bun, instance); err != nil {
 		go metric.Done(true)
 
 		return c.bun.errProc(err)
