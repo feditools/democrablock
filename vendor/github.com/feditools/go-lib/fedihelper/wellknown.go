@@ -50,39 +50,15 @@ func (f *FediHelper) GetWellknownNodeInfo(ctx context.Context, domain string) (*
 }
 
 // GetWellknownWebFinger retrieves wellknown web finger resource from a federated instance.
-func (f *FediHelper) GetWellknownWebFinger(ctx context.Context, username, domain string) (*models.WebFinger, error) {
+func (f *FediHelper) GetWellknownWebFinger(ctx context.Context, serverHostname, username, domain string) (*models.WebFinger, error) {
 	l := logger.WithField("func", "GetWellknownWebFinger")
-	webfingerURI := fmt.Sprintf("https://%s/.well-known/webfinger?resource=acct:%s@%s", domain, username, domain)
-	v, err, _ := f.requestGroup.Do(webfingerURI, func() (interface{}, error) {
-		// do request
-		resp, err := f.http.Get(ctx, webfingerURI)
-		if err != nil {
-			l.Errorf("http get: %s", err.Error())
 
-			return nil, err
-		}
-
-		webfinger := new(models.WebFinger)
-		defer resp.Body.Close()
-		err = json.NewDecoder(resp.Body).Decode(webfinger)
-		if err != nil {
-			l.Errorf("decode json: %s", err.Error())
-
-			return nil, err
-		}
-
-		return webfinger, nil
-	})
-
+	webfingerURI := fmt.Sprintf("https://%s/.well-known/webfinger?resource=acct:%%s@%%s", serverHostname)
+	webfinger, err := f.webFinger(ctx, webfingerURI, username, domain)
 	if err != nil {
 		l.Errorf("singleflight: %s", err.Error())
 
 		return nil, err
-	}
-
-	webfinger, ok := v.(*models.WebFinger)
-	if !ok {
-		return nil, NewError("invalid response type from single flight")
 	}
 
 	return webfinger, nil

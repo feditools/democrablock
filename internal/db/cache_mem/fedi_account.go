@@ -62,6 +62,10 @@ func (c *CacheMem) CountFediAccountsForInstance(ctx context.Context, instanceID 
 	return count, nil
 }
 
+func (c *CacheMem) CountFediAccountsWithCouncil(ctx context.Context) (count int64, err db.Error) {
+	return c.db.CountFediAccountsWithCouncil(ctx)
+}
+
 // CreateFediAccount stores the federated instance and caches it.
 func (c *CacheMem) CreateFediAccount(ctx context.Context, account *models.FediAccount) db.Error {
 	err := c.db.CreateFediAccount(ctx, account)

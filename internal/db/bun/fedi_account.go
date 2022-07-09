@@ -17,6 +17,25 @@ func (c *Client) CountFediAccounts(ctx context.Context) (int64, db.Error) {
 	metric := c.metrics.NewDBQuery("CountFediAccounts")
 
 	count, err := c.newFediAccountQ((*models.FediAccount)(nil)).Count(ctx)
+
+	if err != nil {
+		go metric.Done(true)
+
+		return 0, c.bun.errProc(err)
+	}
+
+	go metric.Done(false)
+
+	return int64(count), nil
+}
+
+// CountFediAccountsWithCouncil returns the number of federated social accounts which are on the council.
+func (c *Client) CountFediAccountsWithCouncil(ctx context.Context) (int64, db.Error) {
+	metric := c.metrics.NewDBQuery("CountFediAccountsWithCouncil")
+
+	count, err := c.newFediAccountQ((*models.FediAccount)(nil)).
+		Where("is_council = TRUE").
+		Count(ctx)
 	if err != nil {
 		go metric.Done(true)
 

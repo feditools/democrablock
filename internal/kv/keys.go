@@ -9,6 +9,7 @@ const (
 	keyAccountAccessToken = keyAccount + "at:"
 
 	keyFedi         = keyBase + "fedi:"
+	keyFediHostMeta = keyFedi + "hm:"
 	keyFediNodeInfo = keyFedi + "ni:"
 
 	keyFileStore             = keyBase + "fs:"
@@ -29,6 +30,9 @@ func KeyFileStorePresignedURL(t string) string { return keyFileStorePresignedURL
 
 // KeyFediNodeInfo returns the kv key which holds cached nodeinfo.
 func KeyFediNodeInfo(d string) string { return keyFediNodeInfo + d }
+
+// KeyHostMeta returns the kv key which holds cached host meta.
+func KeyHostMeta(d string) string { return keyFediHostMeta + d }
 
 // KeyInstanceOAuth returns the kv key which holds an instance's oauth tokens.
 func KeyInstanceOAuth(i int64) string { return keyInstanceOAuth + strconv.FormatInt(i, 10) }

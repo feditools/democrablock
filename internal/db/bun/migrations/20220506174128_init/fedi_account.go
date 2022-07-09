@@ -11,11 +11,12 @@ type FediAccount struct {
 	Username    string        `validate:"-" bun:",unique:unique_fedi_user,nullzero,notnull"`
 	InstanceID  int64         `validate:"-" bun:",unique:unique_fedi_user,nullzero,notnull"`
 	Instance    *FediInstance `validate:"-" bun:"rel:belongs-to,join:instance_id=id"`
-	DisplayName string        `validate:"-" bun:",notnull"`
+	DisplayName string        `validate:"-" bun:",nullzero"`
 	LastFinger  time.Time     `validate:"-" bun:",notnull"`
-	LogInCount  int64         `validate:"-" bun:",nullzero,notnull,default:0"`
+	LogInCount  int64         `validate:"-" bun:",notnull"`
 	LogInLast   time.Time     `validate:"-" bun:",nullzero"`
 
 	// login stuff
-	IsAdmin bool `validate:"-" bun:",notnull"`
+	IsAdmin   bool `validate:"-" bun:",notnull"`
+	IsCouncil bool `validate:"-" bun:",notnull"`
 }

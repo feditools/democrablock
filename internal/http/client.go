@@ -26,15 +26,21 @@ type Client struct {
 	userAgent string
 }
 
+// Do runs a request with the http client.
+func (*Client) Do(req *http.Request) (resp *http.Response, err error) {
+	client := &http.Client{}
+
+	return client.Do(req)
+}
+
 // Get calls http.Get with expected http User-Agent.
 func (c *Client) Get(ctx context.Context, url string) (resp *http.Response, err error) {
-	client := &http.Client{}
 	req, err := c.NewRequest(ctx, http.MethodGet, url, nil)
 	if err != nil {
 		return nil, err
 	}
 
-	return client.Do(req)
+	return c.Do(req)
 }
 
 // NewRequest calls http.NewRequest with expected http User-Agent.
@@ -49,13 +55,13 @@ func (c *Client) NewRequest(ctx context.Context, method, url string, body io.Rea
 	return req, nil
 }
 
+func (c *Client) Transport() (transport http.RoundTripper) {
+	return &Transport{userAgent: c.userAgent}
+}
+
 // Transport adds the expected http User-Agent to any request.
 type Transport struct {
 	userAgent string
-}
-
-func (c *Client) Transport() (transport http.RoundTripper) {
-	return &Transport{userAgent: c.userAgent}
 }
 
 // RoundTrip executes the default http.Transport with expected http User-Agent.

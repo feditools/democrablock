@@ -57,7 +57,7 @@ func (h *Helper) GetCurrentAccount(ctx context.Context, instance fedihelper.Inst
 	}
 
 	// do webfinger
-	webFinger, err := h.fedi.GetWellknownWebFinger(ctx, retrievedAccount.Username, instance.GetDomain())
+	webFinger, err := h.fedi.GetWellknownWebFinger(ctx, instance.GetServerHostname(), retrievedAccount.Username, instance.GetDomain())
 	if err != nil {
 		fhErr := fedihelper.NewErrorf("webfinger %s@%s: %s", retrievedAccount.Username, instance.GetDomain(), err.Error())
 		l.Debug(fhErr.Error())

@@ -10,6 +10,8 @@ const (
 	// CacheControlNoTransform indicates that any intermediary shouldn't transform the response contents.
 	CacheControlNoTransform = "no-transform"
 
+	// HeaderAccept is the key for the accept header.
+	HeaderAccept = "Accept"
 	// HeaderCacheControl is the key for the cache control header.
 	HeaderCacheControl = "Cache-Control"
 	// HeaderContentType is the key for the content type header.

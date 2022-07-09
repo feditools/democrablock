@@ -26,6 +26,14 @@ func TestKeyFediNodeInfo(t *testing.T) {
 	}
 }
 
+func TestKeyHostMeta(t *testing.T) {
+	want := "democrablock:fedi:hm:example.com"
+
+	if v := KeyHostMeta("example.com"); v != want {
+		t.Errorf("enexpected value for KeyHostMeta, got: '%s', want: '%s'.", v, want)
+	}
+}
+
 func TestKeyInstanceOAuthn(t *testing.T) {
 	want := "democrablock:instance:oauth:168432228"
 

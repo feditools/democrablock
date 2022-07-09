@@ -21,6 +21,8 @@ type DB interface {
 
 	// CountFediAccounts returns the number of federated social account
 	CountFediAccounts(ctx context.Context) (count int64, err Error)
+	// CountFediAccountsWithCouncil returns the number of federated social accounts which are on the council
+	CountFediAccountsWithCouncil(ctx context.Context) (count int64, err Error)
 	// CountFediAccountsForInstance returns the number of federated social account for an instance
 	CountFediAccountsForInstance(ctx context.Context, instanceID int64) (count int64, err Error)
 	// CreateFediAccount stores the federated social account
