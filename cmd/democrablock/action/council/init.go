@@ -220,12 +220,7 @@ var Init action.Action = func(ctx context.Context) error {
 
 	// commit transaction
 	if err := dbClient.TxCommit(ctx, txID); err != nil {
-		l.Errorf("error comitting db tx: %s", err.Error())
-		if txerr := dbClient.TxRollback(ctx, txID); txerr != nil {
-			l.Errorf("error rolling back db tx: %s", err.Error())
-
-			return txerr
-		}
+		l.Errorf("error committing db tx: %s", err.Error())
 
 		return err
 	}

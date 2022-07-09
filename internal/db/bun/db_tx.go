@@ -3,6 +3,7 @@ package bun
 import (
 	"context"
 	"database/sql"
+
 	"github.com/feditools/democrablock/internal/db"
 	"github.com/google/uuid"
 	"github.com/uptrace/bun"
@@ -25,6 +26,7 @@ func (c *Client) TxCommit(_ context.Context, id db.TxID) db.Error {
 	if err != nil {
 		return err
 	}
+	c.deleteTx(id)
 
 	return tx.Commit()
 }
@@ -34,6 +36,7 @@ func (c *Client) TxRollback(_ context.Context, id db.TxID) db.Error {
 	if err != nil {
 		return err
 	}
+	c.deleteTx(id)
 
 	return tx.Rollback()
 }

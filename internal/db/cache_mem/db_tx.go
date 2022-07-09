@@ -2,6 +2,7 @@ package cachemem
 
 import (
 	"context"
+
 	"github.com/feditools/democrablock/internal/db"
 )
 

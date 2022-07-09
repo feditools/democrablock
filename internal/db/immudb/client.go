@@ -2,6 +2,7 @@ package immudb
 
 import (
 	"context"
+
 	immudb "github.com/codenotary/immudb/pkg/client"
 	"github.com/feditools/democrablock/internal/config"
 	"github.com/feditools/democrablock/internal/db"

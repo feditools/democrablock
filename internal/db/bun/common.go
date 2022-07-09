@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+
 	"github.com/uptrace/bun"
 
 	"github.com/feditools/democrablock/internal/db"

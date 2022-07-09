@@ -3,6 +3,7 @@ package bun
 import (
 	"context"
 	"errors"
+
 	"github.com/feditools/democrablock/internal/db"
 	"github.com/feditools/democrablock/internal/models"
 	libdatabase "github.com/feditools/go-lib/database"

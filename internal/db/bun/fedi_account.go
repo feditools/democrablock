@@ -202,7 +202,14 @@ func (c *Client) UpdateFediAccount(ctx context.Context, account *models.FediAcco
 func (c *Client) UpdateFediAccountTX(ctx context.Context, txID db.TxID, account *models.FediAccount) db.Error {
 	metric := c.metrics.NewDBQuery("UpdateFediAccountTX")
 
-	if err := update(ctx, c.bun, account); err != nil {
+	tx, err := c.getTx(txID)
+	if err != nil {
+		go metric.Done(true)
+
+		return c.bun.errProc(err)
+	}
+
+	if err := update(ctx, tx, account); err != nil {
 		go metric.Done(true)
 
 		return c.bun.errProc(err)

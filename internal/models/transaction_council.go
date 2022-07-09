@@ -7,7 +7,7 @@ import (
 
 const (
 	TransactionTypeCouncilInit       TransactionType = "COUNCIL_INIT"
-	TransactionTypeCouncilInitString                 = "Council initialized with members: %s"
+	TransactionTypeCouncilInitString string          = "Council initialized with members: %s"
 )
 
 type TransactionCouncilInit struct {
