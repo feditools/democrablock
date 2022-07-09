@@ -16,6 +16,12 @@ import (
 
 //revive:disable:add-constant
 
+func TestClient_ImplementsDB(t *testing.T) {
+	t.Parallel()
+
+	var _ db.DB = (*Client)(nil)
+}
+
 func TestDeriveBunDBPGOptions(t *testing.T) {
 	dbDatabase := "database"
 	dbPassword := "password"

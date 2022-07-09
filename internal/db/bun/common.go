@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"github.com/uptrace/bun"
 
 	"github.com/feditools/democrablock/internal/db"
 	"github.com/feditools/democrablock/internal/db/bun/migrations"
@@ -17,16 +18,6 @@ func (c *Client) Close(_ context.Context) db.Error {
 	l.Info("closing db connection")
 
 	return c.bun.Close()
-}
-
-// Create inserts an object into the database.
-func (c *Client) Create(ctx context.Context, i interface{}) db.Error {
-	_, err := c.bun.NewInsert().Model(i).Exec(ctx)
-	if err != nil {
-		logger.WithField("func", "Create").Errorf("db: %s", err.Error())
-	}
-
-	return c.bun.ProcessError(err)
 }
 
 // DoMigration runs schema migrations on the database.
@@ -108,25 +99,24 @@ func (c *Client) LoadTestData(ctx context.Context) db.Error {
 	return nil
 }
 
-// ReadByID returns a model by its ID.
-func (c *Client) ReadByID(ctx context.Context, id int64, i interface{}) db.Error {
-	q := c.bun.NewSelect().Model(i).Where("id = ?", id)
-
-	err := q.Scan(ctx)
-
-	return c.bun.ProcessError(err)
-}
-
 // ResetCache does nothing. This module contains no cache.
-func (Client) ResetCache(_ context.Context) db.Error {
+func (*Client) ResetCache(_ context.Context) db.Error {
 	return nil
 }
 
-// Update updates stored data.
-func (c *Client) Update(ctx context.Context, i interface{}) db.Error {
-	q := c.bun.NewUpdate().Model(i).WherePK()
+func create(ctx context.Context, c bun.IDB, i interface{}) error {
+	_, err := c.NewInsert().Model(i).Exec(ctx)
+	if err != nil {
+		logger.WithField("func", "create").Errorf("db: %s", err.Error())
+	}
+
+	return err
+}
+
+func update(ctx context.Context, c bun.IDB, i interface{}) error {
+	q := c.NewUpdate().Model(i).WherePK()
 
 	_, err := q.Exec(ctx)
 
-	return c.bun.ProcessError(err)
+	return err
 }

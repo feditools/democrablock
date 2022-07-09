@@ -14,6 +14,7 @@ func init() {
 	up := func(ctx context.Context, db *bun.DB) error {
 		return db.RunInTx(ctx, nil, func(ctx context.Context, tx bun.Tx) error {
 			modelList := []interface{}{
+				&models.Transaction{},
 				&models.FediInstance{},
 				&models.FediAccount{},
 			}

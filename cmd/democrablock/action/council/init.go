@@ -3,6 +3,7 @@ package council
 import (
 	"context"
 	"errors"
+	"fmt"
 
 	"github.com/feditools/democrablock/cmd/democrablock/action"
 	"github.com/feditools/democrablock/internal/config"
@@ -158,9 +159,78 @@ var Init action.Action = func(ctx context.Context) error {
 
 			account = newAccount
 		}
+		account.Instance = instance
 
 		members[i] = account
 	}
+
+	// create council
+	txID, err := dbClient.TxNew(ctx)
+	if err != nil {
+		l.Errorf("new db tx: %s", err.Error())
+
+		return err
+	}
+
+	// update members to council
+	newMetaData := models.TransactionCouncilInit{
+		Members: make([]models.TransactionCouncilInitMember, len(members)),
+	}
+	for i, member := range members {
+		member.IsCouncil = true
+		if err := dbClient.UpdateFediAccountTX(ctx, txID, member); err != nil {
+			l.Errorf("error updating account %d: %s", member.ID, err.Error())
+			if txerr := dbClient.TxRollback(ctx, txID); txerr != nil {
+				l.Errorf("error rolling back db tx: %s", err.Error())
+
+				return txerr
+			}
+
+			return err
+		}
+
+		newMetaData.Members[i].DBID = member.ID
+		newMetaData.Members[i].Name = fmt.Sprintf("%s@%s", member.Username, member.Instance.Domain)
+	}
+
+	// create transaction log entry
+	newTransactionLogEntry := models.Transaction{
+		Type: models.TransactionTypeCouncilInit,
+	}
+	if err := newTransactionLogEntry.SetMetaData(newMetaData); err != nil {
+		l.Errorf("error settings meta data: %s", err.Error())
+		if txerr := dbClient.TxRollback(ctx, txID); txerr != nil {
+			l.Errorf("error rolling back db tx: %s", err.Error())
+
+			return txerr
+		}
+
+		return err
+	}
+	if err := dbClient.CreateTransactionTX(ctx, txID, &newTransactionLogEntry); err != nil {
+		l.Errorf("error creating transaction: %s", err.Error())
+		if txerr := dbClient.TxRollback(ctx, txID); txerr != nil {
+			l.Errorf("error rolling back db tx: %s", err.Error())
+
+			return txerr
+		}
+
+		return err
+	}
+
+	// commit transaction
+	if err := dbClient.TxCommit(ctx, txID); err != nil {
+		l.Errorf("error comitting db tx: %s", err.Error())
+		if txerr := dbClient.TxRollback(ctx, txID); txerr != nil {
+			l.Errorf("error rolling back db tx: %s", err.Error())
+
+			return txerr
+		}
+
+		return err
+	}
+
+	l.Info(newMetaData.String())
 
 	return nil
 }

@@ -67,7 +67,7 @@ func (c *Client) CountFediAccountsForInstance(ctx context.Context, instanceID in
 func (c *Client) CreateFediAccount(ctx context.Context, account *models.FediAccount) db.Error {
 	metric := c.metrics.NewDBQuery("CreateFediAccount")
 
-	if err := c.Create(ctx, account); err != nil {
+	if err := create(ctx, c.bun, account); err != nil {
 		go metric.Done(true)
 
 		return c.bun.errProc(err)
@@ -187,7 +187,22 @@ func (c *Client) ReadFediAccountsPage(ctx context.Context, index, count int) ([]
 func (c *Client) UpdateFediAccount(ctx context.Context, account *models.FediAccount) db.Error {
 	metric := c.metrics.NewDBQuery("UpdateFediAccount")
 
-	if err := c.Update(ctx, account); err != nil {
+	if err := update(ctx, c.bun, account); err != nil {
+		go metric.Done(true)
+
+		return c.bun.errProc(err)
+	}
+
+	go metric.Done(false)
+
+	return nil
+}
+
+// UpdateFediAccountTX updates the stored federated social account inside a transaction.
+func (c *Client) UpdateFediAccountTX(ctx context.Context, txID db.TxID, account *models.FediAccount) db.Error {
+	metric := c.metrics.NewDBQuery("UpdateFediAccountTX")
+
+	if err := update(ctx, c.bun, account); err != nil {
 		go metric.Done(true)
 
 		return c.bun.errProc(err)

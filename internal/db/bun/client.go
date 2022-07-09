@@ -11,6 +11,7 @@ import (
 	"os"
 	"runtime"
 	"strings"
+	"sync"
 
 	"github.com/feditools/go-lib/metrics"
 
@@ -48,10 +49,14 @@ type Bun struct {
 type Client struct {
 	bun     *Bun
 	metrics metrics.Collector
+
+	// tx
+	tx     map[db.TxID]*bun.Tx
+	txLock sync.RWMutex
 }
 
 // New creates a new bun database client.
-func New(ctx context.Context, m metrics.Collector) (db.DB, error) {
+func New(ctx context.Context, m metrics.Collector) (*Client, error) {
 	var newBun *Bun
 	var err error
 	dbType := strings.ToLower(viper.GetString(config.Keys.DBType))
@@ -78,6 +83,8 @@ func New(ctx context.Context, m metrics.Collector) (db.DB, error) {
 	return &Client{
 		bun:     newBun,
 		metrics: m,
+
+		tx: make(map[db.TxID]*bun.Tx),
 	}, nil
 }
 
