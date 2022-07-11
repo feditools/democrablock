@@ -27,8 +27,8 @@ require (
 	github.com/tmthrgd/go-hex v0.0.0-20190904060850-447a3041c3bc
 	github.com/tyrm/go-util v0.4.2
 	github.com/tyrm/immudb-migrate v0.2.1
-	github.com/uptrace/bun v1.1.5
-	github.com/uptrace/bun/dialect/pgdialect v1.1.5
+	github.com/uptrace/bun v1.1.6
+	github.com/uptrace/bun/dialect/pgdialect v1.1.6
 	github.com/uptrace/bun/dialect/sqlitedialect v1.1.5
 	github.com/uptrace/bun/extra/bundebug v1.1.5
 	modernc.org/sqlite v1.17.1
@@ -108,7 +108,7 @@ require (
 	golang.org/x/mod v0.6.0-dev.0.20220106191415-9b9b3d81d5e3 // indirect
 	golang.org/x/net v0.0.0-20220526153639-5463443f8c37 // indirect
 	golang.org/x/sync v0.0.0-20220513210516-0976fa681c29 // indirect
-	golang.org/x/sys v0.0.0-20220520151302-bc2c85ada10a // indirect
+	golang.org/x/sys v0.0.0-20220708085239-5a0f0661e09d // indirect
 	golang.org/x/term v0.0.0-20210927222741-03fcf44c2211 // indirect
 	golang.org/x/text v0.3.7 // indirect
 	golang.org/x/tools v0.1.10 // indirect
